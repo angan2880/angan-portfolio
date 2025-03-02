@@ -1,39 +1,54 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
 import Layout from '../components/Layout';
-import { searchEssays } from '../lib/markdown';
 
-export default function Search({ initialResults }) {
+export default function Search() {
   const [query, setQuery] = useState('');
-  const [results, setResults] = useState(initialResults);
+  const [results, setResults] = useState([]);
   const [isSearching, setIsSearching] = useState(false);
   const router = useRouter();
-
-  const handleSearch = async (e) => {
-    e.preventDefault();
-    if (!query.trim()) return;
+  
+  // Run search when the page loads if there's a query parameter
+  useEffect(() => {
+    if (router.query.q) {
+      setQuery(router.query.q);
+      performSearch(router.query.q);
+    }
+  }, [router.query.q]);
+  
+  // Function to perform the search
+  const performSearch = async (searchQuery) => {
+    if (!searchQuery.trim()) return;
     
     setIsSearching(true);
     
     try {
-      // Navigate to search page with query parameter
-      router.push({
-        pathname: '/search',
-        query: { q: query }
-      }, undefined, { shallow: true });
-      
       // Call the API endpoint to search essays
-      const response = await fetch(`/api/search?q=${encodeURIComponent(query)}`);
+      const response = await fetch(`/api/search?q=${encodeURIComponent(searchQuery)}`);
       if (!response.ok) throw new Error('Search failed');
       
       const searchResults = await response.json();
       setResults(searchResults);
     } catch (error) {
       console.error('Search error:', error);
+      setResults([]);
     } finally {
       setIsSearching(false);
     }
+  };
+
+  const handleSearch = async (e) => {
+    e.preventDefault();
+    if (!query.trim()) return;
+    
+    // Navigate to search page with query parameter
+    router.push({
+      pathname: '/search',
+      query: { q: query }
+    }, undefined, { shallow: true });
+    
+    performSearch(query);
   };
 
   return (
@@ -85,22 +100,105 @@ export default function Search({ initialResults }) {
             ))}
           </ul>
         ) : (
-          <p>No essays found. Try a different search term.</p>
+          <p>{query ? 'No essays found. Try a different search term.' : 'Enter a search term to find essays.'}</p>
         )}
       </div>
+      
+      <style jsx>{`
+        .page-header {
+          margin-bottom: 2rem;
+        }
+        
+        .page-header h1 {
+          font-size: 1.8rem;
+          font-weight: 600;
+          margin-bottom: 0.5rem;
+        }
+        
+        .subtitle {
+          color: #666;
+          font-size: 1rem;
+        }
+        
+        .search-container {
+          margin-bottom: 2rem;
+        }
+        
+        .search-container form {
+          display: flex;
+          max-width: 600px;
+        }
+        
+        .search-input {
+          flex: 1;
+          padding: 10px 15px;
+          border: 1px solid #ddd;
+          border-radius: 4px 0 0 4px;
+          font-size: 1rem;
+        }
+        
+        .search-button {
+          padding: 10px 20px;
+          background-color: #333;
+          color: white;
+          border: none;
+          border-radius: 0 4px 4px 0;
+          cursor: pointer;
+          font-size: 1rem;
+        }
+        
+        .search-button:hover {
+          background-color: #555;
+        }
+        
+        .search-button:disabled {
+          background-color: #999;
+          cursor: not-allowed;
+        }
+        
+        .search-results h2 {
+          font-size: 1.4rem;
+          margin-bottom: 1.5rem;
+          font-weight: 500;
+        }
+        
+        .essay-list {
+          list-style: none;
+          padding: 0;
+        }
+        
+        .essay-item {
+          margin-bottom: 1.5rem;
+          padding-bottom: 1.5rem;
+          border-bottom: 1px solid #eee;
+        }
+        
+        .essay-title {
+          font-size: 1.2rem;
+          margin-bottom: 0.5rem;
+        }
+        
+        .essay-title a {
+          color: #333;
+          text-decoration: none;
+        }
+        
+        .essay-title a:hover {
+          text-decoration: underline;
+        }
+        
+        .essay-date {
+          font-size: 0.9rem;
+          color: #666;
+          margin-bottom: 0.5rem;
+        }
+        
+        .essay-summary {
+          font-size: 1rem;
+          line-height: 1.5;
+          color: #444;
+        }
+      `}</style>
     </Layout>
   );
-}
-
-export async function getServerSideProps(context) {
-  const { q } = context.query;
-  
-  // If there's a query parameter, search for it
-  const initialResults = q 
-    ? await searchEssays(q) 
-    : await searchEssays('');
-  
-  return {
-    props: { initialResults },
-  };
 } 
