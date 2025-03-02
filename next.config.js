@@ -1,4 +1,6 @@
 /** @type {import('next').NextConfig} */
+const { getAllEssays } = require('./lib/markdown');
+
 const nextConfig = {
   reactStrictMode: true,
   output: 'export',
@@ -14,9 +16,35 @@ const nextConfig = {
     defaultPathMap,
     { dev, dir, outDir, distDir, buildId }
   ) {
-    // Remove the search page from the export
-    const pathMap = { ...defaultPathMap };
-    delete pathMap['/search'];
+    // Create a new pathMap with only the pages we want to include
+    const pathMap = {
+      '/': { page: '/' },
+      '/about': { page: '/about' },
+      '/essays': { page: '/essays' },
+      '/interesting': { page: '/interesting' },
+    };
+
+    // Handle dynamic routes for essays
+    try {
+      // Add essay pages by getting all essay slugs
+      const essays = await getAllEssays(['slug']);
+      
+      // Create a path mapping for each essay
+      essays.forEach((essay) => {
+        pathMap[`/essays/${essay.slug}`] = { 
+          page: '/essays/[slug]', 
+          query: { slug: essay.slug } 
+        };
+      });
+    } catch (error) {
+      console.error("Error adding essay routes to export map:", error);
+      
+      // Fallback to at least include a sample essay
+      pathMap['/essays/sample-essay'] = {
+        page: '/essays/[slug]',
+        query: { slug: 'sample-essay' }
+      };
+    }
     
     return pathMap;
   },
