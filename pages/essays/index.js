@@ -3,7 +3,7 @@ import Link from 'next/link';
 import Layout from '../../components/Layout';
 import { getAllEssays } from '../../lib/markdown';
 
-export default function Essays({ allEssays }) {
+export default function Essays({ essays }) {
   const [hoveredEssay, setHoveredEssay] = useState(null);
 
   const handleMouseEnter = (slug) => {
@@ -26,9 +26,9 @@ export default function Essays({ allEssays }) {
         
         <div className="header-divider"></div>
         
-        {allEssays.length > 0 ? (
+        {essays.length > 0 ? (
           <div className="essays-list">
-            {allEssays.map((essay) => (
+            {essays.map((essay) => (
               <div 
                 key={essay.slug}
                 className={`essay-container ${hoveredEssay === essay.slug ? 'essay-hovered' : ''}`}
