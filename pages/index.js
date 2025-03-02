@@ -316,7 +316,5 @@ export async function getStaticProps() {
       recentEssays: recentEssays.slice(0, 3),
       interestingItems,
     },
-    // Add revalidation to update the page when new data is available
-    revalidate: 60, // Revalidate every 60 seconds
   };
 } 

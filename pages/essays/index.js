@@ -158,10 +158,11 @@ function formatDate(dateString) {
 }
 
 export async function getStaticProps() {
-  const allEssays = await getAllEssays(['title', 'date', 'slug']);
-  
+  const essays = await getAllEssays();
+
   return {
-    props: { allEssays },
-    revalidate: 60, // Revalidate every 60 seconds
+    props: {
+      essays,
+    },
   };
 } 

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import Layout from '../components/Layout';
 import { getAllInterestingItems } from '../lib/interesting';
+import { supabase } from '../lib/supabase';
 
 export default function InterestingPage({ interestingItems }) {
   const [hoveredItem, setHoveredItem] = useState(null);
@@ -220,10 +221,8 @@ export default function InterestingPage({ interestingItems }) {
 
 export async function getStaticProps() {
   const interestingItems = await getAllInterestingItems();
-  
+
   return {
-    props: { interestingItems },
-    // Add revalidation to update the page when new data is available
-    revalidate: 60, // Revalidate every 60 seconds
+    props: { interestingItems }
   };
 } 

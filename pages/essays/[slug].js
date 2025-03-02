@@ -144,25 +144,11 @@ export async function getStaticPaths() {
 }
 
 export async function getStaticProps({ params }) {
-  const essay = await getEssayBySlug(params.slug, [
-    'title',
-    'date',
-    'slug',
-    'author',
-    'content',
-    'summary',
-  ]);
-  
-  const content = await markdownToHtml(essay.content || '');
+  const essay = await getEssayBySlug(params.slug);
 
   return {
     props: {
-      essay: {
-        ...essay,
-        content,
-      },
+      essay,
     },
-    // Add revalidation to update the page when new data is available
-    revalidate: 60, // Revalidate every 60 seconds
   };
 } 
