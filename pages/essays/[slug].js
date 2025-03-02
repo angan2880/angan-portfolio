@@ -1,16 +1,9 @@
 import React from 'react';
-import { useRouter } from 'next/router';
 import Link from 'next/link';
 import Layout from '../../components/Layout';
 import { getEssayBySlug, getAllEssays, markdownToHtml } from '../../lib/markdown';
 
 export default function Essay({ essay }) {
-  const router = useRouter();
-
-  if (router.isFallback) {
-    return <div>Loading...</div>;
-  }
-
   // Format date as "DD MMM YYYY"
   const formattedDate = (() => {
     const date = new Date(essay.date);
