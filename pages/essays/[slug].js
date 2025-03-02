@@ -138,10 +138,16 @@ export async function getStaticPaths() {
 
 export async function getStaticProps({ params }) {
   const essay = await getEssayBySlug(params.slug);
-
+  
+  // Process markdown content to HTML
+  const processedContent = await markdownToHtml(essay.content || '');
+  
   return {
     props: {
-      essay,
+      essay: {
+        ...essay,
+        content: processedContent
+      },
     },
   };
 } 
