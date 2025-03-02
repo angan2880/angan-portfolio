@@ -1,0 +1,384 @@
+:root {
+  --background-color: #ffffff;
+  --text-color: #333333;
+  --link-color: #000000;
+  --link-hover-color: #555555;
+  --border-color: #eeeeee;
+  --code-bg: #f5f5f5;
+  --blockquote-bg: #f9f9f9;
+  --blockquote-border: #e0e0e0;
+  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  --font-heading: 'Work Sans', sans-serif;
+  --font-serif: 'Georgia', 'Times New Roman', serif;
+  --font-mono: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+  --max-width: 1100px;
+  --header-height: 80px;
+}
+
+html,
+body {
+  padding: 0;
+  margin: 0;
+  font-family: var(--font-sans);
+  font-size: 16px;
+  line-height: 1.6;
+  color: var(--text-color);
+  background-color: var(--background-color);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+a {
+  color: var(--link-color);
+  text-decoration: none;
+  transition: color 0.2s ease;
+  font-weight: 500;
+}
+
+a:hover,
+a:focus {
+  color: var(--link-hover-color);
+}
+
+main {
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: 4rem 2rem;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-sans);
+  font-weight: 600;
+  line-height: 1.3;
+  margin-top: 2.5rem;
+  margin-bottom: 1.5rem;
+  letter-spacing: -0.02em;
+}
+
+h1 {
+  font-size: 2.5rem;
+  margin-top: 0;
+  letter-spacing: -0.03em;
+}
+
+h2 {
+  font-size: 1.8rem;
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+h3 {
+  font-size: 1.4rem;
+}
+
+h4 {
+  font-size: 1.2rem;
+}
+
+p, ul, ol {
+  margin-bottom: 1.5rem;
+}
+
+ul, ol {
+  padding-left: 1.5rem;
+}
+
+li {
+  margin-bottom: 0.5rem;
+}
+
+blockquote {
+  margin: 1.5rem 0;
+  padding: 0.5rem 1rem;
+  border-left: 4px solid var(--blockquote-border);
+  background-color: var(--blockquote-bg);
+  font-style: italic;
+}
+
+code {
+  font-family: var(--font-mono);
+  background-color: var(--code-bg);
+  padding: 0.2rem 0.4rem;
+  border-radius: 3px;
+  font-size: 0.9em;
+}
+
+pre {
+  background-color: var(--code-bg);
+  padding: 1rem;
+  border-radius: 5px;
+  overflow-x: auto;
+  margin: 1.5rem 0;
+}
+
+pre code {
+  background-color: transparent;
+  padding: 0;
+}
+
+hr {
+  border: 0;
+  height: 1px;
+  background-color: var(--border-color);
+  margin: 2rem 0;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1.5rem 0;
+}
+
+th, td {
+  padding: 0.5rem;
+  border: 1px solid var(--border-color);
+}
+
+th {
+  background-color: var(--code-bg);
+  font-weight: 600;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+}
+
+.header {
+  padding: 2rem 0;
+  border-bottom: 1px solid var(--border-color);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.footer {
+  padding: 2rem 0;
+  border-top: 1px solid var(--border-color);
+  margin-top: 5rem;
+  font-size: 0.9rem;
+  color: #999;
+}
+
+.nav {
+  display: flex;
+  gap: 2rem;
+  margin: 1.5rem 0 0.5rem;
+}
+
+.nav a {
+  font-family: var(--font-sans);
+  font-size: 0.95rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 5px 10px;
+  border-radius: 4px;
+  border-left: 4px solid transparent;
+  transition: all 0.2s ease;
+  margin: 0 -10px;
+  display: flex;
+  align-items: center;
+  height: 36px;
+}
+
+.nav a:hover {
+  color: var(--link-color);
+  background-color: #e0e0e0;
+  border-left: 4px solid #666;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.essay-list {
+  list-style: none;
+  padding: 0;
+  margin-top: 3rem;
+}
+
+.essay-item {
+  margin-bottom: 3rem;
+  padding-bottom: 3rem;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.essay-item:last-child {
+  border-bottom: none;
+}
+
+.essay-title {
+  font-size: 1.6rem;
+  margin-bottom: 0.5rem;
+  letter-spacing: -0.02em;
+}
+
+.essay-date {
+  font-size: 0.85rem;
+  color: #888;
+  margin-bottom: 1rem;
+  font-weight: 500;
+}
+
+.essay-summary {
+  margin-top: 1rem;
+  color: #555;
+  line-height: 1.6;
+}
+
+.search-container {
+  margin: 3rem 0;
+}
+
+.search-input {
+  width: 100%;
+  padding: 0.8rem 1rem;
+  font-size: 1rem;
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  background-color: #fafafa;
+  transition: all 0.2s ease;
+}
+
+.search-input:focus {
+  outline: none;
+  border-color: #aaa;
+  background-color: #fff;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.intro {
+  margin-bottom: 4rem;
+}
+
+/* Remove dark mode support to keep consistent white theme */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background-color: #ffffff;
+    --text-color: #333333;
+    --link-color: #000000;
+    --link-hover-color: #555555;
+    --border-color: #eeeeee;
+    --code-bg: #f5f5f5;
+    --blockquote-bg: #f9f9f9;
+    --blockquote-border: #e0e0e0;
+  }
+}
+
+/* Responsive adjustments */
+@media (min-width: 768px) {
+  .header {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .nav {
+    margin: 0;
+  }
+  
+  h1 {
+    margin: 0;
+  }
+}
+
+.page-header {
+  margin-bottom: 3rem;
+}
+
+.subtitle {
+  color: #666;
+  font-size: 1.1rem;
+  margin-top: 0.5rem;
+}
+
+.essay-content {
+  margin-bottom: 4rem;
+}
+
+.essay-header {
+  margin-bottom: 3rem;
+}
+
+.essay-body {
+  font-size: 1.05rem;
+  line-height: 1.7;
+}
+
+.essay-body h2 {
+  margin-top: 3rem;
+}
+
+.essay-body h3 {
+  margin-top: 2rem;
+}
+
+.essay-body p {
+  margin-bottom: 1.5rem;
+}
+
+.essay-body blockquote {
+  margin: 2rem 0;
+  padding: 1rem 1.5rem;
+  border-left: 3px solid var(--border-color);
+  background-color: var(--blockquote-bg);
+  font-style: italic;
+}
+
+.back-to-essays {
+  margin-top: 4rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--border-color);
+}
+
+.view-all {
+  display: inline-block;
+  margin-top: 1rem;
+  font-weight: 500;
+}
+
+.logo h1 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+.search-button {
+  background-color: #000;
+  color: #fff;
+  border: none;
+  padding: 0.8rem 1.5rem;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  margin-top: 1rem;
+  border-radius: 4px;
+}
+
+.search-button:hover {
+  background-color: #333;
+}
+
+.search-results {
+  margin-top: 3rem;
+}
+
+.about-section {
+  margin-bottom: 3rem;
+}
+
+.about-section ul {
+  margin-top: 1rem;
+}
+
+.about-section li {
+  margin-bottom: 0.7rem;
+}

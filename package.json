@@ -1,0 +1,30 @@
+{
+  "name": "personal-writing-site",
+  "version": "1.0.0",
+  "description": "A minimalist, text-focused personal writing website",
+  "main": "index.js",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "npx next lint",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "writing",
+    "blog",
+    "markdown",
+    "minimalist"
+  ],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@supabase/supabase-js": "^2.49.1",
+    "gray-matter": "^4.0.3",
+    "next": "^13.4.19",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "remark": "^14.0.3",
+    "remark-html": "^15.0.2"
+  }
+}
