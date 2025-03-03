@@ -8,8 +8,8 @@ export default function Essays({ essays }) {
   const [touchedEssay, setTouchedEssay] = useState(null);
   const [isTouch, setIsTouch] = useState(false);
   const essayRefs = useRef({});
-  
-  // Detect touch devices on mount
+
+  // Detect touch devices on mount and set up observers for scroll-based highlighting
   useEffect(() => {
     setIsTouch('ontouchstart' in window || navigator.maxTouchPoints > 0);
     
@@ -18,7 +18,7 @@ export default function Essays({ essays }) {
       const observerOptions = {
         root: null,
         rootMargin: '0px',
-        threshold: 0.7, // Essay needs to be 70% visible to trigger
+        threshold: 0.7, // Item needs to be 70% visible to trigger
       };
       
       const observer = new IntersectionObserver((entries) => {
@@ -35,7 +35,7 @@ export default function Essays({ essays }) {
         });
       }, observerOptions);
       
-      // Register all essays for observation
+      // Register all items for observation
       Object.values(essayRefs.current).forEach(ref => {
         if (ref) observer.observe(ref);
       });
@@ -58,14 +58,13 @@ export default function Essays({ essays }) {
     }
   };
   
-  const handleTouch = (slug, e) => {
+  const handleTouch = (slug, url) => {
     if (isTouch) {
       if (touchedEssay === slug) {
-        // If already touched, allow navigation (handled by Link component)
-        return;
+        // Second tap, navigate to the essay
+        window.location.href = url;
       } else {
-        // First touch, just highlight
-        e.preventDefault();
+        // First tap, show the summary
         setTouchedEssay(slug);
       }
     }
@@ -93,11 +92,17 @@ export default function Essays({ essays }) {
                 } ${isTouch ? 'touch-device' : ''}`}
                 onMouseEnter={() => handleMouseEnter(essay.slug)}
                 onMouseLeave={handleMouseLeave}
+                onClick={() => handleTouch(essay.slug, `/essays/${essay.slug}`)}
               >
                 <Link 
                   href={`/essays/${essay.slug}`} 
                   className="essay-link"
-                  onClick={(e) => handleTouch(essay.slug, e)}
+                  onClick={(e) => {
+                    if (isTouch) {
+                      // Prevent default navigation on any tap inside the item
+                      e.preventDefault();
+                    }
+                  }}
                 >
                   <div className="essay-row">
                     <div className="essay-date">
@@ -107,13 +112,22 @@ export default function Essays({ essays }) {
                       {essay.title}
                     </div>
                   </div>
-                  
-                  {(hoveredEssay === essay.slug || touchedEssay === essay.slug) && essay.summary && (
-                    <div className="essay-summary">
-                      {essay.summary}
-                    </div>
-                  )}
                 </Link>
+                
+                {/* Show summary when hovered/touched */}
+                {(hoveredEssay === essay.slug || touchedEssay === essay.slug) && essay.summary && (
+                  <div 
+                    className="essay-summary"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      if (isTouch) {
+                        handleTouch(essay.slug, `/essays/${essay.slug}`);
+                      }
+                    }}
+                  >
+                    {essay.summary}
+                  </div>
+                )}
               </div>
             ))}
           </div>
@@ -198,24 +212,35 @@ export default function Essays({ essays }) {
           align-items: center;
         }
         
+        /* Essay summary displayed on hover/touch */
         .essay-summary {
-          padding: 0 15px 15px 15px;
-          margin-top: -5px;
+          padding: 10px 15px 15px;
           margin-left: 150px;
           font-size: 0.9rem;
           line-height: 1.5;
           color: #555;
+          background-color: rgba(0,0,0,0.03);
+          border-bottom-left-radius: 4px;
+          border-bottom-right-radius: 4px;
+          transition: opacity 0.2s ease, max-height 0.3s ease;
         }
         
         /* Touch device specific styles */
-        .touch-device.essay-hovered {
-          background-color: rgba(224, 224, 224, 0.8) !important;
+        .touch-device {
+          transition: background-color 0.3s ease;
         }
         
+        .touch-device .essay-row {
+          position: relative;
+        }
+        
+        .touch-device.essay-hovered {
+          background-color: rgba(0, 0, 0, 0.02);
+        }
+        
+        /* Show summary box when scrolled into view on mobile */
         .touch-device .essay-summary {
-          padding: 10px 15px 15px;
-          margin-top: 0;
-          background-color: rgba(0,0,0,0.03);
+          margin-top: 0.5rem;
           border-top: 1px solid rgba(0, 0, 0, 0.05);
         }
         
@@ -232,9 +257,27 @@ export default function Essays({ essays }) {
             margin-left: 0;
           }
           
-          /* Mobile-specific touch styles */
-          .touch-device.essay-hovered {
-            border-left-color: #0070f3 !important;
+          /* Mobile-specific touch indicators */
+          .touch-device.essay-hovered::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            height: 100%;
+            width: 4px;
+            background: #0070f3;
+            border-radius: 2px;
+          }
+          
+          /* Tap again hint for mobile */
+          .touch-device.essay-hovered .essay-summary::after {
+            content: 'Tap again to read';
+            display: block;
+            margin-top: 0.75rem;
+            font-size: 0.8rem;
+            color: #0070f3;
+            text-align: right;
+            font-style: italic;
           }
         }
       `}</style>
