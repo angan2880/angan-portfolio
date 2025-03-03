@@ -1,56 +1,67 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import Layout from '../components/Layout';
 import { getAllInterestingItems } from '../lib/interesting';
 import { supabase } from '../lib/supabase';
 
 export default function InterestingPage({ interestingItems }) {
   const [hoveredItem, setHoveredItem] = useState(null);
-  const [isMobile, setIsMobile] = useState(false);
-
-  // Check if the device is mobile
+  const [touchedItem, setTouchedItem] = useState(null);
+  const [isTouch, setIsTouch] = useState(false);
+  const itemRefs = useRef({});
+  
+  // Detect touch devices on mount
   useEffect(() => {
-    const checkMobile = () => {
-      setIsMobile(window.innerWidth <= 768);
-    };
+    setIsTouch('ontouchstart' in window || navigator.maxTouchPoints > 0);
     
-    // Initial check
-    checkMobile();
-    
-    // Add event listener for resize
-    window.addEventListener('resize', checkMobile);
-    
-    // Cleanup
-    return () => window.removeEventListener('resize', checkMobile);
-  }, []);
+    // Set up intersection observer for mobile scroll-based highlighting
+    if (typeof IntersectionObserver !== 'undefined') {
+      const observerOptions = {
+        root: null,
+        rootMargin: '0px',
+        threshold: 0.7, // Item needs to be 70% visible to trigger
+      };
+      
+      const observer = new IntersectionObserver((entries) => {
+        // Only apply auto-highlight on touch devices
+        if (!isTouch) return;
+        
+        entries.forEach(entry => {
+          const id = entry.target.dataset.id;
+          if (entry.isIntersecting) {
+            setTouchedItem(id);
+          } else if (touchedItem === id) {
+            setTouchedItem(null);
+          }
+        });
+      }, observerOptions);
+      
+      // Register all items for observation
+      Object.values(itemRefs.current).forEach(ref => {
+        if (ref) observer.observe(ref);
+      });
+      
+      return () => {
+        observer.disconnect();
+      };
+    }
+  }, [isTouch, touchedItem, interestingItems]);
 
   const handleMouseEnter = (id) => {
-    if (!isMobile) {
+    if (!isTouch) {
       setHoveredItem(id);
     }
   };
 
   const handleMouseLeave = () => {
-    if (!isMobile) {
+    if (!isTouch) {
       setHoveredItem(null);
     }
   };
   
-  // For mobile: toggle item details on tap
-  const handleItemClick = (e, id) => {
-    if (isMobile) {
-      e.preventDefault(); // Prevent navigation on first tap
-      
-      if (hoveredItem === id) {
-        // If already open, allow the link to work normally on second tap
-        setHoveredItem(null);
-        return true; 
-      } else {
-        // Open this item
-        setHoveredItem(id);
-        return false;
-      }
+  const handleTouch = (id) => {
+    if (isTouch) {
+      setTouchedItem(touchedItem === id ? null : id);
     }
-    return true;
   };
 
   // Format date as "DD MMM YYYY"
@@ -65,12 +76,12 @@ export default function InterestingPage({ interestingItems }) {
   return (
     <Layout title="Interesting Things" description="Collection of interesting things found online">
       <div className="interesting-container">
+        <section className="intro-section">
+          <h1>Stuff I Found Interesting on the Interwebs</h1>
+          <p>A curated collection of articles, tools, videos, and resources that caught my attention.</p>
+        </section>
         
-        <h1>Stuff I Found Interesting on the Interwebs</h1>
-        
-        <p className="intro">
-          A collection of articles, videos, and tools that caught my attention.
-        </p>
+        <div className="content-divider"></div>
         
         <div className="interesting-header">
           <div className="header-date">Date</div>
@@ -83,16 +94,25 @@ export default function InterestingPage({ interestingItems }) {
             {interestingItems.map((item) => (
               <div 
                 key={item.id}
-                className={`interesting-item ${hoveredItem === item.id ? 'item-hovered' : ''}`}
+                ref={el => itemRefs.current[item.id] = el}
+                data-id={item.id}
+                className={`interesting-item ${
+                  hoveredItem === item.id || touchedItem === item.id ? 'item-hovered' : ''
+                } ${isTouch ? 'touch-device' : ''}`}
                 onMouseEnter={() => handleMouseEnter(item.id)}
                 onMouseLeave={handleMouseLeave}
+                onClick={() => handleTouch(item.id)}
               >
                 <a 
                   href={item.url} 
                   target="_blank" 
                   rel="noopener noreferrer"
                   className="item-link"
-                  onClick={(e) => hoveredItem === item.id || !isMobile ? true : handleItemClick(e, item.id)}
+                  onClick={(e) => {
+                    if (isTouch && touchedItem !== item.id) {
+                      e.preventDefault(); // Prevent navigation on first touch
+                    }
+                  }}
                 >
                   <div className="item-row">
                     <div className="item-date">
@@ -100,11 +120,6 @@ export default function InterestingPage({ interestingItems }) {
                     </div>
                     <div className="item-title">
                       {item.title}
-                      {isMobile && 
-                        <div className="mobile-hint">
-                          {hoveredItem === item.id ? 'Tap again to open →' : 'Tap to see why →'}
-                        </div>
-                      }
                     </div>
                     <div className="item-type">
                       {item.type}
@@ -112,7 +127,7 @@ export default function InterestingPage({ interestingItems }) {
                   </div>
                 </a>
                 
-                {hoveredItem === item.id && (
+                {(hoveredItem === item.id || touchedItem === item.id) && (
                   <div className="item-why">
                     <strong>Why I found it interesting:</strong> {item.why}
                   </div>
@@ -124,35 +139,52 @@ export default function InterestingPage({ interestingItems }) {
           <p>No interesting items found. Start collecting!</p>
         )}
       </div>
-      
+
       <style jsx>{`
         .interesting-container {
-          width: 100%;
-          margin-top: 1rem;
+          max-width: 900px;
+          margin: 0 auto;
+          padding-top: 0;
         }
         
-        h1 {
-          font-size: 1.8rem;
+        .intro-section {
+          margin-bottom: 2rem;
+        }
+        
+        .intro-section h1 {
+          font-size: 1.6rem;
           font-weight: 600;
-          margin-bottom: 1rem;
+          margin-bottom: 0.5rem;
+          font-family: var(--font-heading);
+          color: #333;
         }
         
-        .intro {
+        .intro-section p {
           font-size: 1rem;
           color: #666;
-          margin-bottom: 2rem;
+          max-width: 650px;
+          line-height: 1.5;
+        }
+        
+        .content-divider {
+          height: 1px;
+          background-color: #e0e0e0;
+          margin: 1.5rem 0;
+          width: 100%;
         }
         
         .interesting-header {
           display: grid;
           grid-template-columns: 150px 1fr 120px;
-          font-size: 0.9rem;
-          font-weight: 500;
-          text-transform: uppercase;
-          color: #888;
           padding: 0 15px 10px;
-          margin-bottom: 0.5rem;
-          border-bottom: 1px solid #eee;
+          border-bottom: 2px solid #f0f0f0;
+          margin-bottom: 1rem;
+          color: #666;
+          font-size: 0.9rem;
+        }
+        
+        .header-date, .header-title, .header-type {
+          font-weight: 500;
         }
         
         .content-list {
@@ -162,22 +194,16 @@ export default function InterestingPage({ interestingItems }) {
         }
         
         .interesting-item {
-          margin-bottom: 10px;
-          padding: 10px;
-          border: 1px solid #e0e0e0;
           border-radius: 4px;
-          cursor: pointer;
-          position: relative;
-          transition: transform 0.15s ease, box-shadow 0.15s ease, background-color 0.15s ease, border-color 0.15s ease;
-          will-change: transform, box-shadow, background-color, border-color;
-          transform: translateZ(0);
-          backface-visibility: hidden;
+          border-left: 4px solid transparent;
+          transition: all 0.2s ease;
+          margin-bottom: 3px;
         }
         
         .item-hovered {
-          background-color: #f9f9f9;
-          border-color: #ccc;
-          box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+          background-color: #f0f0f0;
+          border-left: 4px solid #666;
+          box-shadow: 0 1px 3px rgba(0,0,0,0.1);
         }
         
         .item-link {
@@ -207,16 +233,6 @@ export default function InterestingPage({ interestingItems }) {
           font-weight: 400;
           display: flex;
           align-items: center;
-          flex-direction: column;
-          align-items: flex-start;
-        }
-        
-        .mobile-hint {
-          font-size: 0.8rem;
-          color: #999;
-          margin-top: 3px;
-          font-style: italic;
-          display: none;
         }
         
         .item-type {
@@ -238,9 +254,28 @@ export default function InterestingPage({ interestingItems }) {
           background-color: rgba(0,0,0,0.03);
           border-bottom-left-radius: 4px;
           border-bottom-right-radius: 4px;
+          transition: opacity 0.2s ease, max-height 0.3s ease;
         }
         
-        /* Mobile optimizations */
+        /* Touch device specific styles */
+        .touch-device {
+          transition: background-color 0.3s ease;
+        }
+        
+        .touch-device .item-row {
+          position: relative;
+        }
+        
+        .touch-device.item-hovered {
+          background-color: rgba(0, 0, 0, 0.02);
+        }
+        
+        /* Show "Why interesting" box when scrolled into view on mobile */
+        .touch-device .item-why {
+          margin-top: 0.5rem;
+          border-top: 1px solid rgba(0, 0, 0, 0.05);
+        }
+        
         @media (max-width: 640px) {
           .interesting-header, .item-row {
             grid-template-columns: 100px 1fr 90px;
@@ -259,47 +294,16 @@ export default function InterestingPage({ interestingItems }) {
             margin-left: 0;
           }
           
-          .mobile-hint {
-            display: block;
-          }
-          
-          /* Add visual indication for tap interaction */
-          .interesting-item {
-            position: relative;
-          }
-          
-          .interesting-item::after {
+          /* Mobile-specific touch indicators */
+          .touch-device.item-hovered::before {
             content: '';
             position: absolute;
-            top: 0;
             left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0,0,0,0.03);
-            opacity: 0;
-            pointer-events: none;
-            transition: opacity 0.2s ease;
-          }
-          
-          .interesting-item:active::after {
-            opacity: 1;
-          }
-          
-          /* Reduce animation complexity on mobile */
-          .interesting-item {
-            transition: background-color 0.2s ease, border-color 0.2s ease;
-            will-change: auto;
-          }
-          
-          /* Simplified hover effect for mobile */
-          .item-hovered {
-            box-shadow: none;
-            transform: none;
-          }
-          
-          /* Optimize touch feedback */
-          .interesting-item:active {
-            background-color: rgba(0, 0, 0, 0.03);
+            top: 0;
+            height: 100%;
+            width: 4px;
+            background: #0070f3;
+            border-radius: 2px;
           }
         }
       `}</style>
