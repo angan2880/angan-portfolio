@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Layout from '../components/Layout';
 import { getAllEssays } from '../lib/markdown';
@@ -6,13 +6,52 @@ import { getAllInterestingItems } from '../lib/interesting';
 
 export default function Home({ recentEssays, interestingItems }) {
   const [hoveredItem, setHoveredItem] = useState(null);
+  const [isMobile, setIsMobile] = useState(false);
+
+  // Check if the device is mobile
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+    
+    // Initial check
+    checkMobile();
+    
+    // Add event listener for resize
+    window.addEventListener('resize', checkMobile);
+    
+    // Cleanup
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
 
   const handleMouseEnter = (id) => {
-    setHoveredItem(id);
+    if (!isMobile) {
+      setHoveredItem(id);
+    }
   };
 
   const handleMouseLeave = () => {
-    setHoveredItem(null);
+    if (!isMobile) {
+      setHoveredItem(null);
+    }
+  };
+
+  // For mobile: toggle item details on tap
+  const handleItemClick = (e, id) => {
+    if (isMobile) {
+      e.preventDefault(); // Prevent navigation on first tap
+      
+      if (hoveredItem === id) {
+        // If already open, allow the link to work normally on second tap
+        setHoveredItem(null);
+        return true; 
+      } else {
+        // Open this item
+        setHoveredItem(id);
+        return false;
+      }
+    }
+    return true;
   };
 
   // Function to format date as "DD MMM YYYY"
@@ -100,6 +139,7 @@ export default function Home({ recentEssays, interestingItems }) {
                     target="_blank" 
                     rel="noopener noreferrer"
                     className="item-link"
+                    onClick={(e) => hoveredItem === item.id || !isMobile ? true : handleItemClick(e, item.id)}
                   >
                     <div className="item-row">
                       <div className="item-date">
@@ -107,17 +147,16 @@ export default function Home({ recentEssays, interestingItems }) {
                       </div>
                       <div className="item-title">
                         {item.title}
+                        {isMobile && hoveredItem === item.id && 
+                          <div className="mobile-hint">Tap again to open →</div>
+                        }
                       </div>
                     </div>
                   </a>
+                  
                   {hoveredItem === item.id && (
-                    <div className="hover-details">
-                      <div className="item-type">
-                        {item.type}
-                      </div>
-                      <div className="item-why">
-                        {item.why}
-                      </div>
+                    <div className="item-why">
+                      <strong>Why I found it interesting:</strong> {item.why}
                     </div>
                   )}
                 </div>
@@ -300,6 +339,46 @@ export default function Home({ recentEssays, interestingItems }) {
           
           .item-type {
             margin-left: 0;
+          }
+        }
+
+        .mobile-hint {
+          font-size: 0.8rem;
+          color: #999;
+          margin-top: 3px;
+          font-style: italic;
+          display: none;
+        }
+        
+        @media (max-width: 640px) {
+          .mobile-hint {
+            display: block;
+          }
+          
+          .item-why {
+            margin-left: 0;
+          }
+          
+          /* Add visual indication for tap interaction */
+          .interesting-item {
+            position: relative;
+          }
+          
+          .interesting-item::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.03);
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.2s ease;
+          }
+          
+          .interesting-item:active::after {
+            opacity: 1;
           }
         }
       `}</style>

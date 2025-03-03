@@ -1,17 +1,56 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Layout from '../components/Layout';
 import { getAllInterestingItems } from '../lib/interesting';
 import { supabase } from '../lib/supabase';
 
 export default function InterestingPage({ interestingItems }) {
   const [hoveredItem, setHoveredItem] = useState(null);
+  const [isMobile, setIsMobile] = useState(false);
+
+  // Check if the device is mobile
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+    
+    // Initial check
+    checkMobile();
+    
+    // Add event listener for resize
+    window.addEventListener('resize', checkMobile);
+    
+    // Cleanup
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
 
   const handleMouseEnter = (id) => {
-    setHoveredItem(id);
+    if (!isMobile) {
+      setHoveredItem(id);
+    }
   };
 
   const handleMouseLeave = () => {
-    setHoveredItem(null);
+    if (!isMobile) {
+      setHoveredItem(null);
+    }
+  };
+  
+  // For mobile: toggle item details on tap
+  const handleItemClick = (e, id) => {
+    if (isMobile) {
+      e.preventDefault(); // Prevent navigation on first tap
+      
+      if (hoveredItem === id) {
+        // If already open, allow the link to work normally on second tap
+        setHoveredItem(null);
+        return true; 
+      } else {
+        // Open this item
+        setHoveredItem(id);
+        return false;
+      }
+    }
+    return true;
   };
 
   // Format date as "DD MMM YYYY"
@@ -26,12 +65,12 @@ export default function InterestingPage({ interestingItems }) {
   return (
     <Layout title="Interesting Things" description="Collection of interesting things found online">
       <div className="interesting-container">
-        <section className="intro-section">
-          <h1>Stuff I Found Interesting on the Interwebs</h1>
-          <p>A curated collection of articles, tools, videos, and resources that caught my attention.</p>
-        </section>
         
-        <div className="content-divider"></div>
+        <h1>Stuff I Found Interesting on the Interwebs</h1>
+        
+        <p className="intro">
+          A collection of articles, videos, and tools that caught my attention.
+        </p>
         
         <div className="interesting-header">
           <div className="header-date">Date</div>
@@ -53,6 +92,7 @@ export default function InterestingPage({ interestingItems }) {
                   target="_blank" 
                   rel="noopener noreferrer"
                   className="item-link"
+                  onClick={(e) => hoveredItem === item.id || !isMobile ? true : handleItemClick(e, item.id)}
                 >
                   <div className="item-row">
                     <div className="item-date">
@@ -60,6 +100,11 @@ export default function InterestingPage({ interestingItems }) {
                     </div>
                     <div className="item-title">
                       {item.title}
+                      {isMobile && 
+                        <div className="mobile-hint">
+                          {hoveredItem === item.id ? 'Tap again to open →' : 'Tap to see why →'}
+                        </div>
+                      }
                     </div>
                     <div className="item-type">
                       {item.type}
@@ -79,52 +124,35 @@ export default function InterestingPage({ interestingItems }) {
           <p>No interesting items found. Start collecting!</p>
         )}
       </div>
-
+      
       <style jsx>{`
         .interesting-container {
-          max-width: 900px;
-          margin: 0 auto;
-          padding-top: 0;
+          width: 100%;
+          margin-top: 1rem;
         }
         
-        .intro-section {
-          margin-bottom: 2rem;
-        }
-        
-        .intro-section h1 {
-          font-size: 1.6rem;
+        h1 {
+          font-size: 1.8rem;
           font-weight: 600;
-          margin-bottom: 0.5rem;
-          font-family: var(--font-heading);
-          color: #333;
+          margin-bottom: 1rem;
         }
         
-        .intro-section p {
+        .intro {
           font-size: 1rem;
           color: #666;
-          max-width: 650px;
-          line-height: 1.5;
-        }
-        
-        .content-divider {
-          height: 1px;
-          background-color: #e0e0e0;
-          margin: 1.5rem 0;
-          width: 100%;
+          margin-bottom: 2rem;
         }
         
         .interesting-header {
           display: grid;
           grid-template-columns: 150px 1fr 120px;
-          padding: 0 15px 10px;
-          border-bottom: 2px solid #f0f0f0;
-          margin-bottom: 1rem;
-          color: #666;
           font-size: 0.9rem;
-        }
-        
-        .header-date, .header-title, .header-type {
           font-weight: 500;
+          text-transform: uppercase;
+          color: #888;
+          padding: 0 15px 10px;
+          margin-bottom: 0.5rem;
+          border-bottom: 1px solid #eee;
         }
         
         .content-list {
@@ -134,16 +162,22 @@ export default function InterestingPage({ interestingItems }) {
         }
         
         .interesting-item {
+          margin-bottom: 10px;
+          padding: 10px;
+          border: 1px solid #e0e0e0;
           border-radius: 4px;
-          border-left: 4px solid transparent;
-          transition: all 0.2s ease;
-          margin-bottom: 3px;
+          cursor: pointer;
+          position: relative;
+          transition: transform 0.15s ease, box-shadow 0.15s ease, background-color 0.15s ease, border-color 0.15s ease;
+          will-change: transform, box-shadow, background-color, border-color;
+          transform: translateZ(0);
+          backface-visibility: hidden;
         }
         
         .item-hovered {
-          background-color: #f0f0f0;
-          border-left: 4px solid #666;
-          box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+          background-color: #f9f9f9;
+          border-color: #ccc;
+          box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
         }
         
         .item-link {
@@ -173,6 +207,16 @@ export default function InterestingPage({ interestingItems }) {
           font-weight: 400;
           display: flex;
           align-items: center;
+          flex-direction: column;
+          align-items: flex-start;
+        }
+        
+        .mobile-hint {
+          font-size: 0.8rem;
+          color: #999;
+          margin-top: 3px;
+          font-style: italic;
+          display: none;
         }
         
         .item-type {
@@ -196,6 +240,7 @@ export default function InterestingPage({ interestingItems }) {
           border-bottom-right-radius: 4px;
         }
         
+        /* Mobile optimizations */
         @media (max-width: 640px) {
           .interesting-header, .item-row {
             grid-template-columns: 100px 1fr 90px;
@@ -212,6 +257,49 @@ export default function InterestingPage({ interestingItems }) {
           
           .item-why {
             margin-left: 0;
+          }
+          
+          .mobile-hint {
+            display: block;
+          }
+          
+          /* Add visual indication for tap interaction */
+          .interesting-item {
+            position: relative;
+          }
+          
+          .interesting-item::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.03);
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.2s ease;
+          }
+          
+          .interesting-item:active::after {
+            opacity: 1;
+          }
+          
+          /* Reduce animation complexity on mobile */
+          .interesting-item {
+            transition: background-color 0.2s ease, border-color 0.2s ease;
+            will-change: auto;
+          }
+          
+          /* Simplified hover effect for mobile */
+          .item-hovered {
+            box-shadow: none;
+            transform: none;
+          }
+          
+          /* Optimize touch feedback */
+          .interesting-item:active {
+            background-color: rgba(0, 0, 0, 0.03);
           }
         }
       `}</style>
