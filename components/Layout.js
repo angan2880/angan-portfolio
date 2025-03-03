@@ -269,34 +269,6 @@ export default function Layout({ children, title = "Angan Sarker", description =
             gap: 1rem;
           }
           
-          .last-name {
-            padding-right: 0;
-            display: inline-flex;
-            align-items: center;
-          }
-          
-          .last-name::after {
-            position: relative;
-            margin-left: 0.6rem;
-            transform: none;
-            display: inline-flex;
-            vertical-align: middle;
-            height: 1.2rem;
-            min-width: 3.8rem;
-            font-size: 0.7rem;
-            padding: 0 4px;
-            right: auto;
-            top: auto;
-            letter-spacing: -0.01em;
-          }
-          
-          .name-header {
-            flex-wrap: nowrap;
-            gap: 4px;
-            align-items: center;
-            letter-spacing: -0.03em;
-          }
-          
           .first-name {
             margin-right: 0.15rem;
             letter-spacing: -0.02em;
@@ -304,6 +276,30 @@ export default function Layout({ children, title = "Angan Sarker", description =
           
           .last-name {
             letter-spacing: -0.02em;
+          }
+          
+          /* Fix for mobile: adjust the percentage display */
+          .last-name::after {
+            position: relative;
+            display: inline-flex;
+            right: auto;
+            margin-left: 0.75rem;
+            top: -1px;
+            transform: none;
+          }
+          
+          /* For very small screens, adjust the header further */
+          @media (max-width: 375px) {
+            .name-header {
+              font-size: 1.3rem;
+            }
+            
+            .last-name::after {
+              font-size: 0.65rem;
+              margin-left: 0.5rem;
+              min-width: 3.8rem;
+              height: 1.2rem;
+            }
           }
         }
 
