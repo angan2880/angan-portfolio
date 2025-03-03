@@ -288,6 +288,45 @@ export default function Layout({ children, title = "Angan Sarker", description =
             transform: none;
           }
           
+          /* Simplify animations for mobile */
+          .header {
+            /* Use a simpler animation cycle with fewer steps for better performance */
+            animation: changeAnimationStateMobile 60s steps(3) infinite;
+          }
+          
+          /* Disable hover animations on mobile for better performance */
+          .logo h1:hover {
+            transform: none;
+          }
+          
+          .logo h1::before {
+            display: none;
+          }
+          
+          /* Custom animation keyframes for mobile */
+          @keyframes changeAnimationStateMobile {
+            0% {
+              --animation-state: 1;
+              --current-color: #16a34a;
+              --current-percentage: "+8.4%";
+            }
+            33% {
+              --animation-state: 2;
+              --current-color: #ef4444;
+              --current-percentage: "-7.3%";
+            }
+            66% {
+              --animation-state: 3;
+              --current-color: #16a34a;
+              --current-percentage: "+5.1%";
+            }
+            100% {
+              --animation-state: 1;
+              --current-color: #16a34a;
+              --current-percentage: "+8.4%";
+            }
+          }
+          
           /* For very small screens, adjust the header further */
           @media (max-width: 375px) {
             .name-header {
@@ -300,6 +339,21 @@ export default function Layout({ children, title = "Angan Sarker", description =
               min-width: 3.8rem;
               height: 1.2rem;
             }
+          }
+          
+          /* Use hardware acceleration for animations */
+          .name-header {
+            transform: translateZ(0);
+            backface-visibility: hidden;
+            perspective: 1000px;
+            will-change: color;
+          }
+          
+          .last-name::after {
+            transform: translateZ(0);
+            backface-visibility: hidden;
+            will-change: color;
+            transition: color 0.5s ease;
           }
         }
 
