@@ -6,8 +6,8 @@ const nextConfig = {
     unoptimized: true,
     domains: [],
   },
-  // basePath: '/angan-portfolio',
-  // assetPrefix: '/angan-portfolio/',
+  basePath: process.env.NODE_ENV === 'development' ? '' : '/angan-portfolio',
+  assetPrefix: process.env.NODE_ENV === 'development' ? '' : '/angan-portfolio/',
   
   // Exclude specific pages from static export
   exportPathMap: async function (
@@ -20,6 +20,7 @@ const nextConfig = {
       '/about': { page: '/about' },
       '/essays': { page: '/essays' },
       '/interesting': { page: '/interesting' },
+      '/search': { page: '/search' },
     };
     
     // Add a sample essay route
@@ -30,6 +31,10 @@ const nextConfig = {
     };
     
     return pathMap;
+  },
+  // Add the following option to fix issues with fonts
+  experimental: {
+    optimizeFonts: true,
   },
 }
 
