@@ -6,8 +6,8 @@ const nextConfig = {
     unoptimized: true,
     domains: [],
   },
-  basePath: '/angan-portfolio',
-  assetPrefix: '/angan-portfolio/',
+  // basePath: '/angan-portfolio',
+  // assetPrefix: '/angan-portfolio/',
   
   // Exclude specific pages from static export
   exportPathMap: async function (

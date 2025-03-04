@@ -191,7 +191,6 @@ export default function Home({ recentEssays, interestingItems }) {
           font-size: 0.95rem;
           line-height: 1.5;
           color: #333;
-          max-width: 650px;
           margin-bottom: 1rem;
         }
         

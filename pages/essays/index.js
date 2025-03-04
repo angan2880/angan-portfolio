@@ -3,6 +3,15 @@ import Link from 'next/link';
 import Layout from '../../components/Layout';
 import { getAllEssays } from '../../lib/markdown';
 
+// Function to format date as "DD MMM YYYY"
+const formatDate = (dateString) => {
+  const date = new Date(dateString);
+  const day = date.getDate();
+  const month = date.toLocaleString('en-US', { month: 'short' });
+  const year = date.getFullYear();
+  return `${day} ${month} ${year}`;
+};
+
 export default function Essays({ essays }) {
   const [hoveredEssay, setHoveredEssay] = useState(null);
   const [touchedEssay, setTouchedEssay] = useState(null);
@@ -285,23 +294,12 @@ export default function Essays({ essays }) {
   );
 }
 
-// Helper function to format date as "DD MMM YYYY"
-function formatDate(dateString) {
-  const date = new Date(dateString);
-  
-  const day = date.getDate();
-  const month = date.toLocaleString('en-US', { month: 'short' });
-  const year = date.getFullYear();
-  
-  return `${day} ${month} ${year}`;
-}
-
 export async function getStaticProps() {
-  const essays = await getAllEssays();
-
+  const essays = await getAllEssays(['title', 'date', 'slug', 'summary']);
+  
   return {
     props: {
-      essays,
+      essays: essays || [], // Ensure we always return an array
     },
   };
 } 
