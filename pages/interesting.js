@@ -25,14 +25,15 @@ export default function InterestingPage({ interestingItems }) {
         // Only apply auto-highlight on touch devices
         if (!isTouch) return;
         
-        entries.forEach(entry => {
-          const id = entry.target.dataset.id;
-          if (entry.isIntersecting) {
-            setTouchedItem(id);
-          } else if (touchedItem === id) {
-            setTouchedItem(null);
-          }
-        });
+        // Remove this automatic selection on scroll
+        // entries.forEach(entry => {
+        //   const id = entry.target.dataset.id;
+        //   if (entry.isIntersecting) {
+        //     setTouchedItem(id);
+        //   } else if (touchedItem === id) {
+        //     setTouchedItem(null);
+        //   }
+        // });
       }, observerOptions);
       
       // Register all items for observation
@@ -60,7 +61,18 @@ export default function InterestingPage({ interestingItems }) {
   
   const handleTouch = (id) => {
     if (isTouch) {
-      setTouchedItem(touchedItem === id ? null : id);
+      if (touchedItem === id) {
+        // If already open, close it
+        setTouchedItem(null);
+      } else {
+        // First tap, show the details
+        // Make sure we clear any previously selected item
+        setTouchedItem(null);
+        // Use setTimeout to ensure UI updates properly before setting the new touched item
+        setTimeout(() => {
+          setTouchedItem(id);
+        }, 10);
+      }
     }
   };
 

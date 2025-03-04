@@ -34,14 +34,15 @@ export default function Essays({ essays }) {
         // Only apply auto-highlight on touch devices
         if (!isTouch) return;
         
-        entries.forEach(entry => {
-          const slug = entry.target.dataset.slug;
-          if (entry.isIntersecting) {
-            setTouchedEssay(slug);
-          } else if (touchedEssay === slug) {
-            setTouchedEssay(null);
-          }
-        });
+        // Remove this automatic selection on scroll
+        // entries.forEach(entry => {
+        //   const slug = entry.target.dataset.slug;
+        //   if (entry.isIntersecting) {
+        //     setTouchedEssay(slug);
+        //   } else if (touchedEssay === slug) {
+        //     setTouchedEssay(null);
+        //   }
+        // });
       }, observerOptions);
       
       // Register all items for observation
@@ -74,7 +75,12 @@ export default function Essays({ essays }) {
         window.location.href = url;
       } else {
         // First tap, show the summary
-        setTouchedEssay(slug);
+        // Make sure we clear any previously selected essay
+        setTouchedEssay(null);
+        // Use setTimeout to ensure UI updates properly before setting the new touched essay
+        setTimeout(() => {
+          setTouchedEssay(slug);
+        }, 10);
       }
     }
   };
