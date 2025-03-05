@@ -29,39 +29,35 @@
   --transition-speed: 0.3s;
 }
 
-/* Dark mode colors */
-.dark-mode {
-  --background-color: #0f0f13;
-  --text-color: #f0f0f0;
-  --link-color: #8ebbff;
-  --link-hover-color: #b6d1ff;
-  --border-color: #333340;
-  --code-bg: #1a1a22;
-  --blockquote-bg: #16161d;
-  --blockquote-border: #404050;
-  --nav-text: #b0b0c0;
+/* Dark mode colors - using the class that next-themes adds to html */
+.dark {
+  --background-color: #121212;
+  --text-color: #e0e0e0;
+  --link-color: #c2c2c2;
+  --link-hover-color: #ffffff;
+  --border-color: #333333;
+  --code-bg: #2a2a2a;
+  --blockquote-bg: #1e1e1e;
+  --blockquote-border: #444444;
+  --nav-text: #a0a0a0;
   --nav-text-hover: #ffffff;
-  --footer-text: #a0a0b0;
-  --hover-bg: rgba(80, 100, 255, 0.15);
-  --card-bg: #16161e;
-  --card-shadow: rgba(0, 0, 0, 0.5);
-  --card-hover-bg: #212130;
-  --card-border: #333340;
-  --input-bg: #1a1a22;
-  --input-border: #404050;
-  --input-text: #f0f0f0;
-  
-  /* Green and red colors for stock ticker */
-  --green-color: #4ade80;
-  --red-color: #ff6b6b;
+  --footer-text: #888888;
+  --hover-bg: rgba(255, 255, 255, 0.1);
+  --card-bg: #1e1e1e;
+  --card-shadow: rgba(0, 0, 0, 0.4);
+  --card-hover-bg: #2a2a2a;
+  --card-border: #333333;
+  --input-bg: #2a2a2a;
+  --input-border: #444444;
+  --input-text: #e0e0e0;
 }
 
 /* Apply light mode explicitly */
 .light-mode {
   --background-color: #ffffff;
   --text-color: #333333;
-  --link-color: #0066cc;
-  --link-hover-color: #0052a3;
+  --link-color: #000000;
+  --link-hover-color: #555555;
   --border-color: #eeeeee;
   --code-bg: #f5f5f5;
   --blockquote-bg: #f9f9f9;
@@ -77,10 +73,6 @@
   --input-bg: #ffffff;
   --input-border: #cccccc;
   --input-text: #333333;
-  
-  /* Green and red colors for stock ticker */
-  --green-color: #16a34a;
-  --red-color: #ef4444;
 }
 
 html,
@@ -172,68 +164,42 @@ blockquote {
   transition: background-color var(--transition-speed) ease, border-color var(--transition-speed) ease;
 }
 
-/* Dark mode specific styles for code blocks */
-.dark-mode pre {
-  background-color: var(--code-bg) !important;
-  border: 1px solid var(--border-color);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+/* Code styling */
+code {
+  font-family: var(--font-mono);
+  background-color: var(--code-bg);
+  padding: 0.2rem 0.4rem;
+  border-radius: 3px;
+  font-size: 0.9em;
+  transition: background-color var(--transition-speed) ease, color var(--transition-speed) ease;
 }
 
-.dark-mode code {
-  color: #e0e0ff;
+pre {
+  background-color: var(--code-bg);
+  padding: 1rem;
+  border-radius: 5px;
+  overflow-x: auto;
+  margin: 1.5rem 0;
+  transition: background-color var(--transition-speed) ease;
 }
 
-/* Essay and interesting items styles for dark mode */
-.dark-mode .essay-container:hover,
-.dark-mode .interesting-item:hover,
-.dark-mode .essay-hovered,
-.dark-mode .item-hovered {
+pre code {
+  background-color: transparent;
+  padding: 0;
+}
+
+/* Dark mode specific styles for essay and interesting items */
+.dark .essay-container:hover,
+.dark .interesting-item:hover,
+.dark .essay-hovered,
+.dark .item-hovered {
   background-color: var(--card-hover-bg) !important;
-  border-left: 4px solid #6d7bff !important;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3) !important;
+  border-left: 4px solid #888 !important;
 }
 
-.dark-mode .essay-summary,
-.dark-mode .item-why {
-  background-color: rgba(70, 80, 150, 0.1);
-  border-top: 1px solid var(--border-color);
-}
-
-.dark-mode .theme-toggle {
-  color: #f0f0f0;
-}
-
-.dark-mode .theme-toggle:hover {
-  background-color: rgba(255, 255, 255, 0.15);
-}
-
-.dark-mode .header-divider,
-.dark-mode .content-divider {
-  background-color: var(--border-color);
-}
-
-.dark-mode .item-date,
-.dark-mode .essay-date {
-  color: #a0a0c0;
-}
-
-.dark-mode .first-name,
-.dark-mode .last-name {
-  color: var(--green-color);
-}
-
-.dark-mode .last-name::after {
-  color: var(--green-color);
-  border-color: var(--green-color);
-}
-
-.dark-mode .header {
-  --current-color: var(--green-color);
-}
-
-.dark-mode .header[data-animation-state="2"],
-.dark-mode .header[data-animation-state="4"] {
-  --current-color: var(--red-color);
+.dark .essay-summary,
+.dark .item-why {
+  background-color: rgba(255, 255, 255, 0.05);
 }
 
 /* Ensure smooth transitions for all common elements */
@@ -490,4 +456,19 @@ th {
 
 .about-section li {
   margin-bottom: 0.7rem;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  main {
+    padding: 2rem 1rem;
+  }
+  
+  h1 {
+    font-size: 2rem;
+  }
+  
+  h2 {
+    font-size: 1.5rem;
+  }
 }

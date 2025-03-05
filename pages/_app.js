@@ -1,10 +1,10 @@
 import React from 'react';
 import '../styles/globals.css';
-import { ThemeProvider } from '../contexts/ThemeContext';
+import { ThemeProvider } from 'next-themes';
 
 function MyApp({ Component, pageProps }) {
   return (
-    <ThemeProvider>
+    <ThemeProvider attribute="class" defaultTheme="system">
       <Component {...pageProps} />
     </ThemeProvider>
   );

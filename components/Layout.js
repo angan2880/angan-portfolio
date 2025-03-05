@@ -1,12 +1,18 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import Head from 'next/head';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { useTheme } from '../contexts/ThemeContext';
+import { useTheme } from 'next-themes';
 
 export default function Layout({ children, title = "Angan Sarker", description = "Investment Analyst at John Hancock Investment Management" }) {
   const router = useRouter();
-  const { isDarkMode, toggleTheme } = useTheme();
+  const { theme, setTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
+  
+  // After mounting, we can show the theme toggle since we know what theme is active
+  useEffect(() => {
+    setMounted(true);
+  }, []);
   
   const isActive = (path) => {
     return router.pathname === path;
@@ -57,11 +63,11 @@ export default function Layout({ children, title = "Angan Sarker", description =
             </Link>
             */}
             <button 
-              onClick={toggleTheme} 
+              onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')} 
               className="theme-toggle"
-              aria-label={isDarkMode ? "Switch to light mode" : "Switch to dark mode"}
+              aria-label={theme === 'dark' ? "Switch to light mode" : "Switch to dark mode"}
             >
-              {isDarkMode ? (
+              {mounted && (theme === 'dark' ? (
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <path d="M12 18C15.3137 18 18 15.3137 18 12C18 8.68629 15.3137 6 12 6C8.68629 6 6 8.68629 6 12C6 15.3137 8.68629 18 12 18Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
                   <path d="M12 2V4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
@@ -77,7 +83,7 @@ export default function Layout({ children, title = "Angan Sarker", description =
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
                 </svg>
-              )}
+              ))}
             </button>
           </nav>
         </div>
@@ -98,6 +104,7 @@ export default function Layout({ children, title = "Angan Sarker", description =
           width: 100%;
           /* Define custom properties for animation state at the top level */
           --animation-state: 1;
+          animation: changeAnimationState 100s steps(5) infinite;
         }
         
         .header-content {
@@ -142,7 +149,7 @@ export default function Layout({ children, title = "Angan Sarker", description =
         .first-name {
           color: var(--current-color);
           font-weight: 500;
-          transition: color 0.3s ease;
+          transition: none;
           margin-right: 0.05em;
           display: inline-block;
           letter-spacing: -0.02em;
@@ -152,7 +159,7 @@ export default function Layout({ children, title = "Angan Sarker", description =
         .last-name {
           font-weight: 500;
           color: var(--current-color);
-          transition: color 0.3s ease;
+          transition: none;
           padding-right: 5.5rem;
           display: inline-block;
           position: relative;
@@ -167,7 +174,7 @@ export default function Layout({ children, title = "Angan Sarker", description =
           height: 2px;
           background: var(--current-color);
           width: 100%;
-          transition: background-color 0.3s ease;
+          transition: none;
         }
 
         .theme-toggle {
@@ -181,12 +188,44 @@ export default function Layout({ children, title = "Angan Sarker", description =
           margin-left: 0.5rem;
           padding: 0.5rem;
           border-radius: 50%;
-          transition: background-color 0.2s ease, transform 0.2s ease;
+          transition: background-color 0.2s ease;
         }
         
         .theme-toggle:hover {
           background-color: var(--hover-bg);
-          transform: scale(1.1);
+        }
+        
+        @keyframes changeAnimationState {
+          0% {
+            --animation-state: 1;
+            --current-color: #16a34a;
+            --current-percentage: "+8.4%";
+          }
+          20% {
+            --animation-state: 2;
+            --current-color: #ef4444;
+            --current-percentage: "-12.6%";
+          }
+          40% {
+            --animation-state: 3;
+            --current-color: #16a34a;
+            --current-percentage: "+5.1%";
+          }
+          60% {
+            --animation-state: 4;
+            --current-color: #ef4444;
+            --current-percentage: "-7.3%";
+          }
+          80% {
+            --animation-state: 5;
+            --current-color: #16a34a;
+            --current-percentage: "+10.2%";
+          }
+          100% {
+            --animation-state: 1;
+            --current-color: #16a34a;
+            --current-percentage: "+8.4%";
+          }
         }
         
         .logo h1:hover {
@@ -202,8 +241,8 @@ export default function Layout({ children, title = "Angan Sarker", description =
           width: 100%;
           height: 2px;
           background: linear-gradient(90deg, 
-            var(--green-color, #16a34a) 0%, var(--green-color, #16a34a) 40%, 
-            var(--red-color, #dc2626) 60%, var(--red-color, #dc2626) 100%);
+            #16a34a 0%, #16a34a 40%, 
+            #dc2626 60%, #dc2626 100%);
           background-size: 200% 100%;
           animation: tickerLine 32s linear infinite;
           transform-origin: left;
@@ -242,24 +281,7 @@ export default function Layout({ children, title = "Angan Sarker", description =
           text-transform: uppercase;
           letter-spacing: 0.05em;
           color: var(--nav-text);
-          transition: color 0.2s ease, transform 0.2s ease;
-          position: relative;
-        }
-        
-        .nav a::after {
-          content: '';
-          position: absolute;
-          width: 0;
-          height: 2px;
-          bottom: -4px;
-          left: 0;
-          background-color: var(--nav-text-hover);
-          transition: width 0.3s ease;
-        }
-        
-        .nav a:hover::after, 
-        .nav a.active::after {
-          width: 100%;
+          transition: color 0.2s ease;
         }
         
         .nav a:hover, .nav a.active {
