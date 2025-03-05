@@ -116,7 +116,7 @@ export default function Portfolio() {
           font-weight: 600;
           margin: 2rem 0 1rem;
           padding-bottom: 0.5rem;
-          border-bottom: 1px solid #eaeaea;
+          border-bottom: 1px solid var(--border-color);
         }
         
         .portfolio-grid {
@@ -129,7 +129,7 @@ export default function Portfolio() {
         .portfolio-item {
           display: flex;
           flex-direction: column;
-          border: 1px solid #eaeaea;
+          border: 1px solid var(--border-color);
           border-radius: 4px;
           overflow: hidden;
           transition: transform 0.2s ease, box-shadow 0.2s ease;
@@ -137,14 +137,14 @@ export default function Portfolio() {
         
         .portfolio-item:hover {
           transform: translateY(-5px);
-          box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+          box-shadow: 0 5px 15px var(--card-shadow);
         }
         
         .image-container {
           width: 100%;
           height: 200px;
           overflow: hidden;
-          background: #f5f5f5;
+          background: var(--code-bg);
           display: flex;
           align-items: center;
           justify-content: center;
@@ -163,7 +163,7 @@ export default function Portfolio() {
         
         .portfolio-item p {
           font-size: 0.85rem;
-          color: #666;
+          color: var(--text-secondary, var(--footer-text));
           margin: 0 0.75rem 0.75rem;
         }
         
@@ -178,19 +178,19 @@ export default function Portfolio() {
           display: flex;
           align-items: center;
           padding: 1rem;
-          border: 1px solid #eaeaea;
+          border: 1px solid var(--border-color);
           border-radius: 4px;
           transition: background-color 0.2s ease;
         }
         
         .document-item:hover {
-          background-color: #f5f5f5;
+          background-color: var(--hover-bg);
         }
         
         .document-icon {
           font-size: 2rem;
           margin-right: 1.5rem;
-          color: #666;
+          color: var(--text-secondary, var(--footer-text));
         }
         
         .document-info {
@@ -205,15 +205,15 @@ export default function Portfolio() {
         
         .document-info p {
           font-size: 0.85rem;
-          color: #666;
+          color: var(--text-secondary, var(--footer-text));
           margin: 0 0 0.5rem;
         }
         
         .download-link {
           display: inline-block;
           font-size: 0.85rem;
-          background-color: #f0f0f0;
-          color: #333;
+          background-color: var(--code-bg);
+          color: var(--text-primary, var(--text-color));
           padding: 0.35rem 0.75rem;
           border-radius: 4px;
           text-decoration: none;
@@ -221,11 +221,11 @@ export default function Portfolio() {
         }
         
         .download-link:hover {
-          background-color: #e0e0e0;
+          background-color: var(--hover-bg);
         }
         
         .tip-box {
-          background-color: #f8f9fa;
+          background-color: var(--blockquote-bg);
           border-left: 3px solid #6b8af7;
           padding: 1.5rem;
           margin-top: 2rem;
@@ -236,7 +236,7 @@ export default function Portfolio() {
           font-size: 1rem;
           font-weight: 600;
           margin: 0 0 1rem;
-          color: #333;
+          color: var(--text-primary, var(--text-color));
         }
         
         .tip-box p {
@@ -256,7 +256,7 @@ export default function Portfolio() {
         }
         
         .tip-box code {
-          background-color: #eaeaea;
+          background-color: var(--code-bg);
           padding: 0.2rem 0.4rem;
           border-radius: 3px;
           font-family: monospace;

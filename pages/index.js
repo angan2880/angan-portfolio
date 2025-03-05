@@ -190,7 +190,7 @@ export default function Home({ recentEssays, interestingItems }) {
         .bio-text {
           font-size: 0.95rem;
           line-height: 1.5;
-          color: #333;
+          color: var(--text-color);
           margin-bottom: 1rem;
         }
         
@@ -200,7 +200,7 @@ export default function Home({ recentEssays, interestingItems }) {
         
         .content-divider {
           height: 1px;
-          background-color: #e0e0e0;
+          background-color: var(--border-color);
           margin: 2.5rem 0;
           width: 100%;
         }
@@ -215,7 +215,7 @@ export default function Home({ recentEssays, interestingItems }) {
           justify-content: space-between;
           align-items: baseline;
           margin-bottom: 1.5rem;
-          border-bottom: 2px solid #f0f0f0;
+          border-bottom: 2px solid var(--border-color);
           padding-bottom: 0.75rem;
         }
         
@@ -223,17 +223,18 @@ export default function Home({ recentEssays, interestingItems }) {
           font-size: 1.2rem;
           font-weight: 600;
           margin: 0;
-          color: #444;
+          color: var(--text-color);
         }
         
         .section-link {
           font-size: 0.9rem;
-          color: #666;
+          color: var(--nav-text);
           text-decoration: none;
         }
         
         .section-link:hover {
           text-decoration: underline;
+          color: var(--nav-text-hover);
         }
         
         .content-list {
@@ -251,9 +252,9 @@ export default function Home({ recentEssays, interestingItems }) {
         }
         
         .essay-item:hover, .item-hovered {
-          background-color: #f0f0f0;
-          border-left: 4px solid #666;
-          box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+          background-color: var(--hover-bg);
+          border-left: 4px solid var(--link-color);
+          box-shadow: 0 1px 3px var(--card-shadow);
         }
         
         .item-link {
@@ -273,7 +274,7 @@ export default function Home({ recentEssays, interestingItems }) {
         
         .item-date {
           font-size: 0.9rem;
-          color: #666;
+          color: var(--footer-text);
           display: flex;
           align-items: center;
         }
@@ -283,11 +284,12 @@ export default function Home({ recentEssays, interestingItems }) {
           font-weight: 400;
           display: flex;
           align-items: center;
+          color: var(--text-color);
         }
         
         .item-type {
           font-size: 0.9rem;
-          color: #666;
+          color: var(--footer-text);
           display: flex;
           align-items: center;
           margin-left: 1rem;
@@ -297,7 +299,7 @@ export default function Home({ recentEssays, interestingItems }) {
           padding: 0 15px 15px 152px;
           font-size: 0.95rem;
           line-height: 1.5;
-          color: #444;
+          color: var(--text-color);
         }
         
         .item-why {
@@ -305,14 +307,14 @@ export default function Home({ recentEssays, interestingItems }) {
           margin-left: 120px;
           font-size: 0.9rem;
           line-height: 1.5;
-          color: #555;
-          background-color: rgba(0,0,0,0.03);
+          color: var(--text-color);
+          background-color: var(--hover-bg);
           border-bottom-left-radius: 4px;
           border-bottom-right-radius: 4px;
         }
         
         .empty-message {
-          color: #666;
+          color: var(--footer-text);
           font-style: italic;
         }
         
@@ -343,7 +345,7 @@ export default function Home({ recentEssays, interestingItems }) {
 
         .mobile-hint {
           font-size: 0.8rem;
-          color: #999;
+          color: var(--footer-text);
           margin-top: 3px;
           font-style: italic;
           display: none;
@@ -370,7 +372,7 @@ export default function Home({ recentEssays, interestingItems }) {
             left: 0;
             right: 0;
             bottom: 0;
-            background: rgba(0,0,0,0.03);
+            background: var(--hover-bg);
             opacity: 0;
             pointer-events: none;
             transition: opacity 0.2s ease;

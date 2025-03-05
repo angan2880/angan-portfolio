@@ -113,10 +113,11 @@ export default function Search() {
           font-size: 1.8rem;
           font-weight: 600;
           margin-bottom: 0.5rem;
+          color: var(--text-primary, var(--text-color));
         }
         
         .subtitle {
-          color: #666;
+          color: var(--text-secondary, var(--footer-text));
           font-size: 1rem;
         }
         
@@ -132,15 +133,17 @@ export default function Search() {
         .search-input {
           flex: 1;
           padding: 10px 15px;
-          border: 1px solid #ddd;
+          border: 1px solid var(--input-border);
           border-radius: 4px 0 0 4px;
           font-size: 1rem;
+          background-color: var(--input-bg);
+          color: var(--input-text);
         }
         
         .search-button {
           padding: 10px 20px;
-          background-color: #333;
-          color: white;
+          background-color: var(--link-color);
+          color: var(--background-color);
           border: none;
           border-radius: 0 4px 4px 0;
           cursor: pointer;
@@ -148,11 +151,11 @@ export default function Search() {
         }
         
         .search-button:hover {
-          background-color: #555;
+          background-color: var(--link-hover-color);
         }
         
         .search-button:disabled {
-          background-color: #999;
+          background-color: var(--footer-text);
           cursor: not-allowed;
         }
         
@@ -160,6 +163,7 @@ export default function Search() {
           font-size: 1.4rem;
           margin-bottom: 1.5rem;
           font-weight: 500;
+          color: var(--text-primary, var(--text-color));
         }
         
         .essay-list {
@@ -170,7 +174,7 @@ export default function Search() {
         .essay-item {
           margin-bottom: 1.5rem;
           padding-bottom: 1.5rem;
-          border-bottom: 1px solid #eee;
+          border-bottom: 1px solid var(--border-color);
         }
         
         .essay-title {
@@ -179,24 +183,25 @@ export default function Search() {
         }
         
         .essay-title a {
-          color: #333;
+          color: var(--text-primary, var(--text-color));
           text-decoration: none;
         }
         
         .essay-title a:hover {
           text-decoration: underline;
+          color: var(--link-hover-color);
         }
         
         .essay-date {
           font-size: 0.9rem;
-          color: #666;
+          color: var(--text-secondary, var(--footer-text));
           margin-bottom: 0.5rem;
         }
         
         .essay-summary {
           font-size: 1rem;
           line-height: 1.5;
-          color: #444;
+          color: var(--text-primary, var(--text-color));
         }
       `}</style>
     </Layout>

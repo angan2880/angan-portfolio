@@ -163,14 +163,14 @@ export default function Essays({ essays }) {
           padding-bottom: 0.75rem;
           margin-bottom: 0;
           align-items: baseline;
-          color: #777;
+          color: var(--footer-text);
           font-size: 1rem;
           padding-left: 0.75rem;
         }
         
         .header-divider {
           height: 1px;
-          background-color: #e0e0e0;
+          background-color: var(--border-color);
           margin-bottom: 15px;
           width: 100%;
         }
@@ -193,9 +193,9 @@ export default function Essays({ essays }) {
         }
         
         .essay-hovered {
-          background-color: #e0e0e0 !important;
-          border-left: 4px solid #666 !important;
-          box-shadow: 0 1px 3px rgba(0,0,0,0.1) !important;
+          background-color: var(--hover-bg) !important;
+          border-left: 4px solid var(--link-color) !important;
+          box-shadow: 0 1px 3px var(--card-shadow) !important;
         }
         
         .essay-link {
@@ -215,7 +215,7 @@ export default function Essays({ essays }) {
         
         .essay-date {
           font-size: 0.9rem;
-          color: #666;
+          color: var(--footer-text);
           display: flex;
           align-items: center;
         }
@@ -225,6 +225,7 @@ export default function Essays({ essays }) {
           font-weight: 400;
           display: flex;
           align-items: center;
+          color: var(--text-color);
         }
         
         /* Essay summary displayed on hover/touch */
@@ -233,8 +234,8 @@ export default function Essays({ essays }) {
           margin-left: 150px;
           font-size: 0.9rem;
           line-height: 1.5;
-          color: #555;
-          background-color: rgba(0,0,0,0.03);
+          color: var(--text-color);
+          background-color: var(--hover-bg);
           border-bottom-left-radius: 4px;
           border-bottom-right-radius: 4px;
           transition: opacity 0.2s ease, max-height 0.3s ease;
@@ -250,13 +251,13 @@ export default function Essays({ essays }) {
         }
         
         .touch-device.essay-hovered {
-          background-color: rgba(0, 0, 0, 0.02);
+          background-color: var(--hover-bg);
         }
         
         /* Show summary box when scrolled into view on mobile */
         .touch-device .essay-summary {
           margin-top: 0.5rem;
-          border-top: 1px solid rgba(0, 0, 0, 0.05);
+          border-top: 1px solid var(--border-color);
         }
         
         @media (max-width: 640px) {
@@ -280,7 +281,7 @@ export default function Essays({ essays }) {
             top: 0;
             height: 100%;
             width: 4px;
-            background: #0070f3;
+            background: var(--link-color);
             border-radius: 2px;
           }
           
@@ -290,7 +291,7 @@ export default function Essays({ essays }) {
             display: block;
             margin-top: 0.75rem;
             font-size: 0.8rem;
-            color: #0070f3;
+            color: var(--link-color);
             text-align: right;
             font-style: italic;
           }

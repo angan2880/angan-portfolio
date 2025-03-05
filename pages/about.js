@@ -134,20 +134,20 @@ export default function About() {
         .download-button {
           display: inline-flex;
           align-items: center;
-          background-color: #f5f5f5;
-          color: #333;
+          background-color: var(--bg-secondary);
+          color: var(--text-primary);
           padding: 10px 16px;
           border-radius: 4px;
           font-size: 0.95rem;
           font-weight: 500;
           text-decoration: none;
-          border: 1px solid #e0e0e0;
+          border: 1px solid var(--border-color);
           transition: all 0.2s ease;
         }
         
         .download-button:hover {
-          background-color: #e5e5e5;
-          border-color: #ccc;
+          background-color: var(--hover-bg);
+          border-color: var(--border-hover);
           box-shadow: 0 1px 3px rgba(0,0,0,0.1);
         }
         
@@ -175,10 +175,11 @@ export default function About() {
           max-width: 100%;
           font-size: 0.95rem;
           line-height: 1.5;
+          color: var(--text-primary);
         }
         
         .section-divider {
-          border-top: 1px solid #eaeaea;
+          border-top: 1px solid var(--border-color);
           margin: 2rem 0;
         }
         
@@ -194,14 +195,14 @@ export default function About() {
         }
         
         .duration {
-          color: #666;
+          color: var(--text-secondary);
           font-size: 0.9rem;
         }
         
         .position {
           font-size: 0.9rem;
           margin: 0.15rem 0 0.5rem 0;
-          color: #333;
+          color: var(--text-primary);
         }
         
         ul {
@@ -213,6 +214,7 @@ export default function About() {
           margin-bottom: 0.35rem;
           font-size: 0.9rem;
           line-height: 1.4;
+          color: var(--text-primary);
         }
         
         .skills-section {
@@ -230,11 +232,16 @@ export default function About() {
         .skill-category p {
           font-size: 0.9rem;
           margin-top: 0.25rem;
+          color: var(--text-primary);
         }
         
         a {
-          color: inherit;
+          color: var(--link-color);
           text-decoration: underline;
+        }
+        
+        a:hover {
+          color: var(--link-hover);
         }
       `}</style>
     </Layout>

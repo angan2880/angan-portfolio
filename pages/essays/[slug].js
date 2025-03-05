@@ -36,17 +36,19 @@ export default function Essay({ essay }) {
           font-weight: 600;
           margin-bottom: 0.5rem;
           line-height: 1.3;
+          color: var(--text-primary);
         }
         
         .essay-date {
           font-size: 0.9rem;
-          color: #666;
+          color: var(--text-secondary);
           margin-bottom: 2rem;
         }
         
         .essay-body {
           line-height: 1.6;
           font-size: 1rem;
+          color: var(--text-primary);
         }
         
         .essay-body :global(h1) {
@@ -54,35 +56,41 @@ export default function Essay({ essay }) {
           font-weight: 600;
           margin-bottom: 0.5rem;
           line-height: 1.3;
+          color: var(--text-primary);
         }
         
         .essay-body :global(h2) {
           font-size: 1.4rem;
           font-weight: 600;
           margin: 2rem 0 1rem;
+          color: var(--text-primary);
         }
         
         .essay-body :global(h3) {
           font-size: 1.2rem;
           font-weight: 600;
           margin: 1.5rem 0 1rem;
+          color: var(--text-primary);
         }
         
         .essay-body :global(p) {
           margin-bottom: 1.2rem;
+          color: var(--text-primary);
         }
         
         .essay-body :global(ul), .essay-body :global(ol) {
           margin-bottom: 1.2rem;
           padding-left: 1.5rem;
+          color: var(--text-primary);
         }
         
         .essay-body :global(li) {
           margin-bottom: 0.5rem;
+          color: var(--text-primary);
         }
         
         .essay-body :global(pre) {
-          background-color: #f6f8fa;
+          background-color: var(--code-bg);
           border-radius: 4px;
           padding: 1rem;
           overflow-x: auto;
@@ -90,16 +98,19 @@ export default function Essay({ essay }) {
         }
         
         .essay-body :global(code) {
-          font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+          font-family: var(--font-mono);
           font-size: 0.9rem;
+          color: var(--code-text);
         }
         
         .essay-body :global(blockquote) {
-          border-left: 3px solid #e0e0e0;
+          border-left: 3px solid var(--blockquote-border);
           margin-left: 0;
           padding-left: 1rem;
           font-style: italic;
-          color: #555;
+          color: var(--text-primary);
+          background-color: var(--blockquote-bg);
+          padding: 0.5rem 1rem;
         }
         
         .back-link {
@@ -108,13 +119,15 @@ export default function Essay({ essay }) {
         }
         
         .back-link a {
-          color: inherit;
+          color: var(--link-color);
           text-decoration: none;
           font-size: 0.9rem;
+          transition: color 0.2s ease;
         }
         
         .back-link a:hover {
           text-decoration: underline;
+          color: var(--link-hover);
         }
       `}</style>
     </Layout>

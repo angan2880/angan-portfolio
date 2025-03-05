@@ -168,19 +168,19 @@ export default function InterestingPage({ interestingItems }) {
           font-weight: 600;
           margin-bottom: 0.5rem;
           font-family: var(--font-heading);
-          color: #333;
+          color: var(--text-color);
         }
         
         .intro-section p {
           font-size: 1rem;
-          color: #666;
+          color: var(--footer-text);
           max-width: 650px;
           line-height: 1.5;
         }
         
         .content-divider {
           height: 1px;
-          background-color: #e0e0e0;
+          background-color: var(--border-color);
           margin: 1.5rem 0;
           width: 100%;
         }
@@ -189,9 +189,9 @@ export default function InterestingPage({ interestingItems }) {
           display: grid;
           grid-template-columns: 150px 1fr 120px;
           padding: 0 15px 10px;
-          border-bottom: 2px solid #f0f0f0;
+          border-bottom: 2px solid var(--border-color);
           margin-bottom: 1rem;
-          color: #666;
+          color: var(--footer-text);
           font-size: 0.9rem;
         }
         
@@ -213,9 +213,9 @@ export default function InterestingPage({ interestingItems }) {
         }
         
         .item-hovered {
-          background-color: #f0f0f0;
-          border-left: 4px solid #666;
-          box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+          background-color: var(--hover-bg);
+          border-left: 4px solid var(--link-color);
+          box-shadow: 0 1px 3px var(--card-shadow);
         }
         
         .item-link {
@@ -235,7 +235,7 @@ export default function InterestingPage({ interestingItems }) {
         
         .item-date {
           font-size: 0.9rem;
-          color: #666;
+          color: var(--footer-text);
           display: flex;
           align-items: center;
         }
@@ -245,12 +245,13 @@ export default function InterestingPage({ interestingItems }) {
           font-weight: 400;
           display: flex;
           align-items: center;
+          color: var(--text-color);
         }
         
         .item-type {
           font-size: 0.85rem;
-          color: #555;
-          background-color: #f0f0f0;
+          color: var(--text-color);
+          background-color: var(--hover-bg);
           padding: 2px 8px;
           border-radius: 12px;
           text-align: center;
@@ -262,8 +263,8 @@ export default function InterestingPage({ interestingItems }) {
           margin-left: 150px;
           font-size: 0.9rem;
           line-height: 1.5;
-          color: #555;
-          background-color: rgba(0,0,0,0.03);
+          color: var(--text-color);
+          background-color: var(--hover-bg);
           border-bottom-left-radius: 4px;
           border-bottom-right-radius: 4px;
           transition: opacity 0.2s ease, max-height 0.3s ease;
@@ -279,13 +280,13 @@ export default function InterestingPage({ interestingItems }) {
         }
         
         .touch-device.item-hovered {
-          background-color: rgba(0, 0, 0, 0.02);
+          background-color: var(--hover-bg);
         }
         
         /* Show "Why interesting" box when scrolled into view on mobile */
         .touch-device .item-why {
           margin-top: 0.5rem;
-          border-top: 1px solid rgba(0, 0, 0, 0.05);
+          border-top: 1px solid var(--border-color);
         }
         
         @media (max-width: 640px) {
@@ -314,7 +315,7 @@ export default function InterestingPage({ interestingItems }) {
             top: 0;
             height: 100%;
             width: 4px;
-            background: #0070f3;
+            background: var(--link-color);
             border-radius: 2px;
           }
         }

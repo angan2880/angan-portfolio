@@ -26,11 +26,12 @@ export default function Search() {
         h1 {
           font-size: 1.8rem;
           margin-bottom: 1.5rem;
+          color: var(--text-primary, var(--text-color));
         }
         
         p {
           margin-bottom: 1rem;
-          color: #666;
+          color: var(--text-secondary, var(--footer-text));
         }
         
         .back-link {
@@ -38,12 +39,13 @@ export default function Search() {
         }
         
         .back-link a {
-          color: inherit;
+          color: var(--link-color);
           text-decoration: none;
         }
         
         .back-link a:hover {
           text-decoration: underline;
+          color: var(--link-hover-color);
         }
       `}</style>
     </Layout>
