@@ -7,12 +7,72 @@
   --code-bg: #f5f5f5;
   --blockquote-bg: #f9f9f9;
   --blockquote-border: #e0e0e0;
+  --nav-text: #666666;
+  --nav-text-hover: #000000;
+  --footer-text: #666666;
+  --hover-bg: rgba(0, 0, 0, 0.05);
+  --card-bg: #ffffff;
+  --card-shadow: rgba(0, 0, 0, 0.1);
+  --card-hover-bg: #f0f0f0;
+  --card-border: #e0e0e0;
+  --input-bg: #ffffff;
+  --input-border: #cccccc;
+  --input-text: #333333;
   --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
   --font-heading: 'Work Sans', sans-serif;
   --font-serif: 'Georgia', 'Times New Roman', serif;
   --font-mono: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
   --max-width: 1100px;
   --header-height: 80px;
+  
+  /* Animation for theme transition */
+  --transition-speed: 0.3s;
+}
+
+/* Dark mode colors */
+.dark-mode {
+  --background-color: #121212;
+  --text-color: #e0e0e0;
+  --link-color: #c2c2c2;
+  --link-hover-color: #ffffff;
+  --border-color: #333333;
+  --code-bg: #2a2a2a;
+  --blockquote-bg: #1e1e1e;
+  --blockquote-border: #444444;
+  --nav-text: #a0a0a0;
+  --nav-text-hover: #ffffff;
+  --footer-text: #888888;
+  --hover-bg: rgba(255, 255, 255, 0.1);
+  --card-bg: #1e1e1e;
+  --card-shadow: rgba(0, 0, 0, 0.4);
+  --card-hover-bg: #2a2a2a;
+  --card-border: #333333;
+  --input-bg: #2a2a2a;
+  --input-border: #444444;
+  --input-text: #e0e0e0;
+}
+
+/* Apply light mode explicitly */
+.light-mode {
+  --background-color: #ffffff;
+  --text-color: #333333;
+  --link-color: #000000;
+  --link-hover-color: #555555;
+  --border-color: #eeeeee;
+  --code-bg: #f5f5f5;
+  --blockquote-bg: #f9f9f9;
+  --blockquote-border: #e0e0e0;
+  --nav-text: #666666;
+  --nav-text-hover: #000000;
+  --footer-text: #666666;
+  --hover-bg: rgba(0, 0, 0, 0.05);
+  --card-bg: #ffffff;
+  --card-shadow: rgba(0, 0, 0, 0.1);
+  --card-hover-bg: #f0f0f0;
+  --card-border: #e0e0e0;
+  --input-bg: #ffffff;
+  --input-border: #cccccc;
+  --input-text: #333333;
 }
 
 html,
@@ -26,6 +86,7 @@ body {
   background-color: var(--background-color);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  transition: background-color var(--transition-speed) ease, color var(--transition-speed) ease;
 }
 
 * {
@@ -57,6 +118,8 @@ h1, h2, h3, h4, h5, h6 {
   margin-top: 2.5rem;
   margin-bottom: 1.5rem;
   letter-spacing: -0.02em;
+  color: var(--text-color);
+  transition: color var(--transition-speed) ease;
 }
 
 h1 {
@@ -81,6 +144,7 @@ h4 {
 
 p, ul, ol {
   margin-bottom: 1.5rem;
+  transition: color var(--transition-speed) ease;
 }
 
 ul, ol {
@@ -97,27 +161,38 @@ blockquote {
   border-left: 4px solid var(--blockquote-border);
   background-color: var(--blockquote-bg);
   font-style: italic;
+  transition: background-color var(--transition-speed) ease, border-color var(--transition-speed) ease;
 }
 
-code {
-  font-family: var(--font-mono);
-  background-color: var(--code-bg);
-  padding: 0.2rem 0.4rem;
-  border-radius: 3px;
-  font-size: 0.9em;
+/* Dark mode specific styles for code blocks */
+.dark-mode pre {
+  background-color: var(--code-bg) !important;
+  border: 1px solid var(--border-color);
 }
 
-pre {
-  background-color: var(--code-bg);
-  padding: 1rem;
-  border-radius: 5px;
-  overflow-x: auto;
-  margin: 1.5rem 0;
+.dark-mode code {
+  color: #e0e0e0;
 }
 
-pre code {
-  background-color: transparent;
-  padding: 0;
+/* Essay and interesting items styles for dark mode */
+.dark-mode .essay-container:hover,
+.dark-mode .interesting-item:hover,
+.dark-mode .essay-hovered,
+.dark-mode .item-hovered {
+  background-color: var(--card-hover-bg) !important;
+  border-left: 4px solid #888 !important;
+}
+
+.dark-mode .essay-summary,
+.dark-mode .item-why {
+  background-color: rgba(255, 255, 255, 0.05);
+}
+
+/* Ensure smooth transitions for all common elements */
+header, nav, footer, article, section, div {
+  transition: background-color var(--transition-speed) ease, 
+              border-color var(--transition-speed) ease,
+              box-shadow var(--transition-speed) ease;
 }
 
 hr {
@@ -256,20 +331,6 @@ th {
 
 .intro {
   margin-bottom: 4rem;
-}
-
-/* Remove dark mode support to keep consistent white theme */
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background-color: #ffffff;
-    --text-color: #333333;
-    --link-color: #000000;
-    --link-hover-color: #555555;
-    --border-color: #eeeeee;
-    --code-bg: #f5f5f5;
-    --blockquote-bg: #f9f9f9;
-    --blockquote-border: #e0e0e0;
-  }
 }
 
 /* Responsive adjustments */

@@ -2,9 +2,12 @@ import React from 'react';
 import Head from 'next/head';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
+import { useTheme } from '../contexts/ThemeContext';
 
 export default function Layout({ children, title = "Angan Sarker", description = "Investment Analyst at John Hancock Investment Management" }) {
   const router = useRouter();
+  const { isDarkMode, toggleTheme } = useTheme();
+  
   const isActive = (path) => {
     return router.pathname === path;
   };
@@ -53,6 +56,29 @@ export default function Layout({ children, title = "Angan Sarker", description =
               SEARCH
             </Link>
             */}
+            <button 
+              onClick={toggleTheme} 
+              className="theme-toggle"
+              aria-label={isDarkMode ? "Switch to light mode" : "Switch to dark mode"}
+            >
+              {isDarkMode ? (
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M12 18C15.3137 18 18 15.3137 18 12C18 8.68629 15.3137 6 12 6C8.68629 6 6 8.68629 6 12C6 15.3137 8.68629 18 12 18Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                  <path d="M12 2V4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                  <path d="M12 20V22" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                  <path d="M4.93 4.93L6.34 6.34" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                  <path d="M17.66 17.66L19.07 19.07" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                  <path d="M2 12H4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                  <path d="M20 12H22" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                  <path d="M4.93 19.07L6.34 17.66" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                  <path d="M17.66 6.34L19.07 4.93" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                </svg>
+              ) : (
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                </svg>
+              )}
+            </button>
           </nav>
         </div>
       </header>
@@ -144,6 +170,24 @@ export default function Layout({ children, title = "Angan Sarker", description =
           width: 100%;
           transition: none;
         }
+
+        .theme-toggle {
+          background: none;
+          border: none;
+          cursor: pointer;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          color: var(--text-color);
+          margin-left: 0.5rem;
+          padding: 0.5rem;
+          border-radius: 50%;
+          transition: background-color 0.2s ease;
+        }
+        
+        .theme-toggle:hover {
+          background-color: var(--hover-bg);
+        }
         
         @keyframes changeAnimationState {
           0% {
@@ -222,6 +266,7 @@ export default function Layout({ children, title = "Angan Sarker", description =
           display: flex;
           gap: 1.5rem;
           margin-left: auto;
+          align-items: center;
         }
         
         .nav a {
@@ -229,12 +274,12 @@ export default function Layout({ children, title = "Angan Sarker", description =
           font-weight: 500;
           text-transform: uppercase;
           letter-spacing: 0.05em;
-          color: #666;
+          color: var(--nav-text);
           transition: color 0.2s ease;
         }
         
         .nav a:hover, .nav a.active {
-          color: #000;
+          color: var(--nav-text-hover);
         }
         
         main {
@@ -247,7 +292,7 @@ export default function Layout({ children, title = "Angan Sarker", description =
         .footer {
           border-top: 1px solid var(--border-color);
           padding: 1.5rem 0;
-          color: #666;
+          color: var(--footer-text);
         }
         
         .footer-content {
