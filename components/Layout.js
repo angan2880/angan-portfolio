@@ -98,7 +98,6 @@ export default function Layout({ children, title = "Angan Sarker", description =
           width: 100%;
           /* Define custom properties for animation state at the top level */
           --animation-state: 1;
-          animation: changeAnimationState 100s steps(5) infinite;
         }
         
         .header-content {
@@ -143,7 +142,7 @@ export default function Layout({ children, title = "Angan Sarker", description =
         .first-name {
           color: var(--current-color);
           font-weight: 500;
-          transition: none;
+          transition: color 0.3s ease;
           margin-right: 0.05em;
           display: inline-block;
           letter-spacing: -0.02em;
@@ -153,7 +152,7 @@ export default function Layout({ children, title = "Angan Sarker", description =
         .last-name {
           font-weight: 500;
           color: var(--current-color);
-          transition: none;
+          transition: color 0.3s ease;
           padding-right: 5.5rem;
           display: inline-block;
           position: relative;
@@ -168,7 +167,7 @@ export default function Layout({ children, title = "Angan Sarker", description =
           height: 2px;
           background: var(--current-color);
           width: 100%;
-          transition: none;
+          transition: background-color 0.3s ease;
         }
 
         .theme-toggle {
@@ -182,44 +181,12 @@ export default function Layout({ children, title = "Angan Sarker", description =
           margin-left: 0.5rem;
           padding: 0.5rem;
           border-radius: 50%;
-          transition: background-color 0.2s ease;
+          transition: background-color 0.2s ease, transform 0.2s ease;
         }
         
         .theme-toggle:hover {
           background-color: var(--hover-bg);
-        }
-        
-        @keyframes changeAnimationState {
-          0% {
-            --animation-state: 1;
-            --current-color: #16a34a;
-            --current-percentage: "+8.4%";
-          }
-          20% {
-            --animation-state: 2;
-            --current-color: #ef4444;
-            --current-percentage: "-12.6%";
-          }
-          40% {
-            --animation-state: 3;
-            --current-color: #16a34a;
-            --current-percentage: "+5.1%";
-          }
-          60% {
-            --animation-state: 4;
-            --current-color: #ef4444;
-            --current-percentage: "-7.3%";
-          }
-          80% {
-            --animation-state: 5;
-            --current-color: #16a34a;
-            --current-percentage: "+10.2%";
-          }
-          100% {
-            --animation-state: 1;
-            --current-color: #16a34a;
-            --current-percentage: "+8.4%";
-          }
+          transform: scale(1.1);
         }
         
         .logo h1:hover {
@@ -235,8 +202,8 @@ export default function Layout({ children, title = "Angan Sarker", description =
           width: 100%;
           height: 2px;
           background: linear-gradient(90deg, 
-            #16a34a 0%, #16a34a 40%, 
-            #dc2626 60%, #dc2626 100%);
+            var(--green-color, #16a34a) 0%, var(--green-color, #16a34a) 40%, 
+            var(--red-color, #dc2626) 60%, var(--red-color, #dc2626) 100%);
           background-size: 200% 100%;
           animation: tickerLine 32s linear infinite;
           transform-origin: left;
@@ -275,7 +242,24 @@ export default function Layout({ children, title = "Angan Sarker", description =
           text-transform: uppercase;
           letter-spacing: 0.05em;
           color: var(--nav-text);
-          transition: color 0.2s ease;
+          transition: color 0.2s ease, transform 0.2s ease;
+          position: relative;
+        }
+        
+        .nav a::after {
+          content: '';
+          position: absolute;
+          width: 0;
+          height: 2px;
+          bottom: -4px;
+          left: 0;
+          background-color: var(--nav-text-hover);
+          transition: width 0.3s ease;
+        }
+        
+        .nav a:hover::after, 
+        .nav a.active::after {
+          width: 100%;
         }
         
         .nav a:hover, .nav a.active {
