@@ -399,12 +399,24 @@ export default function Home({ recentEssays, interestingItems }) {
           gap: 0.75rem;
         }
         
-        .item-summary, .item-why {
+        .item-summary {
           padding: 5px 15px 15px;
           margin-left: 150px;
           font-size: 0.9rem;
           line-height: 1.5;
           color: var(--text-color);
+        }
+        
+        .item-why {
+          padding: 10px 15px 15px;
+          margin-left: 150px;
+          font-size: 0.9rem;
+          line-height: 1.5;
+          color: var(--text-color);
+          background-color: var(--hover-bg);
+          border-bottom-left-radius: 4px;
+          border-bottom-right-radius: 4px;
+          transition: opacity 0.2s ease, max-height 0.3s ease;
         }
         
         .mobile-hint {
@@ -428,9 +440,15 @@ export default function Home({ recentEssays, interestingItems }) {
             font-size: 0.85rem;
           }
           
-          .item-summary, .item-why {
+          .item-summary {
             margin-left: 0;
             padding: 5px 15px 15px;
+          }
+          
+          .item-why {
+            margin-left: 0;
+            padding: 10px 15px 15px;
+            border-top: 1px solid var(--border-color);
           }
         }
       `}</style>
