@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import Layout from '../components/Layout';
 import { getAllEssays } from '../lib/markdown';
@@ -7,6 +7,9 @@ import { getAllInterestingItems } from '../lib/interesting';
 export default function Home({ recentEssays, interestingItems }) {
   const [hoveredItem, setHoveredItem] = useState(null);
   const [isMobile, setIsMobile] = useState(false);
+  const [keyboardMode, setKeyboardMode] = useState(false);
+  const itemRefs = useRef({});
+  const essayRefs = useRef({});
 
   // Check if the device is mobile
   useEffect(() => {
@@ -20,18 +23,57 @@ export default function Home({ recentEssays, interestingItems }) {
     // Add event listener for resize
     window.addEventListener('resize', checkMobile);
     
+    // Detect keyboard navigation
+    const handleKeyDown = (e) => {
+      if (['Tab', 'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(e.key)) {
+        setKeyboardMode(true);
+      }
+    };
+    
+    const handleMouseDown = () => {
+      setKeyboardMode(false);
+    };
+    
+    // Add listeners for custom keyboard focus events from Layout component
+    const handleKeyboardFocus = (e) => {
+      const { itemId } = e.detail;
+      if (itemId) {
+        setHoveredItem(itemId);
+      }
+    };
+    
+    // Set up event listeners for all interesting items
+    Object.entries(itemRefs.current).forEach(([id, ref]) => {
+      if (ref) {
+        ref.addEventListener('keyboardFocus', handleKeyboardFocus);
+      }
+    });
+    
+    window.addEventListener('keydown', handleKeyDown);
+    window.addEventListener('mousedown', handleMouseDown);
+    
     // Cleanup
-    return () => window.removeEventListener('resize', checkMobile);
+    return () => {
+      window.removeEventListener('resize', checkMobile);
+      window.removeEventListener('keydown', handleKeyDown);
+      window.removeEventListener('mousedown', handleMouseDown);
+      
+      Object.entries(itemRefs.current).forEach(([id, ref]) => {
+        if (ref) {
+          ref.removeEventListener('keyboardFocus', handleKeyboardFocus);
+        }
+      });
+    };
   }, []);
 
   const handleMouseEnter = (id) => {
-    if (!isMobile) {
+    if (!isMobile && !keyboardMode) {
       setHoveredItem(id);
     }
   };
 
   const handleMouseLeave = () => {
-    if (!isMobile) {
+    if (!isMobile && !keyboardMode) {
       setHoveredItem(null);
     }
   };
@@ -52,6 +94,38 @@ export default function Home({ recentEssays, interestingItems }) {
       }
     }
     return true;
+  };
+  
+  // Handle keyboard focus
+  const handleFocus = (id) => {
+    if (keyboardMode) {
+      setHoveredItem(id);
+    }
+  };
+  
+  const handleBlur = () => {
+    if (keyboardMode) {
+      // Use a small delay to allow new focus to be set before removing hover
+      setTimeout(() => {
+        if (!document.activeElement || 
+            !(document.activeElement.closest('.interesting-item') || 
+              document.activeElement.closest('.essay-item'))) {
+          setHoveredItem(null);
+        }
+      }, 50);
+    }
+  };
+  
+  // Handle keyboard Enter/Space keys
+  const handleKeyDown = (e, id, url) => {
+    if (e.key === 'Enter') {
+      if (url) {
+        window.open(url, '_blank', 'noopener,noreferrer');
+      }
+    } else if (e.key === ' ') { // Space key
+      e.preventDefault(); // Prevent page scroll
+      setHoveredItem(id === hoveredItem ? null : id);
+    }
   };
 
   // Function to format date as "DD MMM YYYY"
@@ -90,9 +164,18 @@ export default function Home({ recentEssays, interestingItems }) {
               {recentEssays.map((essay) => (
                 <div 
                   key={essay.slug} 
-                  className="essay-item"
+                  className={`essay-item ${hoveredItem === essay.slug ? 'item-hovered' : ''}`}
+                  onMouseEnter={() => handleMouseEnter(essay.slug)}
+                  onMouseLeave={handleMouseLeave}
+                  onFocus={() => handleFocus(essay.slug)}
+                  onBlur={handleBlur}
+                  tabIndex={0}
+                  ref={el => essayRefs.current[essay.slug] = el}
+                  data-id={essay.slug}
+                  onKeyDown={(e) => handleKeyDown(e, essay.slug)}
+                  role="button"
                 >
-                  <Link href={`/essays/${essay.slug}`} className="item-link">
+                  <Link href={`/essays/${essay.slug}`} className="item-link" tabIndex={-1}>
                     <div className="item-row">
                       <div className="item-date">
                         {formatDate(essay.date)}
@@ -133,6 +216,14 @@ export default function Home({ recentEssays, interestingItems }) {
                   className={`interesting-item ${hoveredItem === item.id ? 'item-hovered' : ''}`}
                   onMouseEnter={() => handleMouseEnter(item.id)}
                   onMouseLeave={handleMouseLeave}
+                  onFocus={() => handleFocus(item.id)}
+                  onBlur={handleBlur}
+                  tabIndex={0}
+                  ref={el => itemRefs.current[item.id] = el}
+                  data-id={item.id}
+                  onKeyDown={(e) => handleKeyDown(e, item.id, item.url)}
+                  role="button"
+                  aria-pressed={hoveredItem === item.id}
                 >
                   <a 
                     href={item.url} 
@@ -140,6 +231,7 @@ export default function Home({ recentEssays, interestingItems }) {
                     rel="noopener noreferrer"
                     className="item-link"
                     onClick={(e) => hoveredItem === item.id || !isMobile ? true : handleItemClick(e, item.id)}
+                    tabIndex={-1}
                   >
                     <div className="item-row">
                       <div className="item-date">
@@ -248,138 +340,97 @@ export default function Home({ recentEssays, interestingItems }) {
           border-radius: 4px;
           border-left: 4px solid transparent;
           transition: all 0.2s ease;
-          margin-bottom: 3px;
+          margin-bottom: 0.5rem;
+          cursor: pointer;
+        }
+        
+        .essay-item:focus, .interesting-item:focus {
+          outline: 2px solid var(--link-color);
+          outline-offset: 2px;
+          position: relative;
+        }
+        
+        /* Ensure hover state shows correctly for keyboard navigation */
+        .keyboard-mode .essay-item:focus, .keyboard-mode .interesting-item:focus {
+          background-color: var(--hover-bg);
+          border-left: 4px solid var(--link-color);
+          box-shadow: 0 1px 3px var(--card-shadow);
+          transform: translateY(-2px);
+        }
+        
+        /* Make sure keyboard focused items show expanded content */
+        .keyboard-mode .essay-item:focus .item-summary,
+        .keyboard-mode .interesting-item:focus .item-why {
+          display: block;
         }
         
         .essay-item:hover, .item-hovered {
           background-color: var(--hover-bg);
           border-left: 4px solid var(--link-color);
           box-shadow: 0 1px 3px var(--card-shadow);
+          transform: translateY(-2px);
         }
         
         .item-link {
           text-decoration: none;
           color: inherit;
           display: block;
-          position: relative;
         }
         
         .item-row {
           display: grid;
-          grid-template-columns: 120px 1fr auto;
+          grid-template-columns: 150px 1fr;
           padding: 10px 15px;
           align-items: center;
-          min-height: 44px;
+          height: 100%;
         }
         
         .item-date {
           font-size: 0.9rem;
-          color: var(--footer-text);
-          display: flex;
-          align-items: center;
+          color: var(--nav-text);
         }
         
         .item-title {
           font-size: 1rem;
           font-weight: 400;
+          color: var(--text-color);
           display: flex;
           align-items: center;
-          color: var(--text-color);
+          gap: 0.75rem;
         }
         
-        .item-type {
-          font-size: 0.9rem;
-          color: var(--footer-text);
-          display: flex;
-          align-items: center;
-          margin-left: 1rem;
-        }
-        
-        .item-summary {
-          padding: 0 15px 15px 152px;
-          font-size: 0.95rem;
-          line-height: 1.5;
-          color: var(--text-color);
-        }
-        
-        .item-why {
-          padding: 10px 15px 15px;
-          margin-left: 120px;
+        .item-summary, .item-why {
+          padding: 5px 15px 15px;
+          margin-left: 150px;
           font-size: 0.9rem;
           line-height: 1.5;
           color: var(--text-color);
-          background-color: var(--hover-bg);
-          border-bottom-left-radius: 4px;
-          border-bottom-right-radius: 4px;
+        }
+        
+        .mobile-hint {
+          font-size: 0.8rem;
+          color: var(--link-color);
+          margin-left: 8px;
         }
         
         .empty-message {
-          color: var(--footer-text);
+          font-size: 0.9rem;
+          color: var(--nav-text);
           font-style: italic;
         }
         
         @media (max-width: 768px) {
           .item-row {
-            grid-template-columns: 1fr;
-            grid-template-rows: auto auto auto;
-            padding: 12px 15px;
-            gap: 0.25rem;
+            grid-template-columns: 100px 1fr;
           }
           
           .item-date {
-            margin-bottom: 0.25rem;
+            font-size: 0.85rem;
           }
           
-          .item-summary {
-            padding: 0 15px 15px;
-          }
-          
-          .item-why {
+          .item-summary, .item-why {
             margin-left: 0;
-          }
-          
-          .item-type {
-            margin-left: 0;
-          }
-        }
-
-        .mobile-hint {
-          font-size: 0.8rem;
-          color: var(--footer-text);
-          margin-top: 3px;
-          font-style: italic;
-          display: none;
-        }
-        
-        @media (max-width: 640px) {
-          .mobile-hint {
-            display: block;
-          }
-          
-          .item-why {
-            margin-left: 0;
-          }
-          
-          /* Add visual indication for tap interaction */
-          .interesting-item {
-            position: relative;
-          }
-          
-          .interesting-item::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: var(--hover-bg);
-            opacity: 0;
-            pointer-events: none;
-            transition: opacity 0.2s ease;
-          }
-          
-          .interesting-item:active::after {
-            opacity: 1;
+            padding: 5px 15px 15px;
           }
         }
       `}</style>

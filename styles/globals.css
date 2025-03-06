@@ -9,6 +9,7 @@
   --blockquote-border: #e0e0e0;
   --nav-text: #666666;
   --nav-text-hover: #000000;
+  --nav-hover-bg: rgba(0, 0, 0, 0.05);
   --footer-text: #666666;
   --hover-bg: rgba(0, 0, 0, 0.05);
   --card-bg: #ffffff;
@@ -40,7 +41,8 @@
   --blockquote-bg: #1e1e1e;
   --blockquote-border: #444444;
   --nav-text: #a0a0a0;
-  --nav-text-hover: #ffffff;
+  --nav-text-hover: #FFFF00;
+  --nav-hover-bg: rgba(255, 255, 255, 0.15);
   --footer-text: #888888;
   --hover-bg: rgba(255, 255, 255, 0.1);
   --card-bg: #1e1e1e;
@@ -64,6 +66,7 @@
   --blockquote-border: #e0e0e0;
   --nav-text: #666666;
   --nav-text-hover: #000000;
+  --nav-hover-bg: rgba(0, 0, 0, 0.05);
   --footer-text: #666666;
   --hover-bg: rgba(0, 0, 0, 0.05);
   --card-bg: #ffffff;
@@ -93,10 +96,31 @@ body {
   box-sizing: border-box;
 }
 
+/* Global keyboard focus styles */
+:focus {
+  outline: 2px solid var(--link-color);
+  outline-offset: 2px;
+}
+
+/* Visible only for keyboard focus, not for mouse clicks */
+:focus:not(:focus-visible) {
+  outline: none;
+}
+
+:focus-visible {
+  outline: 2px solid var(--link-color);
+  outline-offset: 2px;
+  box-shadow: 0 0 0 4px rgba(0, 0, 0, 0.05);
+}
+
+.dark :focus-visible {
+  box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.1);
+}
+
 a {
   color: var(--link-color);
   text-decoration: none;
-  transition: color 0.2s ease;
+  transition: color 0.2s ease, outline 0.2s ease;
   font-weight: 500;
 }
 
@@ -300,13 +324,37 @@ tr:hover {
   display: flex;
   align-items: center;
   height: 36px;
+  position: relative;
 }
 
 .nav a:hover {
-  color: var(--link-color);
-  background-color: #e0e0e0;
+  color: var(--nav-text-hover);
+  background-color: var(--nav-hover-bg);
   border-left: 4px solid #666;
   box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+/* Special keyboard focus styles for navigation */
+.nav a:focus-visible {
+  color: var(--nav-text-hover);
+  background-color: var(--nav-hover-bg);
+  border-left: 4px solid #666;
+  outline: 2px solid var(--link-color);
+  outline-offset: 2px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.15);
+  position: relative;
+}
+
+.nav a:focus-visible::after {
+  content: attr(data-shortcut);
+  position: absolute;
+  right: 8px;
+  font-size: 0.75rem;
+  opacity: 0.8;
+  background-color: rgba(0,0,0,0.1);
+  padding: 2px 5px;
+  border-radius: 3px;
+  margin-left: 5px;
 }
 
 .essay-list {
@@ -493,4 +541,240 @@ tr:hover {
   h2 {
     font-size: 1.5rem;
   }
+}
+
+/* Remove skip-link styles */
+.skip-link {
+  display: none;
+}
+
+.skip-link:focus {
+  display: none;
+}
+
+/* Special keyboard mode indicator - make it MORE visible */
+.keyboard-mode *:focus {
+  outline: none !important; /* Remove default focus styles */
+}
+
+.dark.keyboard-mode *:focus {
+  outline-color: #FFFF00 !important;
+}
+
+/* Show keyboard shortcut hints when in keyboard mode */
+.keyboard-mode .nav a[data-shortcut]::after {
+  content: attr(data-shortcut);
+  position: absolute;
+  right: 8px;
+  font-size: 0.75rem;
+  opacity: 0.9;
+  background-color: rgba(0, 0, 0, 0.15);
+  padding: 2px 6px;
+  border-radius: 3px;
+  font-family: var(--font-mono);
+  font-weight: bold;
+}
+
+.dark .keyboard-mode .nav a[data-shortcut]::after {
+  background-color: rgba(255, 255, 255, 0.2);
+  color: #FFFF00;
+}
+
+/* Add a subtle pulse animation for the active element when in keyboard mode */
+@keyframes focusPulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(255, 255, 0, 0.6);
+  }
+  70% {
+    box-shadow: 0 0 0 8px rgba(255, 255, 0, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(255, 255, 0, 0);
+  }
+}
+
+.dark .keyboard-mode *:focus-visible {
+  animation: focusPulse 1.5s infinite;
+  outline-color: #FFFF00 !important;
+}
+
+/* Enhance hover/focus styles for dark mode */
+.dark .nav a:hover, 
+.dark .nav a:focus-visible,
+.dark .nav a.active {
+  color: #FFFF00;
+  text-shadow: 0 0 8px rgba(255, 255, 0, 0.5);
+  background-color: rgba(255, 255, 0, 0.1);
+}
+
+/* Style for nav items that are keyboard focused */
+.keyboard-mode .nav a.keyboard-focused {
+  position: relative;
+  color: #FFFF00 !important;
+  background-color: rgba(255, 255, 0, 0.1);
+  text-shadow: 0 0 8px rgba(255, 255, 0, 0.5);
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(255, 255, 0, 0.3);
+  z-index: 2;
+}
+
+.keyboard-mode .nav a.keyboard-focused::before {
+  content: "→";
+  position: absolute;
+  left: -15px;
+  animation: pulse 1s infinite alternate;
+  color: #FFFF00;
+}
+
+@keyframes pulse {
+  from {
+    opacity: 0.5;
+    transform: translateX(2px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* Light mode styles */
+.light .keyboard-mode .nav a.keyboard-focused {
+  color: #000 !important;
+  background-color: rgba(0, 0, 0, 0.05);
+  text-shadow: none;
+  box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.2);
+}
+
+.light .keyboard-mode .nav a.keyboard-focused::before {
+  color: #000;
+}
+
+/* Navigation hover/focus styles for Superhuman-like experience */
+.nav a:hover, 
+.nav a:focus {
+  background-color: var(--nav-hover-bg);
+  color: var(--nav-text-hover);
+}
+
+/* Dark mode enhanced nav styles */
+.dark .nav a.keyboard-focused,
+.dark .nav a:hover {
+  color: #FFFF00;
+  background-color: rgba(255, 255, 0, 0.1);
+}
+
+/* Remove the keyboard navigation instruction text */
+.keyboard-mode .header::after {
+  content: none;
+}
+
+/* Add general focus styles for keyboard navigation mode */
+.keyboard-mode a:focus,
+.keyboard-mode button:focus,
+.keyboard-mode input:focus,
+.keyboard-mode [tabindex]:focus {
+  outline: 2px solid var(--link-color);
+  outline-offset: 2px;
+  position: relative;
+  z-index: 10;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.15);
+  background-color: var(--hover-bg);
+  transform: translateY(-1px); /* Slight lift effect */
+  transition: all 0.2s ease;
+}
+
+/* Modify visual indicator for focused elements in keyboard mode - remove arrow */
+.keyboard-mode a:focus::after,
+.keyboard-mode button:focus::after,
+.keyboard-mode [tabindex]:focus::after {
+  content: none;
+}
+
+/* Dark mode focus styles */
+.dark.keyboard-mode a:focus,
+.dark.keyboard-mode button:focus,
+.dark.keyboard-mode input:focus,
+.dark.keyboard-mode [tabindex]:focus {
+  outline-color: #FFFF00;
+  box-shadow: 0 0 0 3px rgba(255, 255, 0, 0.3);
+  background-color: rgba(255, 255, 0, 0.1);
+}
+
+.dark.keyboard-mode a:focus::after,
+.dark.keyboard-mode button:focus::after,
+.dark.keyboard-mode [tabindex]:focus::after {
+  color: #FFFF00;
+}
+
+/* Special styling for download button in keyboard mode */
+.keyboard-mode .download-button:focus {
+  background-color: var(--hover-bg);
+  border-color: var(--link-color);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+  transition: all 0.2s ease;
+}
+
+.dark.keyboard-mode .download-button:focus {
+  background-color: rgba(255, 255, 0, 0.1);
+  border-color: #FFFF00;
+  box-shadow: 0 4px 8px rgba(255, 255, 0, 0.15);
+}
+
+/* Focus styles for interesting items */
+.keyboard-mode .interesting-item:focus-within {
+  background-color: var(--hover-bg);
+  border-left: 4px solid var(--link-color);
+  box-shadow: 0 1px 3px var(--card-shadow);
+  transform: translateY(-1px);
+}
+
+.dark.keyboard-mode .interesting-item:focus-within {
+  border-left-color: #FFFF00;
+  background-color: rgba(255, 255, 0, 0.1);
+}
+
+/* Make sure keyboard focused items show expanded content for essays */
+.keyboard-mode .essay-item:focus .item-summary {
+  display: block;
+}
+
+/* Enhanced essay item keyboard focus styles */
+.keyboard-mode .essay-item:focus {
+  background-color: var(--hover-bg);
+  border-left: 4px solid var(--link-color);
+  box-shadow: 0 1px 3px var(--card-shadow);
+  transform: translateY(-2px);
+}
+
+.dark.keyboard-mode .essay-item:focus {
+  border-left-color: #FFFF00;
+  background-color: rgba(255, 255, 0, 0.1);
+}
+
+/* Fix for interesting item focus in keyboard mode */
+.keyboard-mode .interesting-item:focus-within .item-why,
+.keyboard-mode .interesting-item:focus .item-why {
+  display: block;
+}
+
+/* Add styles for content expansion with keyboard focus */
+.item-hovered .item-summary,
+.item-hovered .item-why,
+.keyboard-mode *:focus-within .item-summary,
+.keyboard-mode *:focus-within .item-why {
+  display: block !important;
+}
+
+/* Fix for section links keyboard navigation */
+.keyboard-mode .section-link:focus {
+  outline: 2px solid var(--link-color);
+  outline-offset: 2px;
+  text-decoration: underline;
+  color: var(--nav-text-hover);
+}
+
+.dark.keyboard-mode .section-link:focus {
+  outline-color: #FFFF00;
+  color: #FFFF00;
 }

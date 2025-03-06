@@ -1,8 +1,31 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import Layout from '../components/Layout';
 import Link from 'next/link';
 
 export default function About() {
+  const [keyboardMode, setKeyboardMode] = useState(false);
+  
+  // Detect keyboard navigation mode
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (['Tab', 'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(e.key)) {
+        setKeyboardMode(true);
+      }
+    };
+    
+    const handleMouseDown = () => {
+      setKeyboardMode(false);
+    };
+    
+    window.addEventListener('keydown', handleKeyDown);
+    window.addEventListener('mousedown', handleMouseDown);
+    
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+      window.removeEventListener('mousedown', handleMouseDown);
+    };
+  }, []);
+  
   return (
     <Layout title="About" description="About Angan Sarker - Investment Analyst">
       <div className="page-header">
@@ -23,7 +46,25 @@ export default function About() {
       </p>
       
       <div className="resume-download">
-        <a href="/documents/Angan_Sarker_Resume.pdf" download className="download-button">
+        <a 
+          href="/documents/Angan_Sarker_Resume.pdf" 
+          download 
+          className={`download-button ${keyboardMode ? 'keyboard-accessible' : ''}`}
+          aria-label="Download Resume PDF"
+          onKeyDown={(e) => {
+            // Add space key support for better keyboard accessibility
+            if (e.key === ' ') {
+              e.preventDefault();
+              // Trigger the download 
+              const link = document.createElement('a');
+              link.href = '/documents/Angan_Sarker_Resume.pdf';
+              link.download = 'Angan_Sarker_Resume.pdf';
+              document.body.appendChild(link);
+              link.click();
+              document.body.removeChild(link);
+            }
+          }}
+        >
           <span className="button-icon">📄</span>
           Download Resume
         </a>
@@ -149,6 +190,16 @@ export default function About() {
           background-color: var(--hover-bg);
           border-color: var(--border-hover);
           box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        
+        /* Enhanced keyboard focus styles */
+        .download-button.keyboard-accessible:focus {
+          outline: 2px solid var(--link-color);
+          outline-offset: 2px;
+          background-color: var(--hover-bg);
+          border-color: var(--link-color);
+          box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+          transform: translateY(-1px);
         }
         
         .button-icon {
