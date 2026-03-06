@@ -16,8 +16,9 @@ export default function Essay({ essay }) {
   return (
     <Layout title={essay.title} description={essay.summary || `Essay: ${essay.title}`}>
       <article className="essay-content">
+        <h1>{essay.title}</h1>
         <p className="essay-date">{formattedDate}</p>
-        
+
         <div className="essay-body" dangerouslySetInnerHTML={{ __html: essay.content }} />
       </article>
       
@@ -33,22 +34,22 @@ export default function Essay({ essay }) {
         
         h1 {
           font-size: 1.8rem;
-          font-weight: 600;
+          font-weight: 700;
           margin-bottom: 0.5rem;
           line-height: 1.3;
-          color: var(--text-primary);
+          color: var(--text-color);
         }
-        
+
         .essay-date {
           font-size: 0.9rem;
-          color: var(--text-secondary);
+          color: var(--nav-text);
           margin-bottom: 2rem;
         }
         
         .essay-body {
           line-height: 1.6;
           font-size: 1rem;
-          color: var(--text-primary);
+          color: var(--text-color);
         }
         
         .essay-body :global(h1) {
@@ -56,37 +57,37 @@ export default function Essay({ essay }) {
           font-weight: 600;
           margin-bottom: 0.5rem;
           line-height: 1.3;
-          color: var(--text-primary);
+          color: var(--text-color);
         }
         
         .essay-body :global(h2) {
           font-size: 1.4rem;
-          font-weight: 600;
+          font-weight: 700;
           margin: 2rem 0 1rem;
-          color: var(--text-primary);
+          color: var(--text-color);
         }
         
         .essay-body :global(h3) {
           font-size: 1.2rem;
           font-weight: 600;
           margin: 1.5rem 0 1rem;
-          color: var(--text-primary);
+          color: var(--text-color);
         }
         
         .essay-body :global(p) {
           margin-bottom: 1.2rem;
-          color: var(--text-primary);
+          color: var(--text-color);
         }
         
         .essay-body :global(ul), .essay-body :global(ol) {
           margin-bottom: 1.2rem;
           padding-left: 1.5rem;
-          color: var(--text-primary);
+          color: var(--text-color);
         }
         
         .essay-body :global(li) {
           margin-bottom: 0.5rem;
-          color: var(--text-primary);
+          color: var(--text-color);
         }
         
         .essay-body :global(pre) {
@@ -100,7 +101,7 @@ export default function Essay({ essay }) {
         .essay-body :global(code) {
           font-family: var(--font-mono);
           font-size: 0.9rem;
-          color: var(--code-text);
+          color: var(--text-color);
         }
         
         .essay-body :global(blockquote) {
@@ -108,7 +109,7 @@ export default function Essay({ essay }) {
           margin-left: 0;
           padding-left: 1rem;
           font-style: italic;
-          color: var(--text-primary);
+          color: var(--text-color);
           background-color: var(--blockquote-bg);
           padding: 0.5rem 1rem;
         }
@@ -117,17 +118,21 @@ export default function Essay({ essay }) {
           margin-top: 3rem;
           margin-bottom: 2rem;
         }
-        
+
         .back-link a {
-          color: var(--link-color);
+          color: var(--text-color);
           text-decoration: none;
-          font-size: 0.9rem;
-          transition: color 0.2s ease;
+          font-size: 0.8rem;
+          font-weight: 500;
+          background-color: var(--card-bg);
+          padding: 5px 14px;
+          border-radius: 20px;
+          transition: all 0.15s ease;
         }
-        
+
         .back-link a:hover {
-          text-decoration: underline;
-          color: var(--link-hover);
+          background-color: var(--card-hover-bg);
+          color: var(--accent-color);
         }
       `}</style>
     </Layout>

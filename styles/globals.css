@@ -1,81 +1,93 @@
 :root {
-  --background-color: #ffffff;
-  --text-color: #333333;
-  --link-color: #000000;
-  --link-hover-color: #555555;
-  --border-color: #eeeeee;
-  --code-bg: #f5f5f5;
-  --blockquote-bg: #f9f9f9;
-  --blockquote-border: #e0e0e0;
-  --nav-text: #666666;
-  --nav-text-hover: #000000;
+  --background-color: #eee8de;
+  --text-color: #191918;
+  --link-color: #191918;
+  --link-hover-color: #d4765a;
+  --border-color: #d8d0c4;
+  --code-bg: #e4ddd2;
+  --blockquote-bg: #e4ddd2;
+  --blockquote-border: #c4bba9;
+  --nav-text: #5a5650;
+  --nav-text-hover: #191918;
   --nav-hover-bg: rgba(0, 0, 0, 0.05);
-  --footer-text: #666666;
-  --hover-bg: rgba(0, 0, 0, 0.05);
-  --card-bg: #ffffff;
-  --card-shadow: rgba(0, 0, 0, 0.1);
-  --card-hover-bg: #f0f0f0;
-  --card-border: #e0e0e0;
+  --footer-text: #8a847c;
+  --hover-bg: #e4ddd2;
+  --card-bg: #e4ddd2;
+  --card-shadow: rgba(25, 25, 24, 0.06);
+  --card-hover-bg: #dbd3c6;
+  --card-border: #cec5b5;
   --input-bg: #ffffff;
-  --input-border: #cccccc;
-  --input-text: #333333;
+  --input-border: #c4bba9;
+  --input-text: #191918;
+  --accent-color: #d4765a;
+  --accent-light: #e08a6e;
+  --accent-bg: rgba(212, 118, 90, 0.1);
+  --name-color: #191918;
   --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
   --font-heading: 'Work Sans', sans-serif;
   --font-serif: 'Georgia', 'Times New Roman', serif;
   --font-mono: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
   --max-width: 1100px;
   --header-height: 80px;
-  
+
   /* Animation for theme transition */
   --transition-speed: 0.3s;
 }
 
 /* Dark mode colors - using the class that next-themes adds to html */
 .dark {
-  --background-color: #121212;
-  --text-color: #e0e0e0;
-  --link-color: #c2c2c2;
-  --link-hover-color: #ffffff;
-  --border-color: #333333;
-  --code-bg: #2a2a2a;
-  --blockquote-bg: #1e1e1e;
-  --blockquote-border: #444444;
-  --nav-text: #a0a0a0;
-  --nav-text-hover: #FFFF00;
-  --nav-hover-bg: rgba(255, 255, 255, 0.15);
-  --footer-text: #888888;
-  --hover-bg: rgba(255, 255, 255, 0.1);
-  --card-bg: #1e1e1e;
-  --card-shadow: rgba(0, 0, 0, 0.4);
-  --card-hover-bg: #2a2a2a;
-  --card-border: #333333;
-  --input-bg: #2a2a2a;
-  --input-border: #444444;
-  --input-text: #e0e0e0;
+  --background-color: #191918;
+  --text-color: #ece6da;
+  --link-color: #d8d0c2;
+  --link-hover-color: #e8936a;
+  --border-color: #2c2b28;
+  --code-bg: #23221f;
+  --blockquote-bg: #23221f;
+  --blockquote-border: #3a3834;
+  --nav-text: #9b9588;
+  --nav-text-hover: #ece6da;
+  --nav-hover-bg: rgba(255, 255, 255, 0.06);
+  --footer-text: #6b665e;
+  --hover-bg: #23221f;
+  --card-bg: #23221f;
+  --card-shadow: rgba(0, 0, 0, 0.3);
+  --card-hover-bg: #2c2b28;
+  --card-border: #2c2b28;
+  --input-bg: #23221f;
+  --input-border: #3a3834;
+  --input-text: #ece6da;
+  --accent-color: #e8936a;
+  --accent-light: #f0a580;
+  --accent-bg: rgba(232, 147, 106, 0.12);
+  --name-color: #ece6da;
 }
 
 /* Apply light mode explicitly */
 .light-mode {
-  --background-color: #ffffff;
-  --text-color: #333333;
-  --link-color: #000000;
-  --link-hover-color: #555555;
-  --border-color: #eeeeee;
-  --code-bg: #f5f5f5;
-  --blockquote-bg: #f9f9f9;
-  --blockquote-border: #e0e0e0;
-  --nav-text: #666666;
-  --nav-text-hover: #000000;
+  --background-color: #eee8de;
+  --text-color: #191918;
+  --link-color: #191918;
+  --link-hover-color: #d4765a;
+  --border-color: #d8d0c4;
+  --code-bg: #e4ddd2;
+  --blockquote-bg: #e4ddd2;
+  --blockquote-border: #c4bba9;
+  --nav-text: #5a5650;
+  --nav-text-hover: #191918;
   --nav-hover-bg: rgba(0, 0, 0, 0.05);
-  --footer-text: #666666;
-  --hover-bg: rgba(0, 0, 0, 0.05);
-  --card-bg: #ffffff;
-  --card-shadow: rgba(0, 0, 0, 0.1);
-  --card-hover-bg: #f0f0f0;
-  --card-border: #e0e0e0;
+  --footer-text: #8a847c;
+  --hover-bg: #e4ddd2;
+  --card-bg: #e4ddd2;
+  --card-shadow: rgba(25, 25, 24, 0.06);
+  --card-hover-bg: #dbd3c6;
+  --card-border: #cec5b5;
   --input-bg: #ffffff;
-  --input-border: #cccccc;
-  --input-text: #333333;
+  --input-border: #c4bba9;
+  --input-text: #191918;
+  --accent-color: #d4765a;
+  --accent-light: #e08a6e;
+  --accent-bg: rgba(212, 118, 90, 0.1);
+  --name-color: #191918;
 }
 
 html,
@@ -137,33 +149,33 @@ main {
 
 h1, h2, h3, h4, h5, h6 {
   font-family: var(--font-sans);
-  font-weight: 600;
-  line-height: 1.3;
+  font-weight: 700;
+  line-height: 1.2;
   margin-top: 2.5rem;
   margin-bottom: 1.5rem;
-  letter-spacing: -0.02em;
+  letter-spacing: -0.03em;
   color: var(--text-color);
   transition: color var(--transition-speed) ease;
 }
 
 h1 {
-  font-size: 2.5rem;
+  font-size: 2.2rem;
   margin-top: 0;
-  letter-spacing: -0.03em;
+  letter-spacing: -0.04em;
 }
 
 h2 {
-  font-size: 1.8rem;
+  font-size: 1.6rem;
   border-bottom: none;
   padding-bottom: 0;
 }
 
 h3 {
-  font-size: 1.4rem;
+  font-size: 1.3rem;
 }
 
 h4 {
-  font-size: 1.2rem;
+  font-size: 1.1rem;
 }
 
 p, ul, ol {
@@ -218,7 +230,6 @@ pre code {
 .dark .essay-hovered,
 .dark .item-hovered {
   background-color: var(--card-hover-bg) !important;
-  border-left: 4px solid #888 !important;
 }
 
 .dark .essay-summary,
@@ -313,14 +324,10 @@ tr:hover {
 
 .nav a {
   font-family: var(--font-sans);
-  font-size: 0.95rem;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  padding: 5px 10px;
-  border-radius: 4px;
-  border-left: 4px solid transparent;
-  transition: all 0.2s ease;
-  margin: 0 -10px;
+  font-size: 0.9rem;
+  padding: 6px 12px;
+  border-radius: 6px;
+  transition: all 0.15s ease;
   display: flex;
   align-items: center;
   height: 36px;
@@ -330,18 +337,14 @@ tr:hover {
 .nav a:hover {
   color: var(--nav-text-hover);
   background-color: var(--nav-hover-bg);
-  border-left: 4px solid #666;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
 }
 
 /* Special keyboard focus styles for navigation */
 .nav a:focus-visible {
   color: var(--nav-text-hover);
   background-color: var(--nav-hover-bg);
-  border-left: 4px solid #666;
-  outline: 2px solid var(--link-color);
+  outline: 2px solid var(--accent-color);
   outline-offset: 2px;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.15);
   position: relative;
 }
 
@@ -558,7 +561,7 @@ tr:hover {
 }
 
 .dark.keyboard-mode *:focus {
-  outline-color: #FFFF00 !important;
+  outline-color: var(--accent-color) !important;
 }
 
 /* Show keyboard shortcut hints when in keyboard mode */
@@ -577,44 +580,43 @@ tr:hover {
 
 .dark .keyboard-mode .nav a[data-shortcut]::after {
   background-color: rgba(255, 255, 255, 0.2);
-  color: #FFFF00;
+  color: var(--accent-color);
 }
 
 /* Add a subtle pulse animation for the active element when in keyboard mode */
 @keyframes focusPulse {
   0% {
-    box-shadow: 0 0 0 0 rgba(255, 255, 0, 0.6);
+    box-shadow: 0 0 0 0 rgba(237, 137, 54, 0.4);
   }
   70% {
-    box-shadow: 0 0 0 8px rgba(255, 255, 0, 0);
+    box-shadow: 0 0 0 8px rgba(237, 137, 54, 0);
   }
   100% {
-    box-shadow: 0 0 0 0 rgba(255, 255, 0, 0);
+    box-shadow: 0 0 0 0 rgba(237, 137, 54, 0);
   }
 }
 
 .dark .keyboard-mode *:focus-visible {
   animation: focusPulse 1.5s infinite;
-  outline-color: #FFFF00 !important;
+  outline-color: var(--accent-color) !important;
 }
 
 /* Enhance hover/focus styles for dark mode */
-.dark .nav a:hover, 
+.dark .nav a:hover,
 .dark .nav a:focus-visible,
 .dark .nav a.active {
-  color: #FFFF00;
-  text-shadow: 0 0 8px rgba(255, 255, 0, 0.5);
-  background-color: rgba(255, 255, 0, 0.1);
+  color: var(--nav-text-hover);
+  background-color: var(--nav-hover-bg);
 }
 
 /* Style for nav items that are keyboard focused */
 .keyboard-mode .nav a.keyboard-focused {
   position: relative;
-  color: #FFFF00 !important;
-  background-color: rgba(255, 255, 0, 0.1);
-  text-shadow: 0 0 8px rgba(255, 255, 0, 0.5);
+  color: var(--accent-color) !important;
+  background-color: var(--accent-bg);
+  text-shadow: 0 0 8px rgba(237, 137, 54, 0.4);
   outline: none;
-  box-shadow: 0 0 0 3px rgba(255, 255, 0, 0.3);
+  box-shadow: 0 0 0 3px rgba(237, 137, 54, 0.3);
   z-index: 2;
 }
 
@@ -623,7 +625,7 @@ tr:hover {
   position: absolute;
   left: -15px;
   animation: pulse 1s infinite alternate;
-  color: #FFFF00;
+  color: var(--accent-color);
 }
 
 @keyframes pulse {
@@ -659,8 +661,8 @@ tr:hover {
 /* Dark mode enhanced nav styles */
 .dark .nav a.keyboard-focused,
 .dark .nav a:hover {
-  color: #FFFF00;
-  background-color: rgba(255, 255, 0, 0.1);
+  color: var(--accent-color);
+  background-color: var(--accent-bg);
 }
 
 /* Remove the keyboard navigation instruction text */
@@ -673,14 +675,12 @@ tr:hover {
 .keyboard-mode button:focus,
 .keyboard-mode input:focus,
 .keyboard-mode [tabindex]:focus {
-  outline: 2px solid var(--link-color);
+  outline: 2px solid var(--accent-color);
   outline-offset: 2px;
   position: relative;
   z-index: 10;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.15);
-  background-color: var(--hover-bg);
-  transform: translateY(-1px); /* Slight lift effect */
-  transition: all 0.2s ease;
+  background-color: var(--card-bg);
+  transition: all 0.15s ease;
 }
 
 /* Modify visual indicator for focused elements in keyboard mode - remove arrow */
@@ -695,43 +695,35 @@ tr:hover {
 .dark.keyboard-mode button:focus,
 .dark.keyboard-mode input:focus,
 .dark.keyboard-mode [tabindex]:focus {
-  outline-color: #FFFF00;
-  box-shadow: 0 0 0 3px rgba(255, 255, 0, 0.3);
-  background-color: rgba(255, 255, 0, 0.1);
+  outline-color: var(--accent-color);
+  background-color: var(--card-bg);
 }
 
 .dark.keyboard-mode a:focus::after,
 .dark.keyboard-mode button:focus::after,
 .dark.keyboard-mode [tabindex]:focus::after {
-  color: #FFFF00;
+  color: var(--accent-color);
 }
 
 /* Special styling for download button in keyboard mode */
 .keyboard-mode .download-button:focus {
-  background-color: var(--hover-bg);
-  border-color: var(--link-color);
-  transform: translateY(-2px);
-  box-shadow: 0 4px 8px rgba(0,0,0,0.15);
-  transition: all 0.2s ease;
+  background-color: var(--card-bg);
+  border-color: var(--accent-color);
+  transition: all 0.15s ease;
 }
 
 .dark.keyboard-mode .download-button:focus {
-  background-color: rgba(255, 255, 0, 0.1);
-  border-color: #FFFF00;
-  box-shadow: 0 4px 8px rgba(255, 255, 0, 0.15);
+  background-color: var(--card-bg);
+  border-color: var(--accent-color);
 }
 
 /* Focus styles for interesting items */
 .keyboard-mode .interesting-item:focus-within {
-  background-color: var(--hover-bg);
-  border-left: 4px solid var(--link-color);
-  box-shadow: 0 1px 3px var(--card-shadow);
-  transform: translateY(-1px);
+  background-color: var(--card-bg);
 }
 
 .dark.keyboard-mode .interesting-item:focus-within {
-  border-left-color: #FFFF00;
-  background-color: rgba(255, 255, 0, 0.1);
+  background-color: var(--card-bg);
 }
 
 /* Make sure keyboard focused items show expanded content for essays */
@@ -741,15 +733,11 @@ tr:hover {
 
 /* Enhanced essay item keyboard focus styles */
 .keyboard-mode .essay-item:focus {
-  background-color: var(--hover-bg);
-  border-left: 4px solid var(--link-color);
-  box-shadow: 0 1px 3px var(--card-shadow);
-  transform: translateY(-2px);
+  background-color: var(--card-bg);
 }
 
 .dark.keyboard-mode .essay-item:focus {
-  border-left-color: #FFFF00;
-  background-color: rgba(255, 255, 0, 0.1);
+  background-color: var(--card-bg);
 }
 
 /* Fix for interesting item focus in keyboard mode */
@@ -775,6 +763,6 @@ tr:hover {
 }
 
 .dark.keyboard-mode .section-link:focus {
-  outline-color: #FFFF00;
-  color: #FFFF00;
+  outline-color: var(--accent-color);
+  color: var(--accent-color);
 }

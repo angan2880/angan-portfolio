@@ -8,11 +8,11 @@ export default function InterestingPage({ interestingItems }) {
   const [isTouch, setIsTouch] = useState(false);
   const [keyboardMode, setKeyboardMode] = useState(false);
   const itemRefs = useRef({});
-  
+
   // Detect touch devices on mount
   useEffect(() => {
     setIsTouch('ontouchstart' in window || navigator.maxTouchPoints > 0);
-    
+
     // Set up intersection observer for mobile scroll-based highlighting
     if (typeof IntersectionObserver !== 'undefined') {
       const observerOptions = {
@@ -20,27 +20,17 @@ export default function InterestingPage({ interestingItems }) {
         rootMargin: '0px',
         threshold: 0.7, // Item needs to be 70% visible to trigger
       };
-      
+
       const observer = new IntersectionObserver((entries) => {
         // Only apply auto-highlight on touch devices
         if (!isTouch) return;
-        
-        // Remove this automatic selection on scroll
-        // entries.forEach(entry => {
-        //   const id = entry.target.dataset.id;
-        //   if (entry.isIntersecting) {
-        //     setTouchedItem(id);
-        //   } else if (touchedItem === id) {
-        //     setTouchedItem(null);
-        //   }
-        // });
       }, observerOptions);
-      
+
       // Register all items for observation
       Object.values(itemRefs.current).forEach(ref => {
         if (ref) observer.observe(ref);
       });
-      
+
       // Add listener for custom keyboard focus events from Layout component
       const handleKeyboardFocus = (e) => {
         const { itemId } = e.detail;
@@ -48,13 +38,13 @@ export default function InterestingPage({ interestingItems }) {
           setHoveredItem(itemId);
         }
       };
-      
+
       Object.entries(itemRefs.current).forEach(([id, ref]) => {
         if (ref) {
           ref.addEventListener('keyboardFocus', handleKeyboardFocus);
         }
       });
-      
+
       return () => {
         observer.disconnect();
         Object.entries(itemRefs.current).forEach(([id, ref]) => {
@@ -64,21 +54,21 @@ export default function InterestingPage({ interestingItems }) {
         });
       };
     }
-    
+
     // Detect keyboard navigation mode
     const handleKeyDown = (e) => {
       if (['Tab', 'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(e.key)) {
         setKeyboardMode(true);
       }
     };
-    
+
     const handleMouseDown = () => {
       setKeyboardMode(false);
     };
-    
+
     window.addEventListener('keydown', handleKeyDown);
     window.addEventListener('mousedown', handleMouseDown);
-    
+
     return () => {
       window.removeEventListener('keydown', handleKeyDown);
       window.removeEventListener('mousedown', handleMouseDown);
@@ -96,7 +86,7 @@ export default function InterestingPage({ interestingItems }) {
       setHoveredItem(null);
     }
   };
-  
+
   const handleTouch = (id) => {
     if (isTouch) {
       if (touchedItem === id) {
@@ -120,19 +110,19 @@ export default function InterestingPage({ interestingItems }) {
       setHoveredItem(id);
     }
   };
-  
+
   const handleBlur = () => {
     if (keyboardMode) {
       // Use a small delay to allow new focus to be set before removing hover
       setTimeout(() => {
-        if (!document.activeElement || 
+        if (!document.activeElement ||
             !document.activeElement.classList.contains('interesting-item')) {
           setHoveredItem(null);
         }
       }, 50);
     }
   };
-  
+
   // Handle keyboard Enter key
   const handleKeyDown = (e, id, url) => {
     if (e.key === 'Enter') {
@@ -159,19 +149,18 @@ export default function InterestingPage({ interestingItems }) {
           <h1>Stuff I Found Interesting on the Interwebs</h1>
           <p>A curated collection of articles, tools, videos, and resources that caught my attention.</p>
         </section>
-        
+
         <div className="content-divider"></div>
-        
+
         <div className="interesting-header">
           <div className="header-date">Date</div>
           <div className="header-title">Title</div>
-          <div className="header-type">Type</div>
         </div>
-        
+
         {interestingItems.length > 0 ? (
           <div className="content-list">
             {interestingItems.map((item) => (
-              <div 
+              <div
                 key={item.id}
                 ref={el => itemRefs.current[item.id] = el}
                 data-id={item.id}
@@ -189,9 +178,9 @@ export default function InterestingPage({ interestingItems }) {
                 aria-pressed={hoveredItem === item.id}
                 aria-label={`${item.title} - ${item.type}`}
               >
-                <a 
-                  href={item.url} 
-                  target="_blank" 
+                <a
+                  href={item.url}
+                  target="_blank"
                   rel="noopener noreferrer"
                   className="item-link"
                   onClick={(e) => {
@@ -206,14 +195,12 @@ export default function InterestingPage({ interestingItems }) {
                       {formatDate(item.date)}
                     </div>
                     <div className="item-title">
-                      {item.title}
-                    </div>
-                    <div className="item-type">
-                      {item.type}
+                      <span className="title-text">{item.title}</span>
+                      {item.type && <span className="type-tag">{item.type}</span>}
                     </div>
                   </div>
                 </a>
-                
+
                 {(hoveredItem === item.id || touchedItem === item.id) && (
                   <div className="item-why">
                     <strong>Why I found it interesting:</strong> {item.why}
@@ -223,124 +210,157 @@ export default function InterestingPage({ interestingItems }) {
             ))}
           </div>
         ) : (
-          <p>No interesting items found. Start collecting!</p>
+          <p className="empty-message">No interesting items found.</p>
         )}
       </div>
 
       <style jsx>{`
         .interesting-container {
-          max-width: 900px;
+          max-width: 960px;
           margin: 0 auto;
           padding-top: 0;
         }
-        
+
         .intro-section {
           margin-bottom: 2rem;
         }
-        
+
         .intro-section h1 {
           font-size: 1.6rem;
-          font-weight: 600;
+          font-weight: 700;
           margin-bottom: 0.5rem;
           font-family: var(--font-heading);
           color: var(--text-color);
         }
-        
+
         .intro-section p {
           font-size: 1rem;
           color: var(--footer-text);
           max-width: 650px;
           line-height: 1.5;
         }
-        
+
         .content-divider {
           height: 1px;
           background-color: var(--border-color);
-          margin: 1.5rem 0;
+          margin: 1.25rem 0;
           width: 100%;
         }
-        
+
         .interesting-header {
           display: grid;
-          grid-template-columns: 150px 1fr 120px;
+          grid-template-columns: 150px 1fr;
           padding: 0 15px 10px;
           border-bottom: 2px solid var(--border-color);
           margin-bottom: 1rem;
           color: var(--footer-text);
           font-size: 0.9rem;
         }
-        
-        .header-date, .header-title, .header-type {
+
+        .header-date, .header-title {
           font-weight: 500;
         }
-        
+
         .content-list {
           display: flex;
           flex-direction: column;
-          gap: 3px;
+          gap: 0;
         }
-        
+
         .interesting-item {
-          border-radius: 4px;
-          border-left: 4px solid transparent;
-          transition: all 0.2s ease;
-          margin-bottom: 3px;
+          border-radius: 8px;
+          transition: all 0.15s ease;
+          margin-bottom: 0;
           cursor: pointer;
         }
-        
+
         /* Add focus styles for keyboard navigation */
         .interesting-item:focus {
-          outline: 2px solid var(--link-color);
+          outline: 2px solid var(--accent-color);
           outline-offset: 2px;
+          position: relative;
         }
-        
+
+        .interesting-item:hover,
         .item-hovered {
-          background-color: var(--hover-bg);
-          border-left: 4px solid var(--link-color);
-          box-shadow: 0 1px 3px var(--card-shadow);
-          transform: translateY(-2px);
+          background-color: var(--card-bg);
         }
-        
+
+        .interesting-item:hover .item-title,
+        .item-hovered .item-title {
+          color: var(--accent-color);
+        }
+
+        .interesting-item:hover .item-date,
+        .item-hovered .item-date {
+          color: var(--text-color);
+        }
+
         .item-link {
           text-decoration: none;
           color: inherit;
           display: block;
           position: relative;
         }
-        
+
         .item-row {
           display: grid;
-          grid-template-columns: 150px 1fr 120px;
-          padding: 10px 15px;
+          grid-template-columns: 150px 1fr;
+          padding: 8px 15px;
           align-items: center;
           min-height: 44px;
         }
-        
+
         .item-date {
-          font-size: 0.9rem;
-          color: var(--footer-text);
-          display: flex;
-          align-items: center;
-        }
-        
-        .item-title {
-          font-size: 1rem;
-          font-weight: 400;
-          display: flex;
-          align-items: center;
-          color: var(--text-color);
-        }
-        
-        .item-type {
           font-size: 0.85rem;
+          color: var(--nav-text);
+          display: flex;
+          align-items: center;
+          font-variant-numeric: tabular-nums;
+        }
+
+        .item-title {
+          font-size: 0.95rem;
+          font-weight: 500;
+          display: flex;
+          align-items: center;
+          gap: 0.5rem;
           color: var(--text-color);
-          background-color: var(--hover-bg);
+        }
+
+        .title-text {
+          position: relative;
+          display: inline-block;
+        }
+
+        .title-text::after {
+          content: '';
+          position: absolute;
+          bottom: -1px;
+          left: 0;
+          width: 0;
+          height: 1.5px;
+          background-color: var(--accent-color);
+          transition: width 0.25s ease;
+        }
+
+        .item-hovered .title-text::after,
+        .interesting-item:hover .title-text::after {
+          width: 100%;
+        }
+
+        .type-tag {
+          font-size: 0.7rem;
+          font-weight: 500;
+          color: var(--accent-color);
+          background-color: var(--accent-bg);
           padding: 2px 8px;
           border-radius: 12px;
-          text-align: center;
-          max-width: 100px;
+          white-space: nowrap;
+          letter-spacing: 0.02em;
+          flex-shrink: 0;
         }
-        
+
         .item-why {
           padding: 10px 15px 15px;
           margin-left: 150px;
@@ -348,63 +368,52 @@ export default function InterestingPage({ interestingItems }) {
           line-height: 1.5;
           color: var(--text-color);
           background-color: var(--hover-bg);
-          border-bottom-left-radius: 4px;
-          border-bottom-right-radius: 4px;
-          transition: opacity 0.2s ease, max-height 0.3s ease;
+          border-bottom-left-radius: 8px;
+          border-bottom-right-radius: 8px;
+          transition: opacity 0.15s ease, max-height 0.3s ease;
         }
-        
+
         /* Make sure keyboard focused items show expanded content */
         .keyboard-mode .interesting-item:focus .item-why {
           display: block;
         }
-        
+
         /* Touch device specific styles */
         .touch-device {
-          transition: background-color 0.3s ease;
+          transition: background-color 0.15s ease;
         }
-        
+
         .touch-device .item-row {
           position: relative;
         }
-        
+
         .touch-device.item-hovered {
-          background-color: var(--hover-bg);
+          background-color: var(--card-bg);
         }
-        
+
         /* Show "Why interesting" box when scrolled into view on mobile */
         .touch-device .item-why {
           margin-top: 0.5rem;
           border-top: 1px solid var(--border-color);
         }
-        
+
+        .empty-message {
+          font-size: 0.9rem;
+          color: var(--nav-text);
+          font-style: italic;
+        }
+
         @media (max-width: 640px) {
           .interesting-header, .item-row {
-            grid-template-columns: 100px 1fr 90px;
+            grid-template-columns: 100px 1fr;
           }
-          
+
           .item-date {
-            font-size: 0.8rem;
+            font-size: 0.85rem;
           }
-          
-          .item-type {
-            font-size: 0.75rem;
-            max-width: 80px;
-          }
-          
+
           .item-why {
             margin-left: 0;
-          }
-          
-          /* Mobile-specific touch indicators */
-          .touch-device.item-hovered::before {
-            content: '';
-            position: absolute;
-            left: 0;
-            top: 0;
-            height: 100%;
-            width: 4px;
-            background: var(--link-color);
-            border-radius: 2px;
           }
         }
       `}</style>
@@ -419,4 +428,4 @@ export async function getStaticProps() {
     props: { interestingItems },
     revalidate: 60,
   };
-} 
+}

@@ -141,17 +141,11 @@ export default function Home({ recentEssays, interestingItems, homeBio }) {
   return (
     <Layout>
       <div className="home-container">
-        <section className="bio-section">
-          {homeBio.map((paragraph, i) => (
-            <p key={i} className="bio-text">{paragraph}</p>
-          ))}
-        </section>
-
-        <div className="content-divider"></div>
+        <p className="intro-line"><span className="accent-dot">·</span> Part investment brain, part tinkerer. Here's what I've been chewing on.</p>
 
         <section className="content-section">
           <div className="section-header">
-            <h2>Recent Essays</h2>
+            <h2>Essays</h2>
             <Link href="/essays" className="section-link">
               all essays →
             </Link>
@@ -179,11 +173,12 @@ export default function Home({ recentEssays, interestingItems, homeBio }) {
                         {formatDate(essay.date)}
                       </div>
                       <div className="item-title">
-                        {essay.title}
+                        <span className="title-text">{essay.title}</span>
+                        {essay.type && <span className="type-tag">{essay.type}</span>}
                       </div>
                     </div>
                   </Link>
-                  {essay.summary && (
+                  {essay.summary && hoveredItem === essay.slug && (
                     <div className="item-summary">
                       {essay.summary}
                     </div>
@@ -236,8 +231,9 @@ export default function Home({ recentEssays, interestingItems, homeBio }) {
                         {formatDate(item.date)}
                       </div>
                       <div className="item-title">
-                        {item.title}
-                        {isMobile && hoveredItem === item.id && 
+                        <span className="title-text">{item.title}</span>
+                        {item.type && <span className="type-tag">{item.type}</span>}
+                        {isMobile && hoveredItem === item.id &&
                           <div className="mobile-hint">Tap again to open →</div>
                         }
                       </div>
@@ -263,110 +259,104 @@ export default function Home({ recentEssays, interestingItems, homeBio }) {
       <style jsx>{`
         .home-container {
           padding-top: 0;
-          max-width: 900px;
+          max-width: 960px;
           margin: 0 auto;
         }
 
-        .cover-image-container {
-          margin-bottom: 1.5rem;
-        }
-        
-        .bio-section {
-          margin: 0 0 2.5rem;
-          padding: 1rem 0;
-          border-left: none;
-        }
-        
-        .bio-text {
-          font-size: 0.95rem;
+        .intro-line {
+          font-size: 1.1rem;
+          color: var(--nav-text);
+          margin: 0 0 1.5rem;
           line-height: 1.5;
-          color: var(--text-color);
-          margin-bottom: 1rem;
         }
-        
-        .bio-text:last-child {
-          margin-bottom: 0;
+
+        .accent-dot {
+          color: var(--accent-color);
+          font-weight: 700;
+          font-size: 1.4rem;
+          margin-right: 0.35rem;
+          vertical-align: -1px;
         }
-        
+
         .content-divider {
           height: 1px;
           background-color: var(--border-color);
-          margin: 2.5rem 0;
+          margin: 1.25rem 0;
           width: 100%;
         }
-        
+
         .content-section {
-          margin-bottom: 2.5rem;
-          padding: 0 0.5rem;
+          margin-bottom: 0.25rem;
+          padding: 0;
         }
-        
+
         .section-header {
           display: flex;
           justify-content: space-between;
           align-items: baseline;
-          margin-bottom: 1.5rem;
-          border-bottom: 2px solid var(--border-color);
-          padding-bottom: 0.75rem;
+          margin-bottom: 0.5rem;
+          padding-bottom: 0.35rem;
+          border-bottom: 1px solid var(--border-color);
         }
-        
+
         .section-header h2 {
-          font-size: 1.2rem;
+          font-size: 0.8rem;
           font-weight: 600;
           margin: 0;
-          color: var(--text-color);
-        }
-        
-        .section-link {
-          font-size: 0.9rem;
           color: var(--nav-text);
-          text-decoration: none;
+          letter-spacing: 0.08em;
+          text-transform: uppercase;
         }
-        
+
+        .section-link {
+          font-size: 0.8rem;
+          color: var(--text-color);
+          text-decoration: none;
+          font-weight: 500;
+          background-color: var(--card-bg);
+          padding: 5px 14px;
+          border-radius: 20px;
+          transition: all 0.15s ease;
+        }
+
         .section-link:hover {
-          text-decoration: underline;
-          color: var(--nav-text-hover);
+          background-color: var(--card-hover-bg);
+          color: var(--accent-color);
         }
         
         .content-list {
           display: flex;
           flex-direction: column;
-          gap: 3px;
+          gap: 0;
         }
-        
+
         /* Common styles for both essay and interesting items */
         .essay-item, .interesting-item {
-          border-radius: 4px;
-          border-left: 4px solid transparent;
-          transition: all 0.2s ease;
-          margin-bottom: 0.5rem;
+          border-radius: 8px;
+          transition: all 0.15s ease;
+          margin-bottom: 0;
           cursor: pointer;
         }
-        
+
         .essay-item:focus, .interesting-item:focus {
-          outline: 2px solid var(--link-color);
+          outline: 2px solid var(--accent-color);
           outline-offset: 2px;
           position: relative;
         }
-        
+
         /* Ensure hover state shows correctly for keyboard navigation */
         .keyboard-mode .essay-item:focus, .keyboard-mode .interesting-item:focus {
           background-color: var(--hover-bg);
-          border-left: 4px solid var(--link-color);
-          box-shadow: 0 1px 3px var(--card-shadow);
-          transform: translateY(-2px);
         }
-        
+
         /* Make sure keyboard focused items show expanded content */
         .keyboard-mode .essay-item:focus .item-summary,
         .keyboard-mode .interesting-item:focus .item-why {
           display: block;
         }
-        
+
         .essay-item:hover, .item-hovered {
-          background-color: var(--hover-bg);
-          border-left: 4px solid var(--link-color);
-          box-shadow: 0 1px 3px var(--card-shadow);
-          transform: translateY(-2px);
+          background-color: var(--card-bg);
         }
         
         .item-link {
@@ -378,31 +368,79 @@ export default function Home({ recentEssays, interestingItems, homeBio }) {
         .item-row {
           display: grid;
           grid-template-columns: 150px 1fr;
-          padding: 10px 15px;
+          padding: 8px 15px;
           align-items: center;
           height: 100%;
         }
         
         .item-date {
-          font-size: 0.9rem;
+          font-size: 0.85rem;
           color: var(--nav-text);
+          font-variant-numeric: tabular-nums;
         }
         
         .item-title {
-          font-size: 1rem;
-          font-weight: 400;
+          font-size: 0.95rem;
+          font-weight: 500;
           color: var(--text-color);
           display: flex;
           align-items: center;
-          gap: 0.75rem;
+          gap: 0.5rem;
         }
-        
-        .item-summary {
-          padding: 5px 15px 15px;
-          margin-left: 150px;
-          font-size: 0.9rem;
-          line-height: 1.5;
+
+        .title-text {
+          position: relative;
+          display: inline-block;
+        }
+
+        .title-text::after {
+          content: '';
+          position: absolute;
+          bottom: -1px;
+          left: 0;
+          width: 0;
+          height: 1.5px;
+          background-color: var(--accent-color);
+          transition: width 0.25s ease;
+        }
+
+        .essay-item:hover .title-text::after,
+        .interesting-item:hover .title-text::after,
+        .item-hovered .title-text::after {
+          width: 100%;
+        }
+
+        .type-tag {
+          font-size: 0.7rem;
+          font-weight: 500;
+          color: var(--accent-color);
+          background-color: var(--accent-bg);
+          padding: 2px 8px;
+          border-radius: 12px;
+          white-space: nowrap;
+          letter-spacing: 0.02em;
+          flex-shrink: 0;
+        }
+
+        .essay-item:hover .item-title,
+        .interesting-item:hover .item-title,
+        .item-hovered .item-title {
+          color: var(--accent-color);
+        }
+
+        .essay-item:hover .item-date,
+        .interesting-item:hover .item-date,
+        .item-hovered .item-date {
           color: var(--text-color);
+        }
+
+        .item-summary {
+          padding: 4px 15px 12px;
+          margin-left: 150px;
+          font-size: 0.85rem;
+          line-height: 1.5;
+          color: var(--nav-text);
+          font-style: italic;
         }
         
         .item-why {
@@ -455,7 +493,7 @@ export default function Home({ recentEssays, interestingItems, homeBio }) {
 }
 
 export async function getStaticProps() {
-  const allEssays = await getAllEssays(['title', 'date', 'slug', 'summary']);
+  const allEssays = await getAllEssays(['title', 'date', 'slug', 'summary', 'type']);
   const recentEssays = allEssays.slice(0, 3);
   const interestingItems = await getAllInterestingItems(3);
 

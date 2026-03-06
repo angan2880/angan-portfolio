@@ -8,7 +8,7 @@ const fallbackAbout = {
     "I'm an Investment Analyst at John Hancock Investment Management where I research and analyze mutual fund products, compile quarterly reports for the Board of Trustees, and collaborate with Research Analysts on fund performance reviews.",
     "With a background in finance and business analytics, I combine quantitative analysis with strategic thinking to support investment decisions and portfolio management."
   ],
-  contact: { email: 'sarker.angan@gmail.com', linkedin: 'https://www.linkedin.com/in/your-linkedin' },
+  contact: { email: 'sarker.angan@gmail.com', linkedin: 'https://www.linkedin.com/in/angansarker' },
   resumeUrl: '/documents/Angan_Sarker_Resume.pdf',
   work: [
     { company: 'John Hancock Investment Management', position: 'Investment Analyst', duration: '2021-Present', bullets: ['Research and analyze the performance, attribution and expenses of 40 mutual fund products ($60B AUM)', 'Compile fund reports and analysis on a quarterly basis for the Board of Trustees', 'Collaborate on performance reviews with qualitative and quantitative fund commentary'] },
@@ -142,7 +142,7 @@ export default function About({ about }) {
       <style jsx>{`
         .page-header h1 {
           font-size: 1.5rem;
-          font-weight: 600;
+          font-weight: 700;
           margin-bottom: 1.5rem;
         }
 
@@ -153,20 +153,21 @@ export default function About({ about }) {
         .download-button {
           display: inline-flex;
           align-items: center;
-          background-color: var(--bg-secondary);
-          color: var(--text-primary);
+          background-color: var(--card-bg);
+          color: var(--text-color);
           padding: 10px 16px;
-          border-radius: 4px;
+          border-radius: 20px;
           font-size: 0.95rem;
           font-weight: 500;
           text-decoration: none;
           border: 1px solid var(--border-color);
-          transition: all 0.2s ease;
+          transition: all 0.15s ease;
         }
 
         .download-button:hover {
-          background-color: var(--hover-bg);
-          border-color: var(--border-hover);
+          background-color: var(--card-hover-bg);
+          color: var(--accent-color);
+          border-color: var(--accent-color);
           box-shadow: 0 1px 3px rgba(0,0,0,0.1);
         }
 
@@ -187,7 +188,7 @@ export default function About({ about }) {
 
         h2 {
           font-size: 1.5rem;
-          font-weight: 600;
+          font-weight: 700;
           margin-bottom: 1.5rem;
           margin-top: 1.5rem;
         }
@@ -204,7 +205,7 @@ export default function About({ about }) {
           max-width: 100%;
           font-size: 0.95rem;
           line-height: 1.5;
-          color: var(--text-primary);
+          color: var(--text-color);
         }
 
         .section-divider {
@@ -224,14 +225,14 @@ export default function About({ about }) {
         }
 
         .duration {
-          color: var(--text-secondary);
+          color: var(--nav-text);
           font-size: 0.9rem;
         }
 
         .position {
           font-size: 0.9rem;
           margin: 0.15rem 0 0.5rem 0;
-          color: var(--text-primary);
+          color: var(--text-color);
         }
 
         ul {
@@ -243,7 +244,7 @@ export default function About({ about }) {
           margin-bottom: 0.35rem;
           font-size: 0.9rem;
           line-height: 1.4;
-          color: var(--text-primary);
+          color: var(--text-color);
         }
 
         .skills-section {
@@ -261,7 +262,7 @@ export default function About({ about }) {
         .skill-category p {
           font-size: 0.9rem;
           margin-top: 0.25rem;
-          color: var(--text-primary);
+          color: var(--text-color);
         }
 
         a {
@@ -270,7 +271,7 @@ export default function About({ about }) {
         }
 
         a:hover {
-          color: var(--link-hover);
+          color: var(--link-hover-color);
         }
       `}</style>
     </Layout>

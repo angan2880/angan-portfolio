@@ -124,7 +124,8 @@ export default function Essays({ essays }) {
                       {formatDate(essay.date)}
                     </div>
                     <div className="essay-title">
-                      {essay.title}
+                      <span className="title-text">{essay.title}</span>
+                      {essay.type && <span className="type-tag">{essay.type}</span>}
                     </div>
                   </div>
                 </Link>
@@ -147,7 +148,7 @@ export default function Essays({ essays }) {
             ))}
           </div>
         ) : (
-          <p>No essays found. Start writing!</p>
+          <p className="empty-message">No essays found.</p>
         )}
       </div>
 
@@ -156,135 +157,173 @@ export default function Essays({ essays }) {
           width: 100%;
           margin-top: 1rem;
         }
-        
+
         .essays-header {
           display: grid;
           grid-template-columns: 150px 1fr;
           padding-bottom: 0.75rem;
           margin-bottom: 0;
           align-items: baseline;
-          color: var(--footer-text);
+          color: var(--nav-text);
           font-size: 1rem;
           padding-left: 0.75rem;
         }
-        
+
         .header-divider {
           height: 1px;
           background-color: var(--border-color);
           margin-bottom: 15px;
           width: 100%;
         }
-        
+
         .header-date, .header-title {
           font-weight: 400;
         }
-        
+
         .essays-list {
           display: flex;
           flex-direction: column;
+          gap: 0;
           width: 100%;
         }
-        
+
         .essay-container {
-          margin-bottom: 3px;
-          border-radius: 4px;
-          border-left: 4px solid transparent;
-          transition: all 0.2s ease;
+          margin-bottom: 0;
+          border-radius: 8px;
+          transition: all 0.15s ease;
+          cursor: pointer;
         }
-        
-        .essay-hovered {
-          background-color: var(--hover-bg) !important;
-          border-left: 4px solid var(--link-color) !important;
-          box-shadow: 0 1px 3px var(--card-shadow) !important;
+
+        .essay-hovered,
+        .essay-container:hover {
+          background-color: var(--card-bg);
         }
-        
+
+        .essay-container:hover .essay-title,
+        .essay-hovered .essay-title {
+          color: var(--accent-color);
+        }
+
+        .essay-container:hover .essay-date,
+        .essay-hovered .essay-date {
+          color: var(--text-color);
+        }
+
         .essay-link {
           text-decoration: none;
           color: inherit;
           display: block;
           position: relative;
         }
-        
+
         .essay-row {
           display: grid;
           grid-template-columns: 150px 1fr;
-          padding: 10px 15px;
+          padding: 8px 15px;
           align-items: center;
           min-height: 44px;
         }
-        
+
         .essay-date {
-          font-size: 0.9rem;
-          color: var(--footer-text);
+          font-size: 0.85rem;
+          color: var(--nav-text);
           display: flex;
           align-items: center;
+          font-variant-numeric: tabular-nums;
         }
-        
+
         .essay-title {
-          font-size: 1rem;
-          font-weight: 400;
+          font-size: 0.95rem;
+          font-weight: 500;
           display: flex;
           align-items: center;
           color: var(--text-color);
+          gap: 0.5rem;
         }
-        
+
+        .title-text {
+          position: relative;
+          display: inline-block;
+        }
+
+        .title-text::after {
+          content: '';
+          position: absolute;
+          bottom: -1px;
+          left: 0;
+          width: 0;
+          height: 1.5px;
+          background-color: var(--accent-color);
+          transition: width 0.25s ease;
+        }
+
+        .essay-hovered .title-text::after,
+        .essay-container:hover .title-text::after {
+          width: 100%;
+        }
+
+        .type-tag {
+          font-size: 0.7rem;
+          font-weight: 500;
+          color: var(--accent-color);
+          background-color: var(--accent-bg);
+          padding: 2px 8px;
+          border-radius: 12px;
+          white-space: nowrap;
+          letter-spacing: 0.02em;
+          flex-shrink: 0;
+        }
+
         /* Essay summary displayed on hover/touch */
         .essay-summary {
-          padding: 10px 15px 15px;
+          padding: 4px 15px 12px;
           margin-left: 150px;
-          font-size: 0.9rem;
+          font-size: 0.85rem;
           line-height: 1.5;
-          color: var(--text-color);
-          background-color: var(--hover-bg);
-          border-bottom-left-radius: 4px;
-          border-bottom-right-radius: 4px;
-          transition: opacity 0.2s ease, max-height 0.3s ease;
+          color: var(--nav-text);
+          font-style: italic;
+          transition: opacity 0.15s ease, max-height 0.3s ease;
         }
-        
+
+        .empty-message {
+          font-size: 0.9rem;
+          color: var(--nav-text);
+          font-style: italic;
+        }
+
         /* Touch device specific styles */
         .touch-device {
-          transition: background-color 0.3s ease;
+          transition: background-color 0.15s ease;
         }
-        
+
         .touch-device .essay-row {
           position: relative;
         }
-        
+
         .touch-device.essay-hovered {
-          background-color: var(--hover-bg);
+          background-color: var(--card-bg);
         }
-        
+
         /* Show summary box when scrolled into view on mobile */
         .touch-device .essay-summary {
           margin-top: 0.5rem;
           border-top: 1px solid var(--border-color);
         }
-        
+
         @media (max-width: 640px) {
           .essays-header, .essay-row {
             grid-template-columns: 100px 1fr;
           }
-          
+
           .essay-date {
-            font-size: 0.8rem;
+            font-size: 0.85rem;
           }
-          
+
           .essay-summary {
             margin-left: 0;
+            padding: 5px 15px 15px;
           }
-          
-          /* Mobile-specific touch indicators */
-          .touch-device.essay-hovered::before {
-            content: '';
-            position: absolute;
-            left: 0;
-            top: 0;
-            height: 100%;
-            width: 4px;
-            background: var(--link-color);
-            border-radius: 2px;
-          }
-          
+
           /* Tap again hint for mobile */
           .touch-device.essay-hovered .essay-summary::after {
             content: 'Tap again to read';
@@ -302,7 +341,7 @@ export default function Essays({ essays }) {
 }
 
 export async function getStaticProps() {
-  const essays = await getAllEssays(['title', 'date', 'slug', 'summary']);
+  const essays = await getAllEssays(['title', 'date', 'slug', 'summary', 'type']);
   
   return {
     props: {
