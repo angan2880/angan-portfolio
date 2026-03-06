@@ -571,6 +571,15 @@ pre code {
   text-align: left;
 }
 
+.notion-table-title {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--nav-text);
+  padding: 0.5rem 1rem;
+  background-color: var(--card-bg);
+  border-bottom: 1px solid var(--border-color);
+}
+
 .notion-table th {
   background-color: var(--card-bg);
   font-weight: 600;
@@ -579,6 +588,21 @@ pre code {
 
 .notion-table tr:hover {
   background-color: var(--hover-bg);
+}
+
+/* Notion select/multi-select tags */
+.notion-select-tag {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  line-height: 1.4;
+  white-space: nowrap;
+}
+
+.notion-table td .notion-select-tag {
+  margin: 1px 2px;
 }
 
 /* Notion toggle blocks */
