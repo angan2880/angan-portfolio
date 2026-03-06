@@ -3,8 +3,9 @@ import Link from 'next/link';
 import Layout from '../components/Layout';
 import { getAllEssays } from '../lib/markdown';
 import { getAllInterestingItems } from '../lib/interesting';
+import { getAboutContentFromNotion } from '../lib/notion';
 
-export default function Home({ recentEssays, interestingItems }) {
+export default function Home({ recentEssays, interestingItems, homeBio }) {
   const [hoveredItem, setHoveredItem] = useState(null);
   const [isMobile, setIsMobile] = useState(false);
   const [keyboardMode, setKeyboardMode] = useState(false);
@@ -141,12 +142,9 @@ export default function Home({ recentEssays, interestingItems }) {
     <Layout>
       <div className="home-container">
         <section className="bio-section">
-          <p className="bio-text">
-            I spend my time researching markets, analyzing investment opportunities, and thinking about the frameworks that drive financial decision-making. I'm particularly interested in how quantitative models and strategic insights intersect to create an edge in portfolio management and broader economic trends. My approach is a blend of deep research, structured thinking, and curiosity about market inefficiencies.
-          </p>
-          <p className="bio-text">
-            Outside of work, I'm learning Spanish, pushing myself in long-distance cycling, and diving into quantum computing. Cycling challenges me both physically and mentally, Spanish expands my perspective, and quantum computing intrigues me with its potential to reshape complex problem-solving. I enjoy taking on difficult, high-leverage challenges that force me to grow.
-          </p>
+          {homeBio.map((paragraph, i) => (
+            <p key={i} className="bio-text">{paragraph}</p>
+          ))}
         </section>
 
         <div className="content-divider"></div>
@@ -460,11 +458,22 @@ export async function getStaticProps() {
   const allEssays = await getAllEssays(['title', 'date', 'slug', 'summary']);
   const recentEssays = allEssays.slice(0, 3);
   const interestingItems = await getAllInterestingItems(3);
-  
+
+  let homeBio = [];
+  try {
+    const about = await getAboutContentFromNotion();
+    if (about && about.homeBio && about.homeBio.length > 0) {
+      homeBio = about.homeBio;
+    }
+  } catch (error) {
+    console.error('Error fetching home bio from Notion:', error);
+  }
+
   return {
     props: {
       recentEssays: recentEssays.slice(0, 3),
       interestingItems,
+      homeBio,
     },
     revalidate: 60,
   };
