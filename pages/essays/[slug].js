@@ -145,7 +145,7 @@ export async function getStaticPaths() {
         },
       };
     }),
-    fallback: false,
+    fallback: 'blocking',
   };
 }
 
@@ -164,5 +164,6 @@ export async function getStaticProps({ params }) {
         content: processedContent
       },
     },
+    revalidate: 60,
   };
 } 

@@ -466,5 +466,6 @@ export async function getStaticProps() {
       recentEssays: recentEssays.slice(0, 3),
       interestingItems,
     },
+    revalidate: 60,
   };
 } 

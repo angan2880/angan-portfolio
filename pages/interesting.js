@@ -416,6 +416,7 @@ export async function getStaticProps() {
   const interestingItems = await getAllInterestingItems();
 
   return {
-    props: { interestingItems }
+    props: { interestingItems },
+    revalidate: 60,
   };
 } 

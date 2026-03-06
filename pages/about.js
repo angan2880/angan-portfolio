@@ -289,5 +289,6 @@ export async function getStaticProps() {
     props: {
       about: about || fallbackAbout,
     },
+    revalidate: 60,
   };
 }

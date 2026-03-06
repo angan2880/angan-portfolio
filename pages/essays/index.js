@@ -308,5 +308,6 @@ export async function getStaticProps() {
     props: {
       essays: essays || [], // Ensure we always return an array
     },
+    revalidate: 60,
   };
 } 
