@@ -457,7 +457,8 @@ export default function Home({ recentEssays, interestingItems }) {
 }
 
 export async function getStaticProps() {
-  const recentEssays = await getAllEssays(['title', 'date', 'slug', 'summary']);
+  const allEssays = await getAllEssays(['title', 'date', 'slug', 'summary']);
+  const recentEssays = allEssays.slice(0, 3);
   const interestingItems = await getAllInterestingItems(3);
   
   return {

@@ -4,6 +4,8 @@ on:
   push:
     branches:
       - main
+  schedule:
+    - cron: '0 */6 * * *'
 
 # Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages and pushing changes
 permissions:
@@ -19,10 +21,11 @@ concurrency:
 jobs:
   build:
     runs-on: ubuntu-latest
-    # Add environment variables for Supabase
     env:
-      NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
-      NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
+      NOTION_API_KEY: ${{ secrets.NOTION_API_KEY }}
+      NOTION_ESSAYS_DATABASE_ID: ${{ secrets.NOTION_ESSAYS_DATABASE_ID }}
+      NOTION_INTERESTING_DATABASE_ID: ${{ secrets.NOTION_INTERESTING_DATABASE_ID }}
+      NOTION_ABOUT_PAGE_ID: ${{ secrets.NOTION_ABOUT_PAGE_ID }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -61,12 +64,10 @@ jobs:
       - name: Build with Next.js
         run: |
           echo "Starting build..."
-          echo "Using Supabase URL: ${NEXT_PUBLIC_SUPABASE_URL:-Not set}"
-          # Don't print the actual key, just check if it exists
-          if [ -n "$NEXT_PUBLIC_SUPABASE_ANON_KEY" ]; then
-            echo "Supabase anon key is set"
+          if [ -n "$NOTION_API_KEY" ]; then
+            echo "Notion API key is set"
           else
-            echo "Supabase anon key is NOT set"
+            echo "Notion API key is NOT set"
           fi
           npm run build
           echo "Build completed"

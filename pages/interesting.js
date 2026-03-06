@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import Layout from '../components/Layout';
 import { getAllInterestingItems } from '../lib/interesting';
-import { supabase } from '../lib/supabase';
 
 export default function InterestingPage({ interestingItems }) {
   const [hoveredItem, setHoveredItem] = useState(null);

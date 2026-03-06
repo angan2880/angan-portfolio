@@ -152,9 +152,11 @@ export async function getStaticPaths() {
 export async function getStaticProps({ params }) {
   const essay = await getEssayBySlug(params.slug);
   
-  // Process markdown content to HTML
-  const processedContent = await markdownToHtml(essay.content || '');
-  
+  // If content is already HTML (from Notion), skip markdown processing
+  const processedContent = essay.isHtml
+    ? essay.content
+    : await markdownToHtml(essay.content || '');
+
   return {
     props: {
       essay: {

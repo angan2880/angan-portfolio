@@ -8,29 +8,10 @@ const nextConfig = {
   },
   basePath: process.env.NODE_ENV === 'development' ? '' : '/angan-portfolio',
   assetPrefix: process.env.NODE_ENV === 'development' ? '' : '/angan-portfolio/',
-  
-  // Exclude specific pages from static export
-  exportPathMap: async function (
-    defaultPathMap,
-    { dev, dir, outDir, distDir, buildId }
-  ) {
-    // Create a new pathMap with only the pages we want to include
-    const pathMap = {
-      '/': { page: '/' },
-      '/about': { page: '/about' },
-      '/essays': { page: '/essays' },
-      '/interesting': { page: '/interesting' },
-      '/search': { page: '/search' },
-    };
-    
-    // Add a sample essay route
-    // This is a static fallback since we can't dynamically get essays at config time
-    pathMap['/essays/sample-essay'] = {
-      page: '/essays/[slug]',
-      query: { slug: 'sample-essay' }
-    };
-    
-    return pathMap;
+
+  // Let Next.js auto-discover all paths via getStaticPaths
+  exportPathMap: async function (defaultPathMap) {
+    return defaultPathMap;
   },
   // Add the following option to fix issues with fonts
   experimental: {
@@ -38,4 +19,4 @@ const nextConfig = {
   },
 }
 
-module.exports = nextConfig 
+module.exports = nextConfig

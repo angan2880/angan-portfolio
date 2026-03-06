@@ -42,5 +42,4 @@ next-env.d.ts
 .vscode/
 
 # System files
-.DS_Store
-Thumbs.db 
+Thumbs.db
