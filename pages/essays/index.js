@@ -46,10 +46,23 @@ export default function Essays({ essays }) {
                 }`}
                 onMouseEnter={() => !isTouch && setHoveredEssay(essay.slug)}
                 onMouseLeave={() => !isTouch && setHoveredEssay(null)}
+                onClick={() => {
+                  if (isTouch && hoveredEssay !== essay.slug) {
+                    setHoveredEssay(essay.slug);
+                  }
+                }}
               >
                 <Link
                   href={`/essays/${essay.slug}`}
                   className="essay-link"
+                  onClick={(e) => {
+                    if (isTouch && hoveredEssay !== essay.slug) {
+                      e.preventDefault();
+                    }
+                    if (isTouch && hoveredEssay === essay.slug) {
+                      e.stopPropagation();
+                    }
+                  }}
                 >
                   <div className="essay-row">
                     <div className="essay-date">

@@ -107,8 +107,24 @@ export default function Home({ recentEssays, interestingItems, homeBio }) {
                   className={`essay-item ${hoveredItem === essay.slug ? 'item-hovered' : ''}`}
                   onMouseEnter={() => !isTouch && setHoveredItem(essay.slug)}
                   onMouseLeave={() => !isTouch && setHoveredItem(null)}
+                  onClick={() => {
+                    if (isTouch && hoveredItem !== essay.slug) {
+                      setHoveredItem(essay.slug);
+                    }
+                  }}
                 >
-                  <Link href={`/essays/${essay.slug}`} className="item-link">
+                  <Link
+                    href={`/essays/${essay.slug}`}
+                    className="item-link"
+                    onClick={(e) => {
+                      if (isTouch && hoveredItem !== essay.slug) {
+                        e.preventDefault();
+                      }
+                      if (isTouch && hoveredItem === essay.slug) {
+                        e.stopPropagation();
+                      }
+                    }}
+                  >
                     <div className="item-row">
                       <div className="item-date">
                         {formatDate(essay.date)}
