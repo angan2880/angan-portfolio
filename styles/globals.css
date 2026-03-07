@@ -908,24 +908,6 @@ details > *:not(summary) {
   z-index: 2;
 }
 
-.keyboard-mode .nav a.keyboard-focused::before {
-  content: "→";
-  position: absolute;
-  left: -15px;
-  animation: pulse 1s infinite alternate;
-  color: var(--accent-color);
-}
-
-@keyframes pulse {
-  from {
-    opacity: 0.5;
-    transform: translateX(2px);
-  }
-  to {
-    opacity: 1;
-    transform: translateX(0);
-  }
-}
 
 /* Light mode styles */
 .light .keyboard-mode .nav a.keyboard-focused {
@@ -935,9 +917,6 @@ details > *:not(summary) {
   box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.2);
 }
 
-.light .keyboard-mode .nav a.keyboard-focused::before {
-  color: #000;
-}
 
 /* Navigation focus styles for Superhuman-like experience */
 .nav a:focus {

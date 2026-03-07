@@ -92,7 +92,7 @@ export default function Layout({ children, title = "Angan Sarker", description =
       const contentEls = getContentElements();
       if (contentEls.length === 0) return;
 
-      if (e.key === 'ArrowDown') {
+      if (e.key === 'ArrowDown' || e.key === 'ArrowRight') {
         e.preventDefault();
         const nextIndex = currentFocusIndex + 1;
         if (nextIndex < contentEls.length) {
@@ -101,7 +101,7 @@ export default function Layout({ children, title = "Angan Sarker", description =
           contentEls[nextIndex].scrollIntoView({ block: 'nearest' });
         }
         // At bottom: do nothing, stay on last element
-      } else if (e.key === 'ArrowUp') {
+      } else if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') {
         e.preventDefault();
         if (currentFocusIndex <= 0) {
           // At top of content, move back to nav
@@ -114,8 +114,6 @@ export default function Layout({ children, title = "Angan Sarker", description =
           contentEls[prevIndex].focus();
           contentEls[prevIndex].scrollIntoView({ block: 'nearest' });
         }
-      } else if (e.key === 'ArrowRight' || e.key === 'ArrowLeft') {
-        // In content, left/right do nothing (let browser scroll)
       }
     }
 
