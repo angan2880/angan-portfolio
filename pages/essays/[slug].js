@@ -33,7 +33,7 @@ export default function Essay({ essay }) {
         }
         
         h1 {
-          font-size: 1.8rem;
+          font-size: 1.5rem;
           font-weight: 700;
           margin-bottom: 0.5rem;
           line-height: 1.3;
@@ -53,7 +53,7 @@ export default function Essay({ essay }) {
         }
         
         .essay-body :global(h1) {
-          font-size: 1.8rem;
+          font-size: 1.5rem;
           font-weight: 600;
           margin-bottom: 0.5rem;
           line-height: 1.3;
@@ -119,7 +119,7 @@ export default function Essay({ essay }) {
           margin-bottom: 2rem;
         }
 
-        .back-link a {
+        .back-link :global(a) {
           color: var(--text-color);
           text-decoration: none;
           font-size: 0.8rem;
@@ -130,9 +130,62 @@ export default function Essay({ essay }) {
           transition: all 0.15s ease;
         }
 
-        .back-link a:hover {
+        .back-link :global(a:hover) {
           background-color: var(--card-hover-bg);
           color: var(--accent-color);
+        }
+
+        @media (max-width: 768px) {
+          h1 {
+            font-size: 1.3rem;
+          }
+
+          .essay-body :global(h1) {
+            font-size: 1.3rem;
+          }
+
+          .essay-body :global(h2) {
+            font-size: 1.2rem;
+          }
+
+          .essay-body :global(h3) {
+            font-size: 1.05rem;
+          }
+
+          .essay-body {
+            font-size: 0.95rem;
+          }
+
+          .essay-body :global(pre) {
+            font-size: 0.8rem;
+            padding: 0.75rem;
+          }
+
+          .essay-body :global(.notion-table-wrap) {
+            margin-left: -1rem;
+            margin-right: -1rem;
+            border-radius: 0;
+          }
+
+          .essay-body :global(.notion-table) {
+            font-size: 0.8rem;
+          }
+
+          .essay-body :global(.notion-table th),
+          .essay-body :global(.notion-table td) {
+            padding: 0.4rem 0.6rem;
+          }
+
+          .essay-body :global(.video-embed) {
+            margin-left: -1rem;
+            margin-right: -1rem;
+            border-radius: 0;
+          }
+
+          .essay-body :global(blockquote) {
+            margin-left: 0;
+            margin-right: 0;
+          }
         }
       `}</style>
     </Layout>

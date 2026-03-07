@@ -263,9 +263,18 @@ export default function Portfolio() {
           font-size: 0.85rem;
         }
         
-        @media (max-width: 640px) {
+        @media (max-width: 768px) {
+          .page-header h1 {
+            font-size: 1.3rem;
+          }
+
           .portfolio-grid {
             grid-template-columns: 1fr;
+          }
+
+          .document-icon {
+            font-size: 1.5rem;
+            margin-right: 1rem;
           }
         }
       `}</style>

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import Layout from '../components/Layout';
 import { getAllInterestingItems } from '../lib/interesting';
 
@@ -7,53 +7,10 @@ export default function InterestingPage({ interestingItems }) {
   const [touchedItem, setTouchedItem] = useState(null);
   const [isTouch, setIsTouch] = useState(false);
   const [keyboardMode, setKeyboardMode] = useState(false);
-  const itemRefs = useRef({});
 
   // Detect touch devices on mount
   useEffect(() => {
     setIsTouch('ontouchstart' in window || navigator.maxTouchPoints > 0);
-
-    // Set up intersection observer for mobile scroll-based highlighting
-    if (typeof IntersectionObserver !== 'undefined') {
-      const observerOptions = {
-        root: null,
-        rootMargin: '0px',
-        threshold: 0.7, // Item needs to be 70% visible to trigger
-      };
-
-      const observer = new IntersectionObserver((entries) => {
-        // Only apply auto-highlight on touch devices
-        if (!isTouch) return;
-      }, observerOptions);
-
-      // Register all items for observation
-      Object.values(itemRefs.current).forEach(ref => {
-        if (ref) observer.observe(ref);
-      });
-
-      // Add listener for custom keyboard focus events from Layout component
-      const handleKeyboardFocus = (e) => {
-        const { itemId } = e.detail;
-        if (itemId) {
-          setHoveredItem(itemId);
-        }
-      };
-
-      Object.entries(itemRefs.current).forEach(([id, ref]) => {
-        if (ref) {
-          ref.addEventListener('keyboardFocus', handleKeyboardFocus);
-        }
-      });
-
-      return () => {
-        observer.disconnect();
-        Object.entries(itemRefs.current).forEach(([id, ref]) => {
-          if (ref) {
-            ref.removeEventListener('keyboardFocus', handleKeyboardFocus);
-          }
-        });
-      };
-    }
 
     // Detect keyboard navigation mode
     const handleKeyDown = (e) => {
@@ -73,7 +30,7 @@ export default function InterestingPage({ interestingItems }) {
       window.removeEventListener('keydown', handleKeyDown);
       window.removeEventListener('mousedown', handleMouseDown);
     };
-  }, [isTouch, touchedItem, interestingItems]);
+  }, []);
 
   const handleMouseEnter = (id) => {
     if (!isTouch && !keyboardMode) {
@@ -145,12 +102,7 @@ export default function InterestingPage({ interestingItems }) {
   return (
     <Layout title="Interesting Things" description="Collection of interesting things found online">
       <div className="interesting-container">
-        <section className="intro-section">
-          <h1>Stuff I Found Interesting on the Interwebs</h1>
-          <p>A curated collection of articles, tools, videos, and resources that caught my attention.</p>
-        </section>
-
-        <div className="content-divider"></div>
+        <p className="intro-line">A curated collection of articles, tools, and resources that caught my attention.</p>
 
         <div className="interesting-header">
           <div className="header-date">Date</div>
@@ -162,7 +114,6 @@ export default function InterestingPage({ interestingItems }) {
             {interestingItems.map((item) => (
               <div
                 key={item.id}
-                ref={el => itemRefs.current[item.id] = el}
                 data-id={item.id}
                 className={`interesting-item ${
                   hoveredItem === item.id || touchedItem === item.id ? 'item-hovered' : ''
@@ -221,44 +172,21 @@ export default function InterestingPage({ interestingItems }) {
           padding-top: 0;
         }
 
-        .intro-section {
-          margin-bottom: 2rem;
-        }
-
-        .intro-section h1 {
-          font-size: 1.6rem;
-          font-weight: 700;
-          margin-bottom: 0.5rem;
-          font-family: var(--font-heading);
-          color: var(--text-color);
-        }
-
-        .intro-section p {
-          font-size: 1rem;
-          color: var(--footer-text);
-          max-width: 650px;
-          line-height: 1.5;
-        }
-
-        .content-divider {
-          height: 1px;
-          background-color: var(--border-color);
-          margin: 1.25rem 0;
-          width: 100%;
-        }
-
         .interesting-header {
           display: grid;
           grid-template-columns: 150px 1fr;
-          padding: 0 15px 10px;
-          border-bottom: 2px solid var(--border-color);
-          margin-bottom: 1rem;
-          color: var(--footer-text);
-          font-size: 0.9rem;
+          padding: 0 0.75rem 0.5rem;
+          border-bottom: 1px solid var(--border-color);
+          margin-bottom: 0.75rem;
+          color: var(--nav-text);
+          font-size: 0.8rem;
+          font-weight: 600;
+          text-transform: uppercase;
+          letter-spacing: 0.08em;
         }
 
         .header-date, .header-title {
-          font-weight: 500;
+          font-weight: 600;
         }
 
         .content-list {
@@ -403,17 +331,26 @@ export default function InterestingPage({ interestingItems }) {
           font-style: italic;
         }
 
-        @media (max-width: 640px) {
+        @media (max-width: 768px) {
           .interesting-header, .item-row {
             grid-template-columns: 100px 1fr;
           }
 
           .item-date {
-            font-size: 0.85rem;
+            font-size: 0.8rem;
+          }
+
+          .item-title {
+            font-size: 0.9rem;
           }
 
           .item-why {
             margin-left: 0;
+          }
+
+          .type-tag {
+            font-size: 0.65rem;
+            padding: 1px 6px;
           }
         }
       `}</style>

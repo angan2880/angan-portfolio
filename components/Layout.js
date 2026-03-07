@@ -463,7 +463,7 @@ export default function Layout({ children, title = "Angan Sarker", description =
       </main>
 
       <footer className="footer">
-        <div className="container">
+        <div className="footer-content">
           <div>© {new Date().getFullYear()} Angan Sarker</div>
         </div>
       </footer>
@@ -582,11 +582,11 @@ export default function Layout({ children, title = "Angan Sarker", description =
           color: var(--footer-text);
           margin-top: 1rem;
         }
-        
+
         .footer-content {
-          max-width: 900px;
+          max-width: 960px;
           margin: 0 auto;
-          padding: 0 1.5rem;
+          padding: 0 2rem;
           font-size: 0.9rem;
         }
         
@@ -594,14 +594,28 @@ export default function Layout({ children, title = "Angan Sarker", description =
           .header-content {
             flex-direction: column;
             align-items: flex-start;
+            padding: 0 1rem;
           }
-          
+
           .nav {
-            margin-top: 1rem;
+            margin-top: 0.75rem;
             margin-left: 0;
-            gap: 1rem;
+            gap: 0.25rem;
+            flex-wrap: wrap;
           }
-          
+
+          .nav a {
+            font-size: 0.85rem;
+            padding: 5px 10px;
+          }
+
+          main {
+            padding: 1.25rem 1rem 2rem;
+          }
+
+          .footer-content {
+            padding: 0 1rem;
+          }
         }
       `}</style>
     </div>

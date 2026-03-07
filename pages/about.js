@@ -273,6 +273,39 @@ export default function About({ about }) {
         a:hover {
           color: var(--link-hover-color);
         }
+
+        @media (max-width: 768px) {
+          .page-header h1 {
+            font-size: 1.3rem;
+          }
+
+          h2 {
+            font-size: 1.3rem;
+          }
+
+          .experience-header {
+            flex-direction: column;
+            gap: 0.15rem;
+          }
+
+          .duration {
+            font-size: 0.8rem;
+          }
+
+          .skills-section {
+            flex-direction: column;
+            gap: 1rem;
+          }
+
+          .skill-category {
+            min-width: unset;
+          }
+
+          .download-button {
+            font-size: 0.9rem;
+            padding: 8px 14px;
+          }
+        }
       `}</style>
     </Layout>
   );

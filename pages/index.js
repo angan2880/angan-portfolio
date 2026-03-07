@@ -141,7 +141,7 @@ export default function Home({ recentEssays, interestingItems, homeBio }) {
   return (
     <Layout>
       <div className="home-container">
-        <p className="intro-line"><span className="accent-dot">·</span> Part investment brain, part tinkerer. Here's what I've been chewing on.</p>
+        <p className="intro-line">Part investment brain, part tinkerer. Here's what I've been chewing on.</p>
 
         <section className="content-section">
           <div className="section-header">
@@ -263,20 +263,7 @@ export default function Home({ recentEssays, interestingItems, homeBio }) {
           margin: 0 auto;
         }
 
-        .intro-line {
-          font-size: 1.1rem;
-          color: var(--nav-text);
-          margin: 0 0 1.5rem;
-          line-height: 1.5;
-        }
 
-        .accent-dot {
-          color: var(--accent-color);
-          font-weight: 700;
-          font-size: 1.4rem;
-          margin-right: 0.35rem;
-          vertical-align: -1px;
-        }
 
         .content-divider {
           height: 1px;
@@ -308,7 +295,7 @@ export default function Home({ recentEssays, interestingItems, homeBio }) {
           text-transform: uppercase;
         }
 
-        .section-link {
+        .section-header :global(.section-link) {
           font-size: 0.8rem;
           color: var(--text-color);
           text-decoration: none;
@@ -319,7 +306,7 @@ export default function Home({ recentEssays, interestingItems, homeBio }) {
           transition: all 0.15s ease;
         }
 
-        .section-link:hover {
+        .section-header :global(.section-link:hover) {
           background-color: var(--card-hover-bg);
           color: var(--accent-color);
         }
@@ -359,6 +346,8 @@ export default function Home({ recentEssays, interestingItems, homeBio }) {
           background-color: var(--card-bg);
         }
         
+        .essay-item :global(.item-link),
+        .interesting-item :global(.item-link),
         .item-link {
           text-decoration: none;
           color: inherit;
@@ -450,8 +439,8 @@ export default function Home({ recentEssays, interestingItems, homeBio }) {
           line-height: 1.5;
           color: var(--text-color);
           background-color: var(--hover-bg);
-          border-bottom-left-radius: 4px;
-          border-bottom-right-radius: 4px;
+          border-bottom-left-radius: 8px;
+          border-bottom-right-radius: 8px;
           transition: opacity 0.2s ease, max-height 0.3s ease;
         }
         
@@ -471,20 +460,38 @@ export default function Home({ recentEssays, interestingItems, homeBio }) {
           .item-row {
             grid-template-columns: 100px 1fr;
           }
-          
+
           .item-date {
-            font-size: 0.85rem;
+            font-size: 0.8rem;
           }
-          
+
+          .item-title {
+            font-size: 0.9rem;
+          }
+
           .item-summary {
             margin-left: 0;
             padding: 5px 15px 15px;
           }
-          
+
           .item-why {
             margin-left: 0;
             padding: 10px 15px 15px;
             border-top: 1px solid var(--border-color);
+          }
+
+          .type-tag {
+            font-size: 0.65rem;
+            padding: 1px 6px;
+          }
+
+          .section-header h2 {
+            font-size: 0.75rem;
+          }
+
+          .section-header :global(.section-link) {
+            font-size: 0.75rem;
+            padding: 4px 10px;
           }
         }
       `}</style>

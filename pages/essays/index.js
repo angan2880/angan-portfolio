@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Layout from '../../components/Layout';
 import { getAllEssays } from '../../lib/markdown';
@@ -16,45 +16,10 @@ export default function Essays({ essays }) {
   const [hoveredEssay, setHoveredEssay] = useState(null);
   const [touchedEssay, setTouchedEssay] = useState(null);
   const [isTouch, setIsTouch] = useState(false);
-  const essayRefs = useRef({});
-
-  // Detect touch devices on mount and set up observers for scroll-based highlighting
+  // Detect touch devices on mount
   useEffect(() => {
     setIsTouch('ontouchstart' in window || navigator.maxTouchPoints > 0);
-    
-    // Set up intersection observer for mobile scroll-based highlighting
-    if (typeof IntersectionObserver !== 'undefined') {
-      const observerOptions = {
-        root: null,
-        rootMargin: '0px',
-        threshold: 0.7, // Item needs to be 70% visible to trigger
-      };
-      
-      const observer = new IntersectionObserver((entries) => {
-        // Only apply auto-highlight on touch devices
-        if (!isTouch) return;
-        
-        // Remove this automatic selection on scroll
-        // entries.forEach(entry => {
-        //   const slug = entry.target.dataset.slug;
-        //   if (entry.isIntersecting) {
-        //     setTouchedEssay(slug);
-        //   } else if (touchedEssay === slug) {
-        //     setTouchedEssay(null);
-        //   }
-        // });
-      }, observerOptions);
-      
-      // Register all items for observation
-      Object.values(essayRefs.current).forEach(ref => {
-        if (ref) observer.observe(ref);
-      });
-      
-      return () => {
-        observer.disconnect();
-      };
-    }
-  }, [isTouch, touchedEssay, essays]);
+  }, []);
 
   const handleMouseEnter = (slug) => {
     if (!isTouch) {
@@ -88,6 +53,8 @@ export default function Essays({ essays }) {
   return (
     <Layout title="Essays" description="Essays by Angan Sarker">
       <div className="essays-container">
+        <p className="intro-line">Longer-form writing on investing, tech, and whatever else I've been thinking about.</p>
+
         <div className="essays-header">
           <div className="header-date">Date</div>
           <div className="header-title">Title</div>
@@ -100,7 +67,6 @@ export default function Essays({ essays }) {
             {essays.map((essay) => (
               <div 
                 key={essay.slug}
-                ref={el => essayRefs.current[essay.slug] = el}
                 data-slug={essay.slug}
                 className={`essay-container ${
                   hoveredEssay === essay.slug || touchedEssay === essay.slug ? 'essay-hovered' : ''
@@ -155,29 +121,30 @@ export default function Essays({ essays }) {
       <style jsx>{`
         .essays-container {
           width: 100%;
-          margin-top: 1rem;
         }
 
         .essays-header {
           display: grid;
           grid-template-columns: 150px 1fr;
-          padding-bottom: 0.75rem;
+          padding: 0 0.75rem 0.5rem;
           margin-bottom: 0;
           align-items: baseline;
           color: var(--nav-text);
-          font-size: 1rem;
-          padding-left: 0.75rem;
+          font-size: 0.8rem;
+          font-weight: 600;
+          text-transform: uppercase;
+          letter-spacing: 0.08em;
         }
 
         .header-divider {
           height: 1px;
           background-color: var(--border-color);
-          margin-bottom: 15px;
+          margin-bottom: 0.75rem;
           width: 100%;
         }
 
         .header-date, .header-title {
-          font-weight: 400;
+          font-weight: 600;
         }
 
         .essays-list {
@@ -209,7 +176,7 @@ export default function Essays({ essays }) {
           color: var(--text-color);
         }
 
-        .essay-link {
+        .essay-container :global(.essay-link) {
           text-decoration: none;
           color: inherit;
           display: block;
@@ -310,18 +277,27 @@ export default function Essays({ essays }) {
           border-top: 1px solid var(--border-color);
         }
 
-        @media (max-width: 640px) {
+        @media (max-width: 768px) {
           .essays-header, .essay-row {
             grid-template-columns: 100px 1fr;
           }
 
           .essay-date {
-            font-size: 0.85rem;
+            font-size: 0.8rem;
+          }
+
+          .essay-title {
+            font-size: 0.9rem;
           }
 
           .essay-summary {
             margin-left: 0;
             padding: 5px 15px 15px;
+          }
+
+          .type-tag {
+            font-size: 0.65rem;
+            padding: 1px 6px;
           }
 
           /* Tap again hint for mobile */
