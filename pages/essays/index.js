@@ -14,41 +14,15 @@ const formatDate = (dateString) => {
 
 export default function Essays({ essays }) {
   const [hoveredEssay, setHoveredEssay] = useState(null);
-  const [touchedEssay, setTouchedEssay] = useState(null);
   const [isTouch, setIsTouch] = useState(false);
-  // Detect touch devices on mount
+
   useEffect(() => {
-    setIsTouch('ontouchstart' in window || navigator.maxTouchPoints > 0);
+    const mq = window.matchMedia('(hover: none)');
+    setIsTouch(mq.matches);
+    const handler = (e) => setIsTouch(e.matches);
+    mq.addEventListener('change', handler);
+    return () => mq.removeEventListener('change', handler);
   }, []);
-
-  const handleMouseEnter = (slug) => {
-    if (!isTouch) {
-      setHoveredEssay(slug);
-    }
-  };
-
-  const handleMouseLeave = () => {
-    if (!isTouch) {
-      setHoveredEssay(null);
-    }
-  };
-  
-  const handleTouch = (slug, url) => {
-    if (isTouch) {
-      if (touchedEssay === slug) {
-        // Second tap, navigate to the essay
-        window.location.href = url;
-      } else {
-        // First tap, show the summary
-        // Make sure we clear any previously selected essay
-        setTouchedEssay(null);
-        // Use setTimeout to ensure UI updates properly before setting the new touched essay
-        setTimeout(() => {
-          setTouchedEssay(slug);
-        }, 10);
-      }
-    }
-  };
 
   return (
     <Layout title="Essays" description="Essays by Angan Sarker">
@@ -65,25 +39,17 @@ export default function Essays({ essays }) {
         {essays.length > 0 ? (
           <div className="essays-list">
             {essays.map((essay) => (
-              <div 
+              <div
                 key={essay.slug}
-                data-slug={essay.slug}
                 className={`essay-container ${
-                  hoveredEssay === essay.slug || touchedEssay === essay.slug ? 'essay-hovered' : ''
-                } ${isTouch ? 'touch-device' : ''}`}
-                onMouseEnter={() => handleMouseEnter(essay.slug)}
-                onMouseLeave={handleMouseLeave}
-                onClick={() => handleTouch(essay.slug, `/essays/${essay.slug}`)}
+                  hoveredEssay === essay.slug ? 'essay-hovered' : ''
+                }`}
+                onMouseEnter={() => !isTouch && setHoveredEssay(essay.slug)}
+                onMouseLeave={() => !isTouch && setHoveredEssay(null)}
               >
-                <Link 
-                  href={`/essays/${essay.slug}`} 
+                <Link
+                  href={`/essays/${essay.slug}`}
                   className="essay-link"
-                  onClick={(e) => {
-                    if (isTouch) {
-                      // Prevent default navigation on any tap inside the item
-                      e.preventDefault();
-                    }
-                  }}
                 >
                   <div className="essay-row">
                     <div className="essay-date">
@@ -95,18 +61,9 @@ export default function Essays({ essays }) {
                     </div>
                   </div>
                 </Link>
-                
-                {/* Show summary when hovered/touched */}
-                {(hoveredEssay === essay.slug || touchedEssay === essay.slug) && essay.summary && (
-                  <div 
-                    className="essay-summary"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      if (isTouch) {
-                        handleTouch(essay.slug, `/essays/${essay.slug}`);
-                      }
-                    }}
-                  >
+
+                {hoveredEssay === essay.slug && essay.summary && (
+                  <div className="essay-summary">
                     {essay.summary}
                   </div>
                 )}
@@ -161,19 +118,30 @@ export default function Essays({ essays }) {
           cursor: pointer;
         }
 
-        .essay-hovered,
-        .essay-container:hover {
+        .essay-hovered {
           background-color: var(--card-bg);
         }
 
-        .essay-container:hover .essay-title,
         .essay-hovered .essay-title {
           color: var(--accent-color);
         }
 
-        .essay-container:hover .essay-date,
         .essay-hovered .essay-date {
           color: var(--text-color);
+        }
+
+        @media (hover: hover) {
+          .essay-container:hover {
+            background-color: var(--card-bg);
+          }
+
+          .essay-container:hover .essay-title {
+            color: var(--accent-color);
+          }
+
+          .essay-container:hover .essay-date {
+            color: var(--text-color);
+          }
         }
 
         .essay-container :global(.essay-link) {
@@ -224,9 +192,14 @@ export default function Essays({ essays }) {
           transition: width 0.25s ease;
         }
 
-        .essay-hovered .title-text::after,
-        .essay-container:hover .title-text::after {
+        .essay-hovered .title-text::after {
           width: 100%;
+        }
+
+        @media (hover: hover) {
+          .essay-container:hover .title-text::after {
+            width: 100%;
+          }
         }
 
         .type-tag {
@@ -258,25 +231,6 @@ export default function Essays({ essays }) {
           font-style: italic;
         }
 
-        /* Touch device specific styles */
-        .touch-device {
-          transition: background-color 0.15s ease;
-        }
-
-        .touch-device .essay-row {
-          position: relative;
-        }
-
-        .touch-device.essay-hovered {
-          background-color: var(--card-bg);
-        }
-
-        /* Show summary box when scrolled into view on mobile */
-        .touch-device .essay-summary {
-          margin-top: 0.5rem;
-          border-top: 1px solid var(--border-color);
-        }
-
         @media (max-width: 768px) {
           .essays-header, .essay-row {
             grid-template-columns: 100px 1fr;
@@ -300,16 +254,7 @@ export default function Essays({ essays }) {
             padding: 1px 6px;
           }
 
-          /* Tap again hint for mobile */
-          .touch-device.essay-hovered .essay-summary::after {
-            content: 'Tap again to read';
-            display: block;
-            margin-top: 0.75rem;
-            font-size: 0.8rem;
-            color: var(--link-color);
-            text-align: right;
-            font-style: italic;
-          }
+
         }
       `}</style>
     </Layout>

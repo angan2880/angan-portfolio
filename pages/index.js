@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Layout from '../components/Layout';
 import { getAllEssays } from '../lib/markdown';
@@ -7,94 +7,46 @@ import { getAboutContentFromNotion } from '../lib/notion';
 
 export default function Home({ recentEssays, interestingItems, homeBio }) {
   const [hoveredItem, setHoveredItem] = useState(null);
-  const [isMobile, setIsMobile] = useState(false);
+  const [isTouch, setIsTouch] = useState(false);
   const [keyboardMode, setKeyboardMode] = useState(false);
-  const itemRefs = useRef({});
-  const essayRefs = useRef({});
 
-  // Check if the device is mobile
   useEffect(() => {
-    const checkMobile = () => {
-      setIsMobile(window.innerWidth <= 768);
-    };
-    
-    // Initial check
-    checkMobile();
-    
-    // Add event listener for resize
-    window.addEventListener('resize', checkMobile);
-    
-    // Detect keyboard navigation
+    // Reliable touch detection via hover media query
+    const mq = window.matchMedia('(hover: none)');
+    setIsTouch(mq.matches);
+    const mqHandler = (e) => setIsTouch(e.matches);
+    mq.addEventListener('change', mqHandler);
+
     const handleKeyDown = (e) => {
       if (['Tab', 'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(e.key)) {
         setKeyboardMode(true);
       }
     };
-    
+
     const handleMouseDown = () => {
       setKeyboardMode(false);
     };
-    
-    // Add listeners for custom keyboard focus events from Layout component
-    const handleKeyboardFocus = (e) => {
-      const { itemId } = e.detail;
-      if (itemId) {
-        setHoveredItem(itemId);
-      }
-    };
-    
-    // Set up event listeners for all interesting items
-    Object.entries(itemRefs.current).forEach(([id, ref]) => {
-      if (ref) {
-        ref.addEventListener('keyboardFocus', handleKeyboardFocus);
-      }
-    });
-    
+
     window.addEventListener('keydown', handleKeyDown);
     window.addEventListener('mousedown', handleMouseDown);
-    
-    // Cleanup
+
     return () => {
-      window.removeEventListener('resize', checkMobile);
+      mq.removeEventListener('change', mqHandler);
       window.removeEventListener('keydown', handleKeyDown);
       window.removeEventListener('mousedown', handleMouseDown);
-      
-      Object.entries(itemRefs.current).forEach(([id, ref]) => {
-        if (ref) {
-          ref.removeEventListener('keyboardFocus', handleKeyboardFocus);
-        }
-      });
     };
   }, []);
 
   const handleMouseEnter = (id) => {
-    if (!isMobile && !keyboardMode) {
+    if (!isTouch && !keyboardMode) {
       setHoveredItem(id);
     }
   };
 
   const handleMouseLeave = () => {
-    if (!isMobile && !keyboardMode) {
+    if (!isTouch && !keyboardMode) {
       setHoveredItem(null);
     }
-  };
-
-  // For mobile: toggle item details on tap
-  const handleItemClick = (e, id) => {
-    if (isMobile) {
-      e.preventDefault(); // Prevent navigation on first tap
-      
-      if (hoveredItem === id) {
-        // If already open, allow the link to work normally on second tap
-        setHoveredItem(null);
-        return true; 
-      } else {
-        // Open this item
-        setHoveredItem(id);
-        return false;
-      }
-    }
-    return true;
   };
   
   // Handle keyboard focus
@@ -104,16 +56,12 @@ export default function Home({ recentEssays, interestingItems, homeBio }) {
     }
   };
   
-  const handleBlur = () => {
+  const handleBlur = (e) => {
     if (keyboardMode) {
-      // Use a small delay to allow new focus to be set before removing hover
-      setTimeout(() => {
-        if (!document.activeElement || 
-            !(document.activeElement.closest('.interesting-item') || 
-              document.activeElement.closest('.essay-item'))) {
-          setHoveredItem(null);
-        }
-      }, 50);
+      const next = e.relatedTarget;
+      if (!next || !(next.closest('.interesting-item') || next.closest('.essay-item'))) {
+        setHoveredItem(null);
+      }
     }
   };
   
@@ -154,20 +102,13 @@ export default function Home({ recentEssays, interestingItems, homeBio }) {
           {recentEssays && recentEssays.length > 0 ? (
             <div className="content-list">
               {recentEssays.map((essay) => (
-                <div 
-                  key={essay.slug} 
+                <div
+                  key={essay.slug}
                   className={`essay-item ${hoveredItem === essay.slug ? 'item-hovered' : ''}`}
-                  onMouseEnter={() => handleMouseEnter(essay.slug)}
-                  onMouseLeave={handleMouseLeave}
-                  onFocus={() => handleFocus(essay.slug)}
-                  onBlur={handleBlur}
-                  tabIndex={0}
-                  ref={el => essayRefs.current[essay.slug] = el}
-                  data-id={essay.slug}
-                  onKeyDown={(e) => handleKeyDown(e, essay.slug)}
-                  role="button"
+                  onMouseEnter={() => !isTouch && setHoveredItem(essay.slug)}
+                  onMouseLeave={() => !isTouch && setHoveredItem(null)}
                 >
-                  <Link href={`/essays/${essay.slug}`} className="item-link" tabIndex={-1}>
+                  <Link href={`/essays/${essay.slug}`} className="item-link">
                     <div className="item-row">
                       <div className="item-date">
                         {formatDate(essay.date)}
@@ -204,26 +145,37 @@ export default function Home({ recentEssays, interestingItems, homeBio }) {
           {interestingItems && interestingItems.length > 0 ? (
             <div className="content-list">
               {interestingItems.map((item) => (
-                <div 
-                  key={item.id} 
+                <div
+                  key={item.id}
                   className={`interesting-item ${hoveredItem === item.id ? 'item-hovered' : ''}`}
                   onMouseEnter={() => handleMouseEnter(item.id)}
                   onMouseLeave={handleMouseLeave}
                   onFocus={() => handleFocus(item.id)}
                   onBlur={handleBlur}
                   tabIndex={0}
-                  ref={el => itemRefs.current[item.id] = el}
                   data-id={item.id}
+                  onClick={() => {
+                    if (isTouch && hoveredItem !== item.id) {
+                      setHoveredItem(item.id);
+                    }
+                  }}
                   onKeyDown={(e) => handleKeyDown(e, item.id, item.url)}
                   role="button"
-                  aria-pressed={hoveredItem === item.id}
+                  aria-expanded={hoveredItem === item.id}
                 >
-                  <a 
-                    href={item.url} 
-                    target="_blank" 
+                  <a
+                    href={item.url}
+                    target="_blank"
                     rel="noopener noreferrer"
                     className="item-link"
-                    onClick={(e) => hoveredItem === item.id || !isMobile ? true : handleItemClick(e, item.id)}
+                    onClick={(e) => {
+                      if (isTouch && hoveredItem !== item.id) {
+                        e.preventDefault();
+                      }
+                      if (isTouch && hoveredItem === item.id) {
+                        e.stopPropagation();
+                      }
+                    }}
                     tabIndex={-1}
                   >
                     <div className="item-row">
@@ -233,9 +185,6 @@ export default function Home({ recentEssays, interestingItems, homeBio }) {
                       <div className="item-title">
                         <span className="title-text">{item.title}</span>
                         {item.type && <span className="type-tag">{item.type}</span>}
-                        {isMobile && hoveredItem === item.id &&
-                          <div className="mobile-hint">Tap again to open →</div>
-                        }
                       </div>
                     </div>
                   </a>
@@ -306,9 +255,11 @@ export default function Home({ recentEssays, interestingItems, homeBio }) {
           transition: all 0.15s ease;
         }
 
-        .section-header :global(.section-link:hover) {
-          background-color: var(--card-hover-bg);
-          color: var(--accent-color);
+        @media (hover: hover) {
+          .section-header :global(.section-link:hover) {
+            background-color: var(--card-hover-bg);
+            color: var(--accent-color);
+          }
         }
         
         .content-list {
@@ -342,8 +293,14 @@ export default function Home({ recentEssays, interestingItems, homeBio }) {
           display: block;
         }
 
-        .essay-item:hover, .item-hovered {
+        .item-hovered {
           background-color: var(--card-bg);
+        }
+
+        @media (hover: hover) {
+          .essay-item:hover {
+            background-color: var(--card-bg);
+          }
         }
         
         .essay-item :global(.item-link),
@@ -393,10 +350,15 @@ export default function Home({ recentEssays, interestingItems, homeBio }) {
           transition: width 0.25s ease;
         }
 
-        .essay-item:hover .title-text::after,
-        .interesting-item:hover .title-text::after,
         .item-hovered .title-text::after {
           width: 100%;
+        }
+
+        @media (hover: hover) {
+          .essay-item:hover .title-text::after,
+          .interesting-item:hover .title-text::after {
+            width: 100%;
+          }
         }
 
         .type-tag {
@@ -411,16 +373,24 @@ export default function Home({ recentEssays, interestingItems, homeBio }) {
           flex-shrink: 0;
         }
 
-        .essay-item:hover .item-title,
-        .interesting-item:hover .item-title,
         .item-hovered .item-title {
           color: var(--accent-color);
         }
 
-        .essay-item:hover .item-date,
-        .interesting-item:hover .item-date,
         .item-hovered .item-date {
           color: var(--text-color);
+        }
+
+        @media (hover: hover) {
+          .essay-item:hover .item-title,
+          .interesting-item:hover .item-title {
+            color: var(--accent-color);
+          }
+
+          .essay-item:hover .item-date,
+          .interesting-item:hover .item-date {
+            color: var(--text-color);
+          }
         }
 
         .item-summary {
@@ -442,12 +412,6 @@ export default function Home({ recentEssays, interestingItems, homeBio }) {
           border-bottom-left-radius: 8px;
           border-bottom-right-radius: 8px;
           transition: opacity 0.2s ease, max-height 0.3s ease;
-        }
-        
-        .mobile-hint {
-          font-size: 0.8rem;
-          color: var(--link-color);
-          margin-left: 8px;
         }
         
         .empty-message {

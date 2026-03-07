@@ -6,7 +6,7 @@ import { useTheme } from 'next-themes';
 
 export default function Layout({ children, title = "Angan Sarker", description = "Investment Analyst at John Hancock Investment Management" }) {
   const router = useRouter();
-  const { theme, setTheme } = useTheme();
+  const { resolvedTheme, setTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
   const [keyboardMode, setKeyboardMode] = useState(false);
   const [focusedNavIndex, setFocusedNavIndex] = useState(-1);
@@ -337,7 +337,7 @@ export default function Layout({ children, title = "Angan Sarker", description =
     // Toggle theme with 'D' key
     if (e.key === 'd' && !e.metaKey && !e.ctrlKey && !e.altKey) {
       e.preventDefault();
-      setTheme(theme === 'dark' ? 'light' : 'dark');
+      setTheme(resolvedTheme === 'dark' ? 'light' : 'dark');
     }
     
     // Navigate to the focused item with Enter key
@@ -350,12 +350,13 @@ export default function Layout({ children, title = "Angan Sarker", description =
     
     // Space key to toggle expansion or activate elements
     if (e.key === ' ' && e.target.tagName !== 'INPUT' && e.target.tagName !== 'TEXTAREA') {
-      // Only prevent default for elements that would benefit from space activation
-      if (e.target.classList.contains('interesting-item') || 
+      if (e.target.classList.contains('interesting-item') ||
           e.target.classList.contains('essay-item') ||
-          e.target.tagName === 'BUTTON' ||
-          e.target.tagName === 'A') {
+          e.target.tagName === 'BUTTON') {
         e.preventDefault();
+      } else if (e.target.tagName === 'A') {
+        e.preventDefault();
+        e.target.click();
       }
     }
     
@@ -373,7 +374,7 @@ export default function Layout({ children, title = "Angan Sarker", description =
         el.classList.remove('keyboard-hovered');
       });
     }
-  }, [focusedNavIndex, navItems.length, router, theme, setTheme, keyboardMode, focusableElements, currentFocusIndex]);
+  }, [focusedNavIndex, navItems.length, router, resolvedTheme, setTheme, keyboardMode, focusableElements, currentFocusIndex]);
 
   // Add event listeners
   useEffect(() => {
@@ -444,11 +445,11 @@ export default function Layout({ children, title = "Angan Sarker", description =
             ))}
             
             <button 
-              aria-label={`Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`}
+              aria-label={`Switch to ${resolvedTheme === 'dark' ? 'light' : 'dark'} mode`}
               className="theme-toggle" 
-              onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+              onClick={() => setTheme(resolvedTheme === 'dark' ? 'light' : 'dark')}
             >
-              {mounted && theme === 'dark' ? (
+              {mounted && resolvedTheme === 'dark' ? (
                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
               ) : (
                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
@@ -506,9 +507,11 @@ export default function Layout({ children, title = "Angan Sarker", description =
           transition: opacity 0.2s ease, transform 0.2s ease;
         }
 
-        .logo-mark:hover {
-          opacity: 0.85;
-          transform: scale(1.05);
+        @media (hover: hover) {
+          .logo-mark:hover {
+            opacity: 0.85;
+            transform: scale(1.05);
+          }
         }
 
         .theme-toggle {
@@ -520,13 +523,17 @@ export default function Layout({ children, title = "Angan Sarker", description =
           justify-content: center;
           color: var(--text-color);
           margin-left: 0.5rem;
-          padding: 0.5rem;
+          padding: 0.75rem;
           border-radius: 50%;
+          min-width: 44px;
+          min-height: 44px;
           transition: background-color 0.2s ease;
         }
         
-        .theme-toggle:hover {
-          background-color: var(--hover-bg);
+        @media (hover: hover) {
+          .theme-toggle:hover {
+            background-color: var(--hover-bg);
+          }
         }
         
         
@@ -548,9 +555,11 @@ export default function Layout({ children, title = "Angan Sarker", description =
           position: relative;
         }
 
-        .nav a:hover {
-          color: var(--nav-text-hover);
-          background-color: var(--nav-hover-bg);
+        @media (hover: hover) {
+          .nav a:hover {
+            color: var(--nav-text-hover);
+            background-color: var(--nav-hover-bg);
+          }
         }
 
         .nav a.active {
@@ -606,7 +615,7 @@ export default function Layout({ children, title = "Angan Sarker", description =
 
           .nav a {
             font-size: 0.85rem;
-            padding: 5px 10px;
+            padding: 10px 12px;
           }
 
           main {

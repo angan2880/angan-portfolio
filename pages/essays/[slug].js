@@ -125,14 +125,17 @@ export default function Essay({ essay }) {
           font-size: 0.8rem;
           font-weight: 500;
           background-color: var(--card-bg);
-          padding: 5px 14px;
+          padding: 12px 16px;
           border-radius: 20px;
           transition: all 0.15s ease;
+          display: inline-block;
         }
 
-        .back-link :global(a:hover) {
-          background-color: var(--card-hover-bg);
-          color: var(--accent-color);
+        @media (hover: hover) {
+          .back-link :global(a:hover) {
+            background-color: var(--card-hover-bg);
+            color: var(--accent-color);
+          }
         }
 
         @media (max-width: 768px) {

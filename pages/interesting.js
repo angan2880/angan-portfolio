@@ -8,11 +8,13 @@ export default function InterestingPage({ interestingItems }) {
   const [isTouch, setIsTouch] = useState(false);
   const [keyboardMode, setKeyboardMode] = useState(false);
 
-  // Detect touch devices on mount
+  // Detect touch devices reliably using hover media query
   useEffect(() => {
-    setIsTouch('ontouchstart' in window || navigator.maxTouchPoints > 0);
+    const mq = window.matchMedia('(hover: none)');
+    setIsTouch(mq.matches);
+    const handler = (e) => setIsTouch(e.matches);
+    mq.addEventListener('change', handler);
 
-    // Detect keyboard navigation mode
     const handleKeyDown = (e) => {
       if (['Tab', 'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(e.key)) {
         setKeyboardMode(true);
@@ -27,6 +29,7 @@ export default function InterestingPage({ interestingItems }) {
     window.addEventListener('mousedown', handleMouseDown);
 
     return () => {
+      mq.removeEventListener('change', handler);
       window.removeEventListener('keydown', handleKeyDown);
       window.removeEventListener('mousedown', handleMouseDown);
     };
@@ -46,18 +49,12 @@ export default function InterestingPage({ interestingItems }) {
 
   const handleTouch = (id) => {
     if (isTouch) {
-      if (touchedItem === id) {
-        // If already open, close it
-        setTouchedItem(null);
-      } else {
-        // First tap, show the details
-        // Make sure we clear any previously selected item
-        setTouchedItem(null);
-        // Use setTimeout to ensure UI updates properly before setting the new touched item
-        setTimeout(() => {
-          setTouchedItem(id);
-        }, 10);
+      if (touchedItem !== id) {
+        // First tap on a new item — show the details
+        setTouchedItem(id);
       }
+      // If touchedItem === id (second tap), do nothing here;
+      // the <a> onClick will handle navigation since it won't preventDefault
     }
   };
 
@@ -68,15 +65,12 @@ export default function InterestingPage({ interestingItems }) {
     }
   };
 
-  const handleBlur = () => {
+  const handleBlur = (e) => {
     if (keyboardMode) {
-      // Use a small delay to allow new focus to be set before removing hover
-      setTimeout(() => {
-        if (!document.activeElement ||
-            !document.activeElement.classList.contains('interesting-item')) {
-          setHoveredItem(null);
-        }
-      }, 50);
+      const next = e.relatedTarget;
+      if (!next || !next.closest('.interesting-item')) {
+        setHoveredItem(null);
+      }
     }
   };
 
@@ -126,7 +120,7 @@ export default function InterestingPage({ interestingItems }) {
                 tabIndex={0}
                 onKeyDown={(e) => handleKeyDown(e, item.id, item.url)}
                 role="button"
-                aria-pressed={hoveredItem === item.id}
+                aria-expanded={hoveredItem === item.id || touchedItem === item.id}
                 aria-label={`${item.title} - ${item.type}`}
               >
                 <a
@@ -138,8 +132,11 @@ export default function InterestingPage({ interestingItems }) {
                     if (isTouch && touchedItem !== item.id) {
                       e.preventDefault(); // Prevent navigation on first touch
                     }
+                    if (isTouch && touchedItem === item.id) {
+                      e.stopPropagation(); // Prevent outer div from toggling on second tap
+                    }
                   }}
-                  tabIndex={-1} // Make the outer div the focus target
+                  tabIndex={-1}
                 >
                   <div className="item-row">
                     <div className="item-date">
@@ -209,19 +206,30 @@ export default function InterestingPage({ interestingItems }) {
           position: relative;
         }
 
-        .interesting-item:hover,
         .item-hovered {
           background-color: var(--card-bg);
         }
 
-        .interesting-item:hover .item-title,
         .item-hovered .item-title {
           color: var(--accent-color);
         }
 
-        .interesting-item:hover .item-date,
         .item-hovered .item-date {
           color: var(--text-color);
+        }
+
+        @media (hover: hover) {
+          .interesting-item:hover {
+            background-color: var(--card-bg);
+          }
+
+          .interesting-item:hover .item-title {
+            color: var(--accent-color);
+          }
+
+          .interesting-item:hover .item-date {
+            color: var(--text-color);
+          }
         }
 
         .item-link {
@@ -272,9 +280,14 @@ export default function InterestingPage({ interestingItems }) {
           transition: width 0.25s ease;
         }
 
-        .item-hovered .title-text::after,
-        .interesting-item:hover .title-text::after {
+        .item-hovered .title-text::after {
           width: 100%;
+        }
+
+        @media (hover: hover) {
+          .interesting-item:hover .title-text::after {
+            width: 100%;
+          }
         }
 
         .type-tag {

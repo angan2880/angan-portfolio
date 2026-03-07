@@ -136,9 +136,14 @@ a {
   font-weight: 500;
 }
 
-a:hover,
 a:focus {
   color: var(--link-hover-color);
+}
+
+@media (hover: hover) {
+  a:hover {
+    color: var(--link-hover-color);
+  }
 }
 
 main {
@@ -226,11 +231,16 @@ pre code {
 }
 
 /* Dark mode specific styles for essay and interesting items */
-.dark .essay-container:hover,
-.dark .interesting-item:hover,
 .dark .essay-hovered,
 .dark .item-hovered {
   background-color: var(--card-hover-bg) !important;
+}
+
+@media (hover: hover) {
+  .dark .essay-container:hover,
+  .dark .interesting-item:hover {
+    background-color: var(--card-hover-bg) !important;
+  }
 }
 
 .dark .essay-summary,
@@ -278,8 +288,10 @@ th {
 }
 
 /* Add hover effect for table rows */
-tr:hover {
-  background-color: var(--hover-bg);
+@media (hover: hover) {
+  tr:hover {
+    background-color: var(--hover-bg);
+  }
 }
 
 /* Dark mode specific table styles */
@@ -291,8 +303,10 @@ tr:hover {
   background-color: var(--code-bg);
 }
 
-.dark tr:hover {
-  background-color: var(--card-hover-bg);
+@media (hover: hover) {
+  .dark tr:hover {
+    background-color: var(--card-hover-bg);
+  }
 }
 
 .container {
@@ -335,9 +349,11 @@ tr:hover {
   position: relative;
 }
 
-.nav a:hover {
-  color: var(--nav-text-hover);
-  background-color: var(--nav-hover-bg);
+@media (hover: hover) {
+  .nav a:hover {
+    color: var(--nav-text-hover);
+    background-color: var(--nav-hover-bg);
+  }
 }
 
 /* Special keyboard focus styles for navigation */
@@ -558,8 +574,10 @@ pre code {
   font-size: 0.85rem;
 }
 
-.notion-table tr:hover {
-  background-color: var(--hover-bg);
+@media (hover: hover) {
+  .notion-table tr:hover {
+    background-color: var(--hover-bg);
+  }
 }
 
 /* Notion select/multi-select tags */
@@ -593,8 +611,10 @@ details summary {
   transition: background-color 0.15s ease;
 }
 
-details summary:hover {
-  background-color: var(--card-hover-bg);
+@media (hover: hover) {
+  details summary:hover {
+    background-color: var(--card-hover-bg);
+  }
 }
 
 details[open] summary {
@@ -687,8 +707,10 @@ details > *:not(summary) {
   border-radius: 4px;
 }
 
-.search-button:hover {
-  background-color: var(--accent-color);
+@media (hover: hover) {
+  .search-button:hover {
+    background-color: var(--accent-color);
+  }
 }
 
 .search-results {
@@ -822,12 +844,18 @@ details > *:not(summary) {
   outline-color: var(--accent-color) !important;
 }
 
-/* Enhance hover/focus styles for dark mode */
-.dark .nav a:hover,
+/* Enhance focus/active styles for dark mode */
 .dark .nav a:focus-visible,
 .dark .nav a.active {
   color: var(--nav-text-hover);
   background-color: var(--nav-hover-bg);
+}
+
+@media (hover: hover) {
+  .dark .nav a:hover {
+    color: var(--nav-text-hover);
+    background-color: var(--nav-hover-bg);
+  }
 }
 
 /* Style for nav items that are keyboard focused */
@@ -872,18 +900,30 @@ details > *:not(summary) {
   color: #000;
 }
 
-/* Navigation hover/focus styles for Superhuman-like experience */
-.nav a:hover, 
+/* Navigation focus styles for Superhuman-like experience */
 .nav a:focus {
   background-color: var(--nav-hover-bg);
   color: var(--nav-text-hover);
 }
 
+@media (hover: hover) {
+  .nav a:hover {
+    background-color: var(--nav-hover-bg);
+    color: var(--nav-text-hover);
+  }
+}
+
 /* Dark mode enhanced nav styles */
-.dark .nav a.keyboard-focused,
-.dark .nav a:hover {
+.dark .nav a.keyboard-focused {
   color: var(--accent-color);
   background-color: var(--accent-bg);
+}
+
+@media (hover: hover) {
+  .dark .nav a:hover {
+    color: var(--accent-color);
+    background-color: var(--accent-bg);
+  }
 }
 
 /* Remove the keyboard navigation instruction text */

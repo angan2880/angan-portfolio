@@ -135,9 +135,11 @@ export default function Portfolio() {
           transition: transform 0.2s ease, box-shadow 0.2s ease;
         }
         
-        .portfolio-item:hover {
-          transform: translateY(-5px);
-          box-shadow: 0 5px 15px var(--card-shadow);
+        @media (hover: hover) {
+          .portfolio-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px var(--card-shadow);
+          }
         }
         
         .image-container {
@@ -183,8 +185,10 @@ export default function Portfolio() {
           transition: background-color 0.2s ease;
         }
         
-        .document-item:hover {
-          background-color: var(--hover-bg);
+        @media (hover: hover) {
+          .document-item:hover {
+            background-color: var(--hover-bg);
+          }
         }
         
         .document-icon {
@@ -220,8 +224,10 @@ export default function Portfolio() {
           transition: background-color 0.2s ease;
         }
         
-        .download-link:hover {
-          background-color: var(--hover-bg);
+        @media (hover: hover) {
+          .download-link:hover {
+            background-color: var(--hover-bg);
+          }
         }
         
         .tip-box {
