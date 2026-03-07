@@ -207,7 +207,7 @@ export default function Home({ recentEssays, interestingItems, homeBio }) {
                   
                   {hoveredItem === item.id && (
                     <div className="item-why">
-                      <strong>Why I found it interesting:</strong> {item.why}
+                      {item.why}
                     </div>
                   )}
                 </div>

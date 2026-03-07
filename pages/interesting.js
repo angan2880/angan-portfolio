@@ -151,7 +151,7 @@ export default function InterestingPage({ interestingItems }) {
 
                 {(hoveredItem === item.id || touchedItem === item.id) && (
                   <div className="item-why">
-                    <strong>Why I found it interesting:</strong> {item.why}
+                    {item.why}
                   </div>
                 )}
               </div>
