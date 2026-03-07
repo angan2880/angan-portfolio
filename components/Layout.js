@@ -11,9 +11,9 @@ export default function Layout({ children, title = "Angan Sarker", description =
   const [keyboardMode, setKeyboardMode] = useState(false);
   const [focusedNavIndex, setFocusedNavIndex] = useState(-1);
   const navRefs = useRef([]);
-  const [focusableElements, setFocusableElements] = useState([]);
   const [currentFocusIndex, setCurrentFocusIndex] = useState(-1);
-  
+  const layoutRef = useRef(null);
+
   // Navigation items config
   const navItems = [
     { label: 'Home', path: '/' },
@@ -21,149 +21,26 @@ export default function Layout({ children, title = "Angan Sarker", description =
     { label: 'Interesting', path: '/interesting' },
     { label: 'About', path: '/about' }
   ];
-  
+
+  // Get focusable content elements (scoped to main content only, excludes nav)
+  const getContentElements = useCallback(() => {
+    const main = document.getElementById('main-content');
+    if (!main) return [];
+    const selector = 'a[href]:not([tabindex="-1"]), button:not([tabindex="-1"]), input, select, textarea, [tabindex="0"]';
+    return Array.from(main.querySelectorAll(selector)).filter(el => {
+      const style = window.getComputedStyle(el);
+      return style.display !== 'none' && style.visibility !== 'hidden' && !el.hasAttribute('disabled');
+    });
+  }, []);
+
   // After mounting, we can show the theme toggle since we know what theme is active
   useEffect(() => {
     setMounted(true);
     navRefs.current = navRefs.current.slice(0, navItems.length);
-    
-    // Find all focusable elements in the document after mounting
-    if (typeof document !== 'undefined') {
-      const getFocusableElements = () => {
-        const selector = 'a, button, input, select, textarea, [tabindex]:not([tabindex="-1"])';
-        const elements = Array.from(document.querySelectorAll(selector))
-          .filter(el => {
-            // Filter out hidden elements
-            const style = window.getComputedStyle(el);
-            return style.display !== 'none' && style.visibility !== 'hidden' && !el.hasAttribute('disabled');
-          });
-        return elements;
-      };
-      
-      setFocusableElements(getFocusableElements());
-      
-      // Update focusable elements when DOM changes
-      const observer = new MutationObserver(() => {
-        setFocusableElements(getFocusableElements());
-      });
-      
-      observer.observe(document.body, {
-        childList: true,
-        subtree: true
-      });
-      
-      return () => observer.disconnect();
-    }
   }, []);
   
   const isActive = (path) => {
     return router.pathname === path;
-  };
-
-  // Get elements in same row (horizontally aligned)
-  const getElementsInSameRow = (element) => {
-    if (!element) return [];
-    
-    const rect = element.getBoundingClientRect();
-    const centerY = rect.top + rect.height / 2;
-    const tolerance = rect.height / 2;
-    
-    return focusableElements.filter(el => {
-      if (el === element) return false;
-      const elRect = el.getBoundingClientRect();
-      const elCenterY = elRect.top + elRect.height / 2;
-      return Math.abs(elCenterY - centerY) <= tolerance;
-    });
-  };
-  
-  // Get elements in same column (vertically aligned)
-  const getElementsInSameColumn = (element) => {
-    if (!element) return [];
-    
-    const rect = element.getBoundingClientRect();
-    const centerX = rect.left + rect.width / 2;
-    const tolerance = rect.width / 2;
-    
-    return focusableElements.filter(el => {
-      if (el === element) return false;
-      const elRect = el.getBoundingClientRect();
-      const elCenterX = elRect.left + elRect.width / 2;
-      return Math.abs(elCenterX - centerX) <= tolerance;
-    });
-  };
-  
-  // Find nearest element in a given direction
-  const findNearestElement = (element, direction) => {
-    if (!element) return null;
-    
-    const rect = element.getBoundingClientRect();
-    let bestElement = null;
-    let bestDistance = Infinity;
-    
-    focusableElements.forEach(el => {
-      if (el === element) return;
-      
-      const elRect = el.getBoundingClientRect();
-      let valid = false;
-      let distance = 0;
-      
-      switch (direction) {
-        case 'left':
-          valid = elRect.right < rect.left && 
-                  elRect.bottom > rect.top && 
-                  elRect.top < rect.bottom;
-          if (valid) distance = rect.left - elRect.right;
-          break;
-        case 'right':
-          valid = elRect.left > rect.right && 
-                  elRect.bottom > rect.top && 
-                  elRect.top < rect.bottom;
-          if (valid) distance = elRect.left - rect.right;
-          break;
-        case 'up':
-          valid = elRect.bottom < rect.top && 
-                  elRect.right > rect.left && 
-                  elRect.left < rect.right;
-          if (valid) distance = rect.top - elRect.bottom;
-          break;
-        case 'down':
-          valid = elRect.top > rect.bottom && 
-                  elRect.right > rect.left && 
-                  elRect.left < rect.right;
-          if (valid) distance = elRect.top - rect.bottom;
-          break;
-      }
-      
-      if (valid && distance < bestDistance) {
-        bestDistance = distance;
-        bestElement = el;
-      }
-    });
-    
-    return bestElement;
-  };
-
-  // Simulate hover effect for keyboard focus
-  const simulateHoverEffect = (element) => {
-    if (!element) return;
-    
-    // For interesting items
-    if (element.classList.contains('interesting-item')) {
-      // Find the item ID from data attribute
-      const itemId = element.dataset.id;
-      if (itemId) {
-        // Dispatch a custom event that interesting.js can listen for
-        const event = new CustomEvent('keyboardFocus', { detail: { itemId } });
-        element.dispatchEvent(event);
-      }
-    }
-    
-    // For essay items
-    if (element.classList.contains('essay-item')) {
-      element.classList.add('keyboard-hovered');
-    }
-    
-    // Add any specific hover simulation logic here for other element types
   };
 
   // Handle keyboard navigation with arrow keys
@@ -176,16 +53,14 @@ export default function Layout({ children, title = "Angan Sarker", description =
     // Enter keyboard mode with any arrow key press
     if (['ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown'].includes(e.key)) {
       if (!keyboardMode) {
+        // Enter keyboard mode, focus first nav item
         setKeyboardMode(true);
-        setCurrentFocusIndex(0);
-        if (focusableElements.length > 0) {
-          focusableElements[0].focus();
-          simulateHoverEffect(focusableElements[0]);
-        }
+        setFocusedNavIndex(0);
+        setCurrentFocusIndex(-1);
         e.preventDefault();
         return;
       }
-      
+
       // If in the nav area, handle navigation there
       if (focusedNavIndex !== -1) {
         if (e.key === 'ArrowRight') {
@@ -197,149 +72,59 @@ export default function Layout({ children, title = "Angan Sarker", description =
           setFocusedNavIndex(prev => (prev - 1 + navItems.length) % navItems.length);
           return;
         } else if (e.key === 'ArrowDown') {
-          // Move from nav to content area
+          // Move from nav to first content element
           e.preventDefault();
           setFocusedNavIndex(-1);
-          
-          // Find the first focusable element in the main content area
-          const mainContentElements = focusableElements.filter(el => {
-            const mainContent = document.getElementById('main-content');
-            return mainContent && mainContent.contains(el);
-          });
-          
-          if (mainContentElements.length > 0) {
-            const nextIndex = focusableElements.indexOf(mainContentElements[0]);
-            setCurrentFocusIndex(nextIndex);
-            mainContentElements[0].focus();
-            simulateHoverEffect(mainContentElements[0]);
+          const contentEls = getContentElements();
+          if (contentEls.length > 0) {
+            setCurrentFocusIndex(0);
+            contentEls[0].focus();
+            contentEls[0].scrollIntoView({ block: 'nearest' });
           }
           return;
         }
-        // For ArrowUp in nav, we don't prevent default scrolling
+        // ArrowUp in nav: do nothing (already at top)
+        e.preventDefault();
         return;
       }
-      
-      // General keyboard navigation throughout the page
-      const currentElement = focusableElements[currentFocusIndex];
-      let nextElement = null;
-      
-      if (e.key === 'ArrowRight') {
-        // Only navigate horizontally with left/right keys
-        const sameRowElements = getElementsInSameRow(currentElement);
-        const rightElements = sameRowElements.filter(el => {
-          return el.getBoundingClientRect().left > currentElement.getBoundingClientRect().left;
-        });
-        
-        if (rightElements.length > 0) {
-          // Find the closest element to the right
-          nextElement = rightElements.reduce((closest, current) => {
-            const closestDist = closest.getBoundingClientRect().left - currentElement.getBoundingClientRect().right;
-            const currentDist = current.getBoundingClientRect().left - currentElement.getBoundingClientRect().right;
-            return currentDist < closestDist ? current : closest;
-          });
-          e.preventDefault();
-        } else {
-          // If nothing found in the same row, try to find anything to the right
-          nextElement = findNearestElement(currentElement, 'right');
-          if (nextElement) e.preventDefault();
-        }
-      } else if (e.key === 'ArrowLeft') {
-        // Only navigate horizontally with left/right keys
-        const sameRowElements = getElementsInSameRow(currentElement);
-        const leftElements = sameRowElements.filter(el => {
-          return el.getBoundingClientRect().right < currentElement.getBoundingClientRect().left;
-        });
-        
-        if (leftElements.length > 0) {
-          // Find the closest element to the left
-          nextElement = leftElements.reduce((closest, current) => {
-            const closestDist = currentElement.getBoundingClientRect().left - closest.getBoundingClientRect().right;
-            const currentDist = currentElement.getBoundingClientRect().left - current.getBoundingClientRect().right;
-            return currentDist < closestDist ? current : closest;
-          });
-          e.preventDefault();
-        } else {
-          // If nothing found in the same row, try to find anything to the left
-          nextElement = findNearestElement(currentElement, 'left');
-          if (nextElement) e.preventDefault();
-        }
-      } else if (e.key === 'ArrowDown') {
-        // Only navigate vertically with up/down keys
-        const sameColumnElements = getElementsInSameColumn(currentElement);
-        const belowElements = sameColumnElements.filter(el => {
-          return el.getBoundingClientRect().top > currentElement.getBoundingClientRect().bottom;
-        });
-        
-        if (belowElements.length > 0) {
-          // Find the closest element below
-          nextElement = belowElements.reduce((closest, current) => {
-            const closestDist = closest.getBoundingClientRect().top - currentElement.getBoundingClientRect().bottom;
-            const currentDist = current.getBoundingClientRect().top - currentElement.getBoundingClientRect().bottom;
-            return currentDist < closestDist ? current : closest;
-          });
-          e.preventDefault();
-        } else {
-          // If nothing found in the same column, try to find anything below
-          nextElement = findNearestElement(currentElement, 'down');
-          if (nextElement) e.preventDefault();
-        }
-      } else if (e.key === 'ArrowUp') {
-        // Only navigate vertically with up/down keys
-        const sameColumnElements = getElementsInSameColumn(currentElement);
-        const aboveElements = sameColumnElements.filter(el => {
-          return el.getBoundingClientRect().bottom < currentElement.getBoundingClientRect().top;
-        });
-        
-        if (aboveElements.length > 0) {
-          // Find the closest element above
-          nextElement = aboveElements.reduce((closest, current) => {
-            const closestDist = currentElement.getBoundingClientRect().top - closest.getBoundingClientRect().bottom;
-            const currentDist = currentElement.getBoundingClientRect().top - current.getBoundingClientRect().bottom;
-            return currentDist < closestDist ? current : closest;
-          });
-          e.preventDefault();
-        } else {
-          // If nothing found in the same column, try to find anything above
-          nextElement = findNearestElement(currentElement, 'up');
-          
-          // Special case: if we're at the top of the content and press up,
-          // check if we should move to the nav
-          if (!nextElement) {
-            const navElement = document.querySelector('.nav');
-            if (navElement && navElement.getBoundingClientRect().bottom < currentElement.getBoundingClientRect().top) {
-              setFocusedNavIndex(0);
-              setCurrentFocusIndex(-1);
-              e.preventDefault();
-              return;
-            }
-          } else {
-            e.preventDefault();
-          }
-        }
-      }
-      
-      if (nextElement) {
-        // Remove any previous hover effects
-        if (currentElement) {
-          currentElement.classList.remove('keyboard-hovered');
-        }
-        
-        const nextIndex = focusableElements.indexOf(nextElement);
-        if (nextIndex !== -1) {
+
+      // Content area navigation (sequential up/down)
+      const contentEls = getContentElements();
+      if (contentEls.length === 0) return;
+
+      if (e.key === 'ArrowDown') {
+        e.preventDefault();
+        const nextIndex = currentFocusIndex + 1;
+        if (nextIndex < contentEls.length) {
           setCurrentFocusIndex(nextIndex);
-          nextElement.focus();
-          simulateHoverEffect(nextElement);
+          contentEls[nextIndex].focus();
+          contentEls[nextIndex].scrollIntoView({ block: 'nearest' });
         }
+        // At bottom: do nothing, stay on last element
+      } else if (e.key === 'ArrowUp') {
+        e.preventDefault();
+        if (currentFocusIndex <= 0) {
+          // At top of content, move back to nav
+          setCurrentFocusIndex(-1);
+          setFocusedNavIndex(0);
+          if (document.activeElement) document.activeElement.blur();
+        } else {
+          const prevIndex = currentFocusIndex - 1;
+          setCurrentFocusIndex(prevIndex);
+          contentEls[prevIndex].focus();
+          contentEls[prevIndex].scrollIntoView({ block: 'nearest' });
+        }
+      } else if (e.key === 'ArrowRight' || e.key === 'ArrowLeft') {
+        // In content, left/right do nothing (let browser scroll)
       }
-      // If no next element found, let the browser handle the arrow key (scroll)
     }
-    
+
     // Toggle theme with 'D' key
     if (e.key === 'd' && !e.metaKey && !e.ctrlKey && !e.altKey) {
       e.preventDefault();
       setTheme(resolvedTheme === 'dark' ? 'light' : 'dark');
     }
-    
+
     // Navigate to the focused item with Enter key
     if (e.key === 'Enter') {
       if (focusedNavIndex >= 0 && focusedNavIndex < navItems.length) {
@@ -347,19 +132,15 @@ export default function Layout({ children, title = "Angan Sarker", description =
         router.push(navItems[focusedNavIndex].path);
       }
     }
-    
-    // Space key to toggle expansion or activate elements
+
+    // Space key to activate focused content elements
     if (e.key === ' ' && e.target.tagName !== 'INPUT' && e.target.tagName !== 'TEXTAREA') {
-      if (e.target.classList.contains('interesting-item') ||
-          e.target.classList.contains('essay-item') ||
-          e.target.tagName === 'BUTTON') {
-        e.preventDefault();
-      } else if (e.target.tagName === 'A') {
+      if (e.target.tagName === 'A' || e.target.tagName === 'BUTTON') {
         e.preventDefault();
         e.target.click();
       }
     }
-    
+
     // Exit keyboard mode with Escape
     if (e.key === 'Escape') {
       setKeyboardMode(false);
@@ -368,13 +149,8 @@ export default function Layout({ children, title = "Angan Sarker", description =
       if (document.activeElement) {
         document.activeElement.blur();
       }
-      
-      // Remove any keyboard hover effects
-      document.querySelectorAll('.keyboard-hovered').forEach(el => {
-        el.classList.remove('keyboard-hovered');
-      });
     }
-  }, [focusedNavIndex, navItems.length, router, resolvedTheme, setTheme, keyboardMode, focusableElements, currentFocusIndex]);
+  }, [focusedNavIndex, navItems.length, router, resolvedTheme, setTheme, keyboardMode, currentFocusIndex, getContentElements]);
 
   // Add event listeners
   useEffect(() => {
@@ -385,11 +161,6 @@ export default function Layout({ children, title = "Angan Sarker", description =
         setKeyboardMode(false);
         setFocusedNavIndex(-1);
         setCurrentFocusIndex(-1);
-        
-        // Remove any keyboard hover effects
-        document.querySelectorAll('.keyboard-hovered').forEach(el => {
-          el.classList.remove('keyboard-hovered');
-        });
       };
       
       window.addEventListener('keydown', handleKeyDownEvent);
@@ -410,7 +181,7 @@ export default function Layout({ children, title = "Angan Sarker", description =
   }, [focusedNavIndex]);
 
   return (
-    <div className={keyboardMode ? 'keyboard-mode' : ''}>
+    <div ref={layoutRef} className={keyboardMode ? 'keyboard-mode' : ''}>
       <Head>
         <title>{title}</title>
         <meta name="description" content={description} />
