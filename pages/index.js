@@ -2,10 +2,10 @@ import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Layout from '../components/Layout';
 import { getAllEssays } from '../lib/markdown';
-import { getAllInterestingItems } from '../lib/interesting';
+import { getAllClippings } from '../lib/clippings';
 import { getAboutContentFromNotion } from '../lib/notion';
 
-export default function Home({ recentEssays, interestingItems, homeBio }) {
+export default function Home({ recentEssays, clippings, homeBio }) {
   const [hoveredItem, setHoveredItem] = useState(null);
   const [isTouch, setIsTouch] = useState(false);
   const [keyboardMode, setKeyboardMode] = useState(false);
@@ -59,7 +59,7 @@ export default function Home({ recentEssays, interestingItems, homeBio }) {
   const handleBlur = (e) => {
     if (keyboardMode) {
       const next = e.relatedTarget;
-      if (!next || !(next.closest('.interesting-item') || next.closest('.essay-item'))) {
+      if (!next || !(next.closest('.clipping-item') || next.closest('.essay-item'))) {
         setHoveredItem(null);
       }
     }
@@ -152,18 +152,18 @@ export default function Home({ recentEssays, interestingItems, homeBio }) {
         
         <section className="content-section">
           <div className="section-header">
-            <h2>Interesting Things</h2>
-            <Link href="/interesting" className="section-link">
-              all interesting things →
+            <h2>Clippings</h2>
+            <Link href="/clippings" className="section-link">
+              all clippings →
             </Link>
           </div>
           
-          {interestingItems && interestingItems.length > 0 ? (
+          {clippings && clippings.length > 0 ? (
             <div className="content-list">
-              {interestingItems.map((item) => (
+              {clippings.map((item) => (
                 <div
                   key={item.id}
-                  className={`interesting-item ${hoveredItem === item.id ? 'item-hovered' : ''}`}
+                  className={`clipping-item ${hoveredItem === item.id ? 'item-hovered' : ''}`}
                   onMouseEnter={() => handleMouseEnter(item.id)}
                   onMouseLeave={handleMouseLeave}
                   onFocus={() => handleFocus(item.id)}
@@ -214,7 +214,7 @@ export default function Home({ recentEssays, interestingItems, homeBio }) {
               ))}
             </div>
           ) : (
-            <p className="empty-message">No interesting items found.</p>
+            <p className="empty-message">No clippings found.</p>
           )}
         </section>
         
@@ -289,28 +289,28 @@ export default function Home({ recentEssays, interestingItems, homeBio }) {
           gap: 0;
         }
 
-        /* Common styles for both essay and interesting items */
-        .essay-item, .interesting-item {
+        /* Common styles for both essay and clipping items */
+        .essay-item, .clipping-item {
           border-radius: 8px;
           transition: all 0.15s ease;
           margin-bottom: 0;
           cursor: pointer;
         }
 
-        .essay-item:focus, .interesting-item:focus {
+        .essay-item:focus, .clipping-item:focus {
           outline: 2px solid var(--accent-color);
           outline-offset: 2px;
           position: relative;
         }
 
         /* Ensure hover state shows correctly for keyboard navigation */
-        .keyboard-mode .essay-item:focus, .keyboard-mode .interesting-item:focus {
+        .keyboard-mode .essay-item:focus, .keyboard-mode .clipping-item:focus {
           background-color: var(--hover-bg);
         }
 
         /* Make sure keyboard focused items show expanded content */
         .keyboard-mode .essay-item:focus .item-summary,
-        .keyboard-mode .interesting-item:focus .item-why {
+        .keyboard-mode .clipping-item:focus .item-why {
           display: block;
         }
 
@@ -318,18 +318,18 @@ export default function Home({ recentEssays, interestingItems, homeBio }) {
           background-color: var(--card-bg);
         }
 
-        .essay-item:active, .interesting-item:active {
+        .essay-item:active, .clipping-item:active {
           background-color: var(--card-bg);
         }
 
         @media (hover: hover) {
-          .essay-item:hover, .interesting-item:hover {
+          .essay-item:hover, .clipping-item:hover {
             background-color: var(--card-bg);
           }
         }
         
         .essay-item :global(.item-link),
-        .interesting-item :global(.item-link),
+        .clipping-item :global(.item-link),
         .item-link {
           text-decoration: none;
           color: inherit;
@@ -380,13 +380,13 @@ export default function Home({ recentEssays, interestingItems, homeBio }) {
         }
 
         .essay-item:active .title-text::after,
-        .interesting-item:active .title-text::after {
+        .clipping-item:active .title-text::after {
           width: 100%;
         }
 
         @media (hover: hover) {
           .essay-item:hover .title-text::after,
-          .interesting-item:hover .title-text::after {
+          .clipping-item:hover .title-text::after {
             width: 100%;
           }
         }
@@ -412,23 +412,23 @@ export default function Home({ recentEssays, interestingItems, homeBio }) {
         }
 
         .essay-item:active .item-title,
-        .interesting-item:active .item-title {
+        .clipping-item:active .item-title {
           color: var(--accent-color);
         }
 
         .essay-item:active .item-date,
-        .interesting-item:active .item-date {
+        .clipping-item:active .item-date {
           color: var(--text-color);
         }
 
         @media (hover: hover) {
           .essay-item:hover .item-title,
-          .interesting-item:hover .item-title {
+          .clipping-item:hover .item-title {
             color: var(--accent-color);
           }
 
           .essay-item:hover .item-date,
-          .interesting-item:hover .item-date {
+          .clipping-item:hover .item-date {
             color: var(--text-color);
           }
         }
@@ -510,7 +510,7 @@ export default function Home({ recentEssays, interestingItems, homeBio }) {
 export async function getStaticProps() {
   const allEssays = await getAllEssays(['title', 'date', 'slug', 'summary', 'type']);
   const recentEssays = allEssays.slice(0, 3);
-  const interestingItems = await getAllInterestingItems(3);
+  const clippings = await getAllClippings(3);
 
   let homeBio = [];
   try {
@@ -525,7 +525,7 @@ export async function getStaticProps() {
   return {
     props: {
       recentEssays: recentEssays.slice(0, 3),
-      interestingItems,
+      clippings,
       homeBio,
     },
     revalidate: 60,

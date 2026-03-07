@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import Layout from '../components/Layout';
-import { getAllInterestingItems } from '../lib/interesting';
+import { getAllClippings } from '../lib/clippings';
 
-export default function InterestingPage({ interestingItems }) {
+export default function ClippingsPage({ clippings }) {
   const [hoveredItem, setHoveredItem] = useState(null);
   const [touchedItem, setTouchedItem] = useState(null);
   const [isTouch, setIsTouch] = useState(false);
@@ -68,7 +68,7 @@ export default function InterestingPage({ interestingItems }) {
   const handleBlur = (e) => {
     if (keyboardMode) {
       const next = e.relatedTarget;
-      if (!next || !next.closest('.interesting-item')) {
+      if (!next || !next.closest('.clipping-item')) {
         setHoveredItem(null);
       }
     }
@@ -94,22 +94,22 @@ export default function InterestingPage({ interestingItems }) {
   };
 
   return (
-    <Layout title="Interesting Things" description="Collection of interesting things found online">
-      <div className="interesting-container">
-        <p className="intro-line">A curated collection of articles, tools, and resources that caught my attention.</p>
+    <Layout title="Clippings" description="A curated collection of articles, tools, and resources worth saving">
+      <div className="clippings-container">
+        <p className="intro-line">A curated collection of articles, tools, and resources worth saving.</p>
 
-        <div className="interesting-header">
+        <div className="clippings-header">
           <div className="header-date">Date</div>
           <div className="header-title">Title</div>
         </div>
 
-        {interestingItems.length > 0 ? (
+        {clippings.length > 0 ? (
           <div className="content-list">
-            {interestingItems.map((item) => (
+            {clippings.map((item) => (
               <div
                 key={item.id}
                 data-id={item.id}
-                className={`interesting-item ${
+                className={`clipping-item ${
                   hoveredItem === item.id || touchedItem === item.id ? 'item-hovered' : ''
                 } ${isTouch ? 'touch-device' : ''}`}
                 onMouseEnter={() => handleMouseEnter(item.id)}
@@ -158,18 +158,18 @@ export default function InterestingPage({ interestingItems }) {
             ))}
           </div>
         ) : (
-          <p className="empty-message">No interesting items found.</p>
+          <p className="empty-message">No clippings found.</p>
         )}
       </div>
 
       <style jsx>{`
-        .interesting-container {
+        .clippings-container {
           max-width: 960px;
           margin: 0 auto;
           padding-top: 0;
         }
 
-        .interesting-header {
+        .clippings-header {
           display: grid;
           grid-template-columns: 150px 1fr;
           padding: 0 0.75rem 0.5rem;
@@ -192,7 +192,7 @@ export default function InterestingPage({ interestingItems }) {
           gap: 0;
         }
 
-        .interesting-item {
+        .clipping-item {
           border-radius: 8px;
           transition: all 0.15s ease;
           margin-bottom: 0;
@@ -200,7 +200,7 @@ export default function InterestingPage({ interestingItems }) {
         }
 
         /* Add focus styles for keyboard navigation */
-        .interesting-item:focus {
+        .clipping-item:focus {
           outline: 2px solid var(--accent-color);
           outline-offset: 2px;
           position: relative;
@@ -218,28 +218,28 @@ export default function InterestingPage({ interestingItems }) {
           color: var(--text-color);
         }
 
-        .interesting-item:active {
+        .clipping-item:active {
           background-color: var(--card-bg);
         }
 
-        .interesting-item:active .item-title {
+        .clipping-item:active .item-title {
           color: var(--accent-color);
         }
 
-        .interesting-item:active .item-date {
+        .clipping-item:active .item-date {
           color: var(--text-color);
         }
 
         @media (hover: hover) {
-          .interesting-item:hover {
+          .clipping-item:hover {
             background-color: var(--card-bg);
           }
 
-          .interesting-item:hover .item-title {
+          .clipping-item:hover .item-title {
             color: var(--accent-color);
           }
 
-          .interesting-item:hover .item-date {
+          .clipping-item:hover .item-date {
             color: var(--text-color);
           }
         }
@@ -296,12 +296,12 @@ export default function InterestingPage({ interestingItems }) {
           width: 100%;
         }
 
-        .interesting-item:active .title-text::after {
+        .clipping-item:active .title-text::after {
           width: 100%;
         }
 
         @media (hover: hover) {
-          .interesting-item:hover .title-text::after {
+          .clipping-item:hover .title-text::after {
             width: 100%;
           }
         }
@@ -331,7 +331,7 @@ export default function InterestingPage({ interestingItems }) {
         }
 
         /* Make sure keyboard focused items show expanded content */
-        .keyboard-mode .interesting-item:focus .item-why {
+        .keyboard-mode .clipping-item:focus .item-why {
           display: block;
         }
 
@@ -348,7 +348,6 @@ export default function InterestingPage({ interestingItems }) {
           background-color: var(--card-bg);
         }
 
-        /* Show "Why interesting" box when scrolled into view on mobile */
         .touch-device .item-why {
           margin-top: 0.5rem;
           border-top: 1px solid var(--border-color);
@@ -361,7 +360,7 @@ export default function InterestingPage({ interestingItems }) {
         }
 
         @media (max-width: 768px) {
-          .interesting-header, .item-row {
+          .clippings-header, .item-row {
             grid-template-columns: 100px 1fr;
           }
 
@@ -388,10 +387,10 @@ export default function InterestingPage({ interestingItems }) {
 }
 
 export async function getStaticProps() {
-  const interestingItems = await getAllInterestingItems();
+  const clippings = await getAllClippings();
 
   return {
-    props: { interestingItems },
+    props: { clippings },
     revalidate: 60,
   };
 }

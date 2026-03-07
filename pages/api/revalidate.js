@@ -6,7 +6,7 @@ export default async function handler(req, res) {
   try {
     await res.revalidate('/');
     await res.revalidate('/essays');
-    await res.revalidate('/interesting');
+    await res.revalidate('/clippings');
     await res.revalidate('/about');
     return res.json({ revalidated: true });
   } catch (err) {

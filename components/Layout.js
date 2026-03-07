@@ -18,7 +18,7 @@ export default function Layout({ children, title = "Angan Sarker", description =
   const navItems = [
     { label: 'Home', path: '/' },
     { label: 'Essays', path: '/essays' },
-    { label: 'Interesting', path: '/interesting' },
+    { label: 'Clippings', path: '/clippings' },
     { label: 'About', path: '/about' }
   ];
 

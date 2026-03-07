@@ -1,6 +1,6 @@
 # Angan Portfolio
 
-My personal portfolio website built with Next.js and deployed on GitHub Pages. This site showcases my essays, interesting findings, and professional background.
+My personal portfolio website built with Next.js and deployed on GitHub Pages. This site showcases my essays, clippings, and professional background.
 
 ## Features
 
