@@ -245,12 +245,14 @@ export default function Essays({ essays }) {
 
         /* Essay summary displayed on hover/touch */
         .essay-summary {
-          padding: 4px 15px 12px;
+          padding: 10px 15px 15px;
           margin-left: 150px;
-          font-size: 0.85rem;
+          font-size: 0.9rem;
           line-height: 1.5;
-          color: var(--nav-text);
-          font-style: italic;
+          color: var(--text-color);
+          background-color: var(--hover-bg);
+          border-bottom-left-radius: 8px;
+          border-bottom-right-radius: 8px;
           transition: opacity 0.15s ease, max-height 0.3s ease;
         }
 
@@ -275,7 +277,8 @@ export default function Essays({ essays }) {
 
           .essay-summary {
             margin-left: 0;
-            padding: 5px 15px 15px;
+            padding: 10px 15px 15px;
+            border-top: 1px solid var(--border-color);
           }
 
           .type-tag {
