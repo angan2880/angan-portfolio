@@ -43,6 +43,11 @@ export default function Search() {
           text-decoration: none;
         }
         
+        .back-link a:active {
+          text-decoration: underline;
+          color: var(--link-hover-color);
+        }
+
         @media (hover: hover) {
           .back-link a:hover {
             text-decoration: underline;

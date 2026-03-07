@@ -140,6 +140,10 @@ a:focus {
   color: var(--link-hover-color);
 }
 
+a:active {
+  color: var(--link-hover-color);
+}
+
 @media (hover: hover) {
   a:hover {
     color: var(--link-hover-color);
@@ -236,6 +240,11 @@ pre code {
   background-color: var(--card-hover-bg) !important;
 }
 
+.dark .essay-container:active,
+.dark .interesting-item:active {
+  background-color: var(--card-hover-bg) !important;
+}
+
 @media (hover: hover) {
   .dark .essay-container:hover,
   .dark .interesting-item:hover {
@@ -288,6 +297,10 @@ th {
 }
 
 /* Add hover effect for table rows */
+tr:active {
+  background-color: var(--hover-bg);
+}
+
 @media (hover: hover) {
   tr:hover {
     background-color: var(--hover-bg);
@@ -301,6 +314,10 @@ th {
 
 .dark th {
   background-color: var(--code-bg);
+}
+
+.dark tr:active {
+  background-color: var(--card-hover-bg);
 }
 
 @media (hover: hover) {
@@ -347,6 +364,11 @@ th {
   align-items: center;
   height: 36px;
   position: relative;
+}
+
+.nav a:active {
+  color: var(--nav-text-hover);
+  background-color: var(--nav-hover-bg);
 }
 
 @media (hover: hover) {
@@ -574,6 +596,10 @@ pre code {
   font-size: 0.85rem;
 }
 
+.notion-table tr:active {
+  background-color: var(--hover-bg);
+}
+
 @media (hover: hover) {
   .notion-table tr:hover {
     background-color: var(--hover-bg);
@@ -609,6 +635,10 @@ details summary {
   font-weight: 500;
   background-color: var(--card-bg);
   transition: background-color 0.15s ease;
+}
+
+details summary:active {
+  background-color: var(--card-hover-bg);
 }
 
 @media (hover: hover) {
@@ -705,6 +735,10 @@ details > *:not(summary) {
   transition: background-color 0.2s ease;
   margin-top: 1rem;
   border-radius: 4px;
+}
+
+.search-button:active {
+  background-color: var(--accent-color);
 }
 
 @media (hover: hover) {
@@ -851,6 +885,11 @@ details > *:not(summary) {
   background-color: var(--nav-hover-bg);
 }
 
+.dark .nav a:active {
+  color: var(--nav-text-hover);
+  background-color: var(--nav-hover-bg);
+}
+
 @media (hover: hover) {
   .dark .nav a:hover {
     color: var(--nav-text-hover);
@@ -915,6 +954,11 @@ details > *:not(summary) {
 
 /* Dark mode enhanced nav styles */
 .dark .nav a.keyboard-focused {
+  color: var(--accent-color);
+  background-color: var(--accent-bg);
+}
+
+.dark .nav a:active {
   color: var(--accent-color);
   background-color: var(--accent-bg);
 }

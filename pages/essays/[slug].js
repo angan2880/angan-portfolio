@@ -131,6 +131,11 @@ export default function Essay({ essay }) {
           display: inline-block;
         }
 
+        .back-link :global(a:active) {
+          background-color: var(--card-hover-bg);
+          color: var(--accent-color);
+        }
+
         @media (hover: hover) {
           .back-link :global(a:hover) {
             background-color: var(--card-hover-bg);

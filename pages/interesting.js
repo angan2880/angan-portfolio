@@ -218,6 +218,18 @@ export default function InterestingPage({ interestingItems }) {
           color: var(--text-color);
         }
 
+        .interesting-item:active {
+          background-color: var(--card-bg);
+        }
+
+        .interesting-item:active .item-title {
+          color: var(--accent-color);
+        }
+
+        .interesting-item:active .item-date {
+          color: var(--text-color);
+        }
+
         @media (hover: hover) {
           .interesting-item:hover {
             background-color: var(--card-bg);
@@ -281,6 +293,10 @@ export default function InterestingPage({ interestingItems }) {
         }
 
         .item-hovered .title-text::after {
+          width: 100%;
+        }
+
+        .interesting-item:active .title-text::after {
           width: 100%;
         }
 

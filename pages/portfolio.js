@@ -135,6 +135,11 @@ export default function Portfolio() {
           transition: transform 0.2s ease, box-shadow 0.2s ease;
         }
         
+        .portfolio-item:active {
+          transform: translateY(-2px);
+          box-shadow: 0 3px 10px var(--card-shadow);
+        }
+
         @media (hover: hover) {
           .portfolio-item:hover {
             transform: translateY(-5px);
@@ -185,6 +190,10 @@ export default function Portfolio() {
           transition: background-color 0.2s ease;
         }
         
+        .document-item:active {
+          background-color: var(--hover-bg);
+        }
+
         @media (hover: hover) {
           .document-item:hover {
             background-color: var(--hover-bg);
@@ -224,6 +233,10 @@ export default function Portfolio() {
           transition: background-color 0.2s ease;
         }
         
+        .download-link:active {
+          background-color: var(--hover-bg);
+        }
+
         @media (hover: hover) {
           .download-link:hover {
             background-color: var(--hover-bg);

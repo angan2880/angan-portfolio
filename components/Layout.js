@@ -507,6 +507,11 @@ export default function Layout({ children, title = "Angan Sarker", description =
           transition: opacity 0.2s ease, transform 0.2s ease;
         }
 
+        .logo-mark:active {
+          opacity: 0.85;
+          transform: scale(1.05);
+        }
+
         @media (hover: hover) {
           .logo-mark:hover {
             opacity: 0.85;
@@ -530,6 +535,10 @@ export default function Layout({ children, title = "Angan Sarker", description =
           transition: background-color 0.2s ease;
         }
         
+        .theme-toggle:active {
+          background-color: var(--hover-bg);
+        }
+
         @media (hover: hover) {
           .theme-toggle:hover {
             background-color: var(--hover-bg);
@@ -553,6 +562,11 @@ export default function Layout({ children, title = "Angan Sarker", description =
           padding: 6px 12px;
           border-radius: 6px;
           position: relative;
+        }
+
+        .nav a:active {
+          color: var(--nav-text-hover);
+          background-color: var(--nav-hover-bg);
         }
 
         @media (hover: hover) {

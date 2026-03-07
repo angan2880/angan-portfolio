@@ -164,6 +164,13 @@ export default function About({ about }) {
           transition: all 0.15s ease;
         }
 
+        .download-button:active {
+          background-color: var(--card-hover-bg);
+          color: var(--accent-color);
+          border-color: var(--accent-color);
+          box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+
         @media (hover: hover) {
           .download-button:hover {
             background-color: var(--card-hover-bg);
@@ -270,6 +277,10 @@ export default function About({ about }) {
         a {
           color: var(--link-color);
           text-decoration: underline;
+        }
+
+        a:active {
+          color: var(--link-hover-color);
         }
 
         @media (hover: hover) {

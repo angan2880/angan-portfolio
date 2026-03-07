@@ -130,6 +130,18 @@ export default function Essays({ essays }) {
           color: var(--text-color);
         }
 
+        .essay-container:active {
+          background-color: var(--card-bg);
+        }
+
+        .essay-container:active .essay-title {
+          color: var(--accent-color);
+        }
+
+        .essay-container:active .essay-date {
+          color: var(--text-color);
+        }
+
         @media (hover: hover) {
           .essay-container:hover {
             background-color: var(--card-bg);
@@ -193,6 +205,10 @@ export default function Essays({ essays }) {
         }
 
         .essay-hovered .title-text::after {
+          width: 100%;
+        }
+
+        .essay-container:active .title-text::after {
           width: 100%;
         }
 

@@ -255,6 +255,11 @@ export default function Home({ recentEssays, interestingItems, homeBio }) {
           transition: all 0.15s ease;
         }
 
+        .section-header :global(.section-link:active) {
+          background-color: var(--card-hover-bg);
+          color: var(--accent-color);
+        }
+
         @media (hover: hover) {
           .section-header :global(.section-link:hover) {
             background-color: var(--card-hover-bg);
@@ -297,8 +302,12 @@ export default function Home({ recentEssays, interestingItems, homeBio }) {
           background-color: var(--card-bg);
         }
 
+        .essay-item:active, .interesting-item:active {
+          background-color: var(--card-bg);
+        }
+
         @media (hover: hover) {
-          .essay-item:hover {
+          .essay-item:hover, .interesting-item:hover {
             background-color: var(--card-bg);
           }
         }
@@ -354,6 +363,11 @@ export default function Home({ recentEssays, interestingItems, homeBio }) {
           width: 100%;
         }
 
+        .essay-item:active .title-text::after,
+        .interesting-item:active .title-text::after {
+          width: 100%;
+        }
+
         @media (hover: hover) {
           .essay-item:hover .title-text::after,
           .interesting-item:hover .title-text::after {
@@ -378,6 +392,16 @@ export default function Home({ recentEssays, interestingItems, homeBio }) {
         }
 
         .item-hovered .item-date {
+          color: var(--text-color);
+        }
+
+        .essay-item:active .item-title,
+        .interesting-item:active .item-title {
+          color: var(--accent-color);
+        }
+
+        .essay-item:active .item-date,
+        .interesting-item:active .item-date {
           color: var(--text-color);
         }
 
